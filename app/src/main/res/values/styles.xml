@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="san_francisco_20">
+        <item name="android:fontFamily">@font/san_francisco_text_regular</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="san_francisco_32">
+        <item name="android:fontFamily">@font/san_francisco_text_regular</item>
+        <item name="android:textSize">32sp</item>
+    </style>
+    <style name="san_francisco_16">
+        <item name="android:fontFamily">@font/san_francisco_text_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="san_francisco_8">
+        <item name="android:fontFamily">@font/san_francisco_text_regular</item>
+        <item name="android:textSize">8sp</item>
+    </style>
+</resources>

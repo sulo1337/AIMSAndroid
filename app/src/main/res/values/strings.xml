@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AIMS Android (alpha)</string>
+    <string name="gpsTitle">Your Current GPS Location</string>
 </resources>
