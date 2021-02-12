@@ -2,6 +2,7 @@ package com.example.aimsandroid.homefragment
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Color
 import android.location.LocationManager
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -13,6 +14,8 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.lifecycle.Observer
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
@@ -77,11 +80,16 @@ class HomeFragment : Fragment() {
     //defining value animator function
     private fun animateCoordinates(view: TextView, begin: Double, end: Double) {
         val valueAnimator: ValueAnimator = ValueAnimator.ofFloat(begin.toFloat(), end.toFloat())
-//        valueAnimator.interpolator = AccelerateDecelerateInterpolator()
-        valueAnimator.duration =300 //in millis
+        valueAnimator.duration =1000 //in millis
         valueAnimator.addUpdateListener{
-            animation ->  view.text = String.format("%.8f", animation.animatedValue)
+            animation ->  view.text = String.format("%.15f", animation.animatedValue)
         }
+//        valueAnimator.doOnStart {
+//            view.setTextColor(Color.GREEN)
+//        }
+//        valueAnimator.doOnEnd {
+//            view.setTextColor(Color.BLACK)
+//        }
         valueAnimator.start()
     }
 }
