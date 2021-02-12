@@ -14,7 +14,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="?attr/colorSecondary"/>
+        android:background="?attr/colorSecondary"
+        android:fitsSystemWindows="true"/>
 
     <fragment
         android:id="@+id/defaultNavHostFragment"
