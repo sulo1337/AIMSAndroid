@@ -39,6 +39,9 @@ class HomeFragment : Fragment() {
         //generate view model using the factory
         viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
+        //bind viewModel to the layout
+        binding.homeViewModel = viewModel
+
         //enable live data to be bound from viewmodel to ui
         binding.lifecycleOwner = this
 

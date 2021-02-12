@@ -34,7 +34,7 @@
             style="@style/san_francisco_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="Latitude "
             app:layout_constraintStart_toStartOf="@+id/gpsTitle"
@@ -46,32 +46,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
             android:text="Longitude"
-            app:layout_constraintEnd_toEndOf="@+id/gpsTitle"
-            app:layout_constraintTop_toBottomOf="@+id/gpsTitle"
-            />
-
-        <TextView
-            android:id="@+id/latitude"
-            style="@style/san_francisco_16"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="35.49444"
-            app:layout_constraintEnd_toEndOf="@+id/latitudeTitle"
             app:layout_constraintStart_toStartOf="@+id/latitudeTitle"
             app:layout_constraintTop_toBottomOf="@+id/latitudeTitle" />
 
         <TextView
+            android:id="@+id/latitude"
+            style="@style/san_francisco_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:text="@{homeViewModel.latitude}"
+            app:layout_constraintBaseline_toBaselineOf="@+id/latitudeTitle"
+            app:layout_constraintStart_toEndOf="@+id/latitudeTitle"
+            tools:text="32.52129066" />
+
+        <TextView
             android:id="@+id/longitude"
             style="@style/san_francisco_16"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="82.6387"
-            app:layout_constraintEnd_toEndOf="@+id/longitudeTitle"
-            app:layout_constraintStart_toStartOf="@+id/longitudeTitle"
-            app:layout_constraintTop_toBottomOf="@+id/longitudeTitle" />
+            android:text="@{homeViewModel.longitude}"
+            app:layout_constraintBaseline_toBaselineOf="@+id/longitudeTitle"
+            app:layout_constraintStart_toStartOf="@+id/latitude"
+            tools:text="-92.07669326" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
