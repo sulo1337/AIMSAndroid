@@ -56,7 +56,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:text="@{homeViewModel.latitude}"
             app:layout_constraintBaseline_toBaselineOf="@+id/latitudeTitle"
             app:layout_constraintStart_toEndOf="@+id/latitudeTitle"
             tools:text="32.52129066" />
@@ -66,7 +65,6 @@
             style="@style/san_francisco_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{homeViewModel.longitude}"
             app:layout_constraintBaseline_toBaselineOf="@+id/longitudeTitle"
             app:layout_constraintStart_toStartOf="@+id/latitude"
             tools:text="-92.07669326" />

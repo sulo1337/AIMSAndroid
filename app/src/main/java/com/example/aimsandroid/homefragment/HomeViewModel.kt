@@ -12,24 +12,43 @@ import androidx.lifecycle.ViewModel
 
 @SuppressLint("MissingPermission")
 class HomeViewModel(locationManager: LocationManager) : ViewModel() {
-    private val _latitude = MutableLiveData<String>()
-    val latitude: LiveData<String>
+    private val _latitude = MutableLiveData<Double>()
+    val latitude: LiveData<Double>
         get() = _latitude
 
-    private val _longitude = MutableLiveData<String>()
-    val longitude: LiveData<String>
+    var prevLatitude: Double = 0.00000001
+
+    private val _longitude = MutableLiveData<Double>()
+    val longitude: LiveData<Double>
         get() = _longitude
+
+    var prevLongitude: Double = 0.00000001
+
+    private val _locationChanged = MutableLiveData<Boolean>()
+    val locationChanged: LiveData<Boolean>
+        get() = _locationChanged
 
     private val locationListener: LocationListener
 
     init {
+        _latitude.value = 0.00000000
+        _longitude.value = 0.00000000
+        prevLatitude = 0.00000001
+        prevLongitude = 0.00000001
         locationListener =  MyLocationListener(this)
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000,  0.5f, locationListener)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200,  0.02f, locationListener)
     }
 
     fun onLocationChanged(location: Location) {
-        _latitude.value = location.latitude.toString()
-        _longitude.value = location.longitude.toString()
+        prevLatitude = _latitude.value!!
+        prevLongitude = _longitude.value!!
+        _latitude.value = location.latitude
+        _longitude.value = location.longitude
+        _locationChanged.value = true
+    }
+
+    fun doneOnLocationChanged() {
+        _locationChanged.value = false
     }
 
     class MyLocationListener(argViewModel: HomeViewModel): LocationListener {

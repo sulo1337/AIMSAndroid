@@ -1,16 +1,22 @@
 package com.example.aimsandroid.homefragment
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.location.LocationManager
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
+import kotlin.properties.Delegates
 
 class HomeFragment : Fragment() {
 
@@ -45,7 +51,37 @@ class HomeFragment : Fragment() {
         //enable live data to be bound from viewmodel to ui
         binding.lifecycleOwner = this
 
+//        viewModel.locationChanged.observe(viewLifecycleOwner, Observer {
+//            it?.let {
+//                this.animateCoordinates(binding.latitude, viewModel.prevLatitude.value!!, viewModel.latitude.value!!)
+//                this.animateCoordinates(binding.longitude, viewModel.prevLongitude.value!!, viewModel.latitude.value!!)
+//                viewModel.doneOnLocationChanged()
+//            }
+//        })
+
+        viewModel.latitude.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                this.animateCoordinates(binding.latitude, viewModel.prevLatitude, it)
+            }
+        })
+
+        viewModel.longitude.observe(viewLifecycleOwner, Observer {
+            it?.let{
+                this.animateCoordinates(binding.longitude, viewModel.prevLongitude, it)
+            }
+        })
+
         return binding.root
     }
 
+    //defining value animator function
+    private fun animateCoordinates(view: TextView, begin: Double, end: Double) {
+        val valueAnimator: ValueAnimator = ValueAnimator.ofFloat(begin.toFloat(), end.toFloat())
+//        valueAnimator.interpolator = AccelerateDecelerateInterpolator()
+        valueAnimator.duration =300 //in millis
+        valueAnimator.addUpdateListener{
+            animation ->  view.text = String.format("%.8f", animation.animatedValue)
+        }
+        valueAnimator.start()
+    }
 }
