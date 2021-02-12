@@ -14,8 +14,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:titleTextAppearance="@style/san_francisco_bold_20"
+        app:titleTextColor="@color/black"
         android:background="?attr/colorSecondary"
-        android:fitsSystemWindows="true"/>
+        android:fitsSystemWindows="true"
+        android:elevation="8dp"
+        />
 
     <fragment
         android:id="@+id/defaultNavHostFragment"
