@@ -3,6 +3,8 @@ package com.example.aimsandroid.homefragment
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Color
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -41,11 +43,8 @@ class HomeFragment : Fragment() {
         //obtain databinding
         val binding = FragmentHomeBinding.inflate(inflater)
 
-        //obtain location manager
-        val locationManager: LocationManager = (activity as AppCompatActivity?)!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        //inject location manager to view model factory
-        val viewModelFactory: HomeViewModelFactory = HomeViewModelFactory(locationManager, requireActivity().application)
+        //inject application to view model factory
+        val viewModelFactory: HomeViewModelFactory = HomeViewModelFactory(requireActivity().application)
 
         //generate view model using the factory
         viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)

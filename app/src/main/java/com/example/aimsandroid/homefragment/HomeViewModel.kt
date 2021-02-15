@@ -10,74 +10,45 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.aimsandroid.database.Review
 import com.example.aimsandroid.database.getDatabase
+import com.example.aimsandroid.repository.LocationRepository
 import com.example.aimsandroid.repository.ReviewsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @SuppressLint("MissingPermission")
-class HomeViewModel(locationManager: LocationManager, application: Application) : AndroidViewModel(application) {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val database = getDatabase(application)
     private val reviewsRepository = ReviewsRepository(database)
+    private val locationRepository = LocationRepository(application)
+
     val reviews = reviewsRepository.reviews
 
-    private val _latitude = MutableLiveData<Double>()
-    val latitude: LiveData<Double>
-        get() = _latitude
+    val latitude = locationRepository.latitude
+    val longitude = locationRepository.longitude
 
-    var prevLatitude: Double = 0.00000001
-
-    private val _longitude = MutableLiveData<Double>()
-    val longitude: LiveData<Double>
-        get() = _longitude
-
-    var prevLongitude: Double = 0.00000001
-
-    private val _locationChanged = MutableLiveData<Boolean>()
-    val locationChanged: LiveData<Boolean>
-        get() = _locationChanged
-
-    private val locationListener: LocationListener
+    var prevLatitude = 0.0
+    var prevLongitude = 0.0
 
     init {
-        _latitude.value = 0.00000000
-        _longitude.value = 0.00000000
-        prevLatitude = 0.00000001
-        prevLongitude = 0.00000001
-        locationListener =  MyLocationListener(this)
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200,  0.02f, locationListener)
-        } catch(e: SecurityException) {
-            Log.i("viewModel","no permission")
-        }
-    }
-
-    fun onLocationChanged(location: Location) {
-        prevLatitude = _latitude.value!!
-        prevLongitude = _longitude.value!!
-        _latitude.value = location.latitude
-        _longitude.value = location.longitude
-        _locationChanged.value = true
-    }
-
-    fun doneOnLocationChanged() {
-        _locationChanged.value = false
+        latitude.observeForever(Observer {
+            it?.let {
+                prevLatitude = locationRepository.prevLatitude
+            }
+        })
+        longitude.observeForever(Observer {
+            it?.let{
+                prevLongitude = locationRepository.prevLongitude
+            }
+        })
     }
 
     fun onClickSubmit(description: String, atmosphere: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                database.reviewDao.insertReview(Review(0L, description, _latitude.value!!, _longitude.value!!, atmosphere))
+                database.reviewDao.insertReview(Review(0L, description, latitude.value!!, longitude.value!!, atmosphere))
             }
-        }
-    }
-
-    class MyLocationListener(argViewModel: HomeViewModel): LocationListener {
-        private val viewModel = argViewModel
-
-        override fun onLocationChanged(location: Location) {
-            viewModel.onLocationChanged(location)
         }
     }
 }
