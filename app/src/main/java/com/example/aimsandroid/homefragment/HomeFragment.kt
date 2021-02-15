@@ -2,10 +2,13 @@ package com.example.aimsandroid.homefragment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,6 +24,7 @@ class HomeFragment : Fragment() {
     }
 
     private lateinit var viewModel: HomeViewModel
+    private lateinit var binding: FragmentHomeBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +34,7 @@ class HomeFragment : Fragment() {
         (activity as AppCompatActivity?)!!.supportActionBar!!.title = getString(R.string.homeFragmentToolbarTitle)
 
         //obtain databinding
-        val binding = FragmentHomeBinding.inflate(inflater)
+        binding = FragmentHomeBinding.inflate(inflater)
 
         //inject application to view model factory
         val viewModelFactory: HomeViewModelFactory = HomeViewModelFactory(requireActivity().application)
@@ -62,6 +66,13 @@ class HomeFragment : Fragment() {
             }
         })
 
+        //restore saved form data (if any)
+        savedInstanceState?.let{
+            val savedEditText = savedInstanceState.getString("editText")
+            val savedRadioChoice = savedInstanceState.getString("radioChoice")
+            Log.i("here", "$savedEditText $savedRadioChoice")
+        }
+
         /**
          * On Click Listeners
          * */
@@ -91,5 +102,31 @@ class HomeFragment : Fragment() {
     private fun hideKeyboard(v: View) {
         val imm: InputMethodManager = (activity as AppCompatActivity)!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(v.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.i("here", binding.description.text.toString())
+        Log.i("here", binding.atmosphere.checkedRadioButtonId.toString())
+        outState.putString("editText", binding.description.text.toString())
+        outState.putInt("radioChoice", binding.atmosphere.checkedRadioButtonId)
+    }
+
+    //save incomplete form data on pause
+    override fun onPause() {
+        super.onPause()
+        val prefs = requireContext().getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
+        prefs.edit().putString("descriptionFormData", binding.description.text.toString()).apply()
+        prefs.edit().putInt("radioChoiceFormData", binding.atmosphere.checkedRadioButtonId).apply()
+    }
+
+    //retrieve incomplete form data on resume
+    override fun onResume() {
+        super.onResume()
+        val prefs = requireContext().getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
+        val descriptionFormData = prefs.getString("descriptionFormData", "")
+        val radioChoiceFormData = prefs.getInt("radioChoiceFormData", -1)
+        binding.description.setText(descriptionFormData, TextView.BufferType.EDITABLE)
+        binding.atmosphere.check(radioChoiceFormData)
     }
 }
