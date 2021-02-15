@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Latitude "
+            android:text="@string/latitude"
             app:layout_constraintStart_toStartOf="@+id/gpsTitle"
             app:layout_constraintTop_toBottomOf="@+id/gpsTitle" />
 
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Longitude"
+            android:text="@string/longitude"
             app:layout_constraintStart_toStartOf="@+id/latitudeTitle"
             app:layout_constraintTop_toBottomOf="@+id/latitudeTitle" />
 
@@ -67,5 +67,84 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/longitudeTitle"
             app:layout_constraintStart_toStartOf="@+id/latitude"
             tools:text="-92.07669326" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/description"
+            android:textColor="?attr/colorOnPrimary"
+            android:textColorHint="@color/gray"
+            app:backgroundTint="@color/gray"
+            style="@style/san_francisco_16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:ems="10"
+            android:hint="@string/describe_this_location"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/longitudeTitle" />
+
+        <RadioGroup
+            android:id="@+id/atmosphere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/atmosphereText"
+            app:layout_constraintTop_toBottomOf="@+id/atmosphereText">
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/awesome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/secondaryColor"
+                android:text="@string/awesome"
+                android:textColor="?attr/colorOnPrimary" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/boring"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/secondaryColor"
+                android:text="@string/boring"
+                android:textColor="?attr/colorOnPrimary" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/atmosphereText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/atmosphere"
+            style="@style/san_francisco_bold_16"
+            app:layout_constraintStart_toStartOf="@+id/description"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/san_francisco_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/your_reviews"
+            app:layout_constraintStart_toStartOf="@+id/atmosphereText"
+            app:layout_constraintTop_toBottomOf="@+id/submitButton" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/san_francisco_bold_16"
+            android:textColor="@color/black"
+            app:backgroundTint="@color/secondaryColor"
+            android:padding="10dp"
+            app:cornerRadius="20dp"
+            android:textAllCaps="false"
+            android:id="@+id/submitButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/submit"
+            app:layout_constraintEnd_toEndOf="@+id/description"
+            app:layout_constraintStart_toStartOf="@+id/description"
+            app:layout_constraintTop_toBottomOf="@+id/atmosphere" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

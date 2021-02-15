@@ -2,4 +2,12 @@
     <string name="app_name">AIMS Android (alpha)</string>
     <string name="gpsTitle">Your Current GPS Location</string>
     <string name="homeFragmentToolbarTitle">AIMS Android (alpha)</string>
+    <string name="describe_this_location">Describe this location...</string>
+    <string name="longitude">Longitude</string>
+    <string name="latitude">Latitude</string>
+    <string name="awesome">Awesome! 😁</string>
+    <string name="boring">Boring 🙄</string>
+    <string name="atmosphere">Atmosphere</string>
+    <string name="your_reviews">Your Reviews</string>
+    <string name="submit">Submit</string>
 </resources>
