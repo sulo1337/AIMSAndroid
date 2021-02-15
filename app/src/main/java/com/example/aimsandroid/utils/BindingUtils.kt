@@ -9,4 +9,5 @@ import com.example.aimsandroid.homefragment.ReviewsAdapter
 fun bindListOfReviewsToRecyclerView(recyclerView: RecyclerView, data: List<Review>?) {
     val adapter = recyclerView.adapter as ReviewsAdapter
     adapter.submitList(data)
+    recyclerView.smoothScrollToPosition(0)
 }

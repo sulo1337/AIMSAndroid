@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
 
         //creating recyclerview adapter
-        val adapter = ReviewsAdapter()
+        val adapter = ReviewsAdapter(requireActivity().application)
 
         //assigning adapter to recycler view
         binding.reviewItems.adapter = adapter

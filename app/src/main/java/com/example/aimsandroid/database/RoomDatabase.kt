@@ -6,7 +6,7 @@ import androidx.room.*
 
 @Dao
 interface ReviewDao {
-    @Query("select * from review_table")
+    @Query("select * from review_table order by id desc")
     fun getReviews(): LiveData<List<Review>>
 
     @Insert
