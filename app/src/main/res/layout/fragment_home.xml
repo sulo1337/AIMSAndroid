@@ -4,17 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="homeViewModel"
             type="com.example.aimsandroid.homefragment.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/homeFragmentParentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/homeFragmentParentLayout"
-        android:theme="@style/Theme.AIMSAndroid"
-        android:background="?attr/colorPrimary">
+        android:background="?attr/colorPrimary"
+        android:theme="@style/Theme.AIMSAndroid">
 
         <TextView
             android:id="@+id/gpsTitle"
@@ -70,9 +71,6 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/description"
-            android:textColor="?attr/colorOnPrimary"
-            android:textColorHint="@color/gray"
-            app:backgroundTint="@color/gray"
             style="@style/san_francisco_16"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -82,6 +80,9 @@
             android:ems="10"
             android:hint="@string/describe_this_location"
             android:inputType="textPersonName"
+            android:textColor="?attr/colorOnPrimary"
+            android:textColorHint="@color/gray"
+            app:backgroundTint="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/longitudeTitle" />
@@ -112,11 +113,11 @@
 
         <TextView
             android:id="@+id/atmosphereText"
+            style="@style/san_francisco_bold_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/atmosphere"
-            style="@style/san_francisco_bold_16"
             app:layout_constraintStart_toStartOf="@+id/description"
             app:layout_constraintTop_toBottomOf="@+id/description" />
 
@@ -131,20 +132,36 @@
             app:layout_constraintTop_toBottomOf="@+id/submitButton" />
 
         <com.google.android.material.button.MaterialButton
-            style="@style/san_francisco_bold_16"
-            android:textColor="@color/black"
-            app:backgroundTint="@color/secondaryColor"
-            android:padding="10dp"
-            app:cornerRadius="20dp"
-            android:textAllCaps="false"
             android:id="@+id/submitButton"
+            style="@style/san_francisco_bold_16"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:padding="10dp"
             android:text="@string/submit"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            app:backgroundTint="@color/secondaryColor"
+            app:cornerRadius="20dp"
             app:layout_constraintEnd_toEndOf="@+id/description"
             app:layout_constraintStart_toStartOf="@+id/description"
             app:layout_constraintTop_toBottomOf="@+id/atmosphere" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            app:spanCount="1"
+            tools:itemCount="16"
+            tools:listitem="@layout/review_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

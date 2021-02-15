@@ -10,10 +10,10 @@ data class Review(
     var id: Long = 0L,
     @ColumnInfo(name="desc")
     var desc: String = "",
-    @ColumnInfo(name="lat")
-    var lat: Double = 0.0,
-    @ColumnInfo(name="long")
-    var long: Double = 0.0,
+    @ColumnInfo(name="latitude")
+    var latitude: Double = 0.0,
+    @ColumnInfo(name="longitude")
+    var longitude: Double = 0.0,
     @ColumnInfo(name="review")
     var review: String = ""
 )

@@ -10,4 +10,5 @@
     <string name="atmosphere">Atmosphere</string>
     <string name="your_reviews">Your Reviews</string>
     <string name="submit">Submit</string>
+    <string name="review_id">Review ID:</string>
 </resources>
