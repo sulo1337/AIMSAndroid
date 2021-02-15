@@ -2,12 +2,9 @@ package com.example.aimsandroid.homefragment
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.example.aimsandroid.database.Review
 import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.repository.LocationRepository

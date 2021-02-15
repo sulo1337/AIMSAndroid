@@ -1,29 +1,18 @@
 package com.example.aimsandroid.homefragment
 
-import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Color
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
-import kotlin.properties.Delegates
+import com.example.aimsandroid.utils.NumberAnimatorUtil.NumberAnimator.animateCoordinates
 
 class HomeFragment : Fragment() {
 
@@ -61,23 +50,15 @@ class HomeFragment : Fragment() {
         //assigning adapter to recycler view
         binding.reviewItems.adapter = adapter
 
-//        viewModel.locationChanged.observe(viewLifecycleOwner, Observer {
-//            it?.let {
-//                this.animateCoordinates(binding.latitude, viewModel.prevLatitude.value!!, viewModel.latitude.value!!)
-//                this.animateCoordinates(binding.longitude, viewModel.prevLongitude.value!!, viewModel.latitude.value!!)
-//                viewModel.doneOnLocationChanged()
-//            }
-//        })
-
         viewModel.latitude.observe(viewLifecycleOwner, Observer {
             it?.let{
-                this.animateCoordinates(binding.latitude, viewModel.prevLatitude, it)
+                animateCoordinates(binding.latitude, viewModel.prevLatitude, it)
             }
         })
 
         viewModel.longitude.observe(viewLifecycleOwner, Observer {
             it?.let{
-                this.animateCoordinates(binding.longitude, viewModel.prevLongitude, it)
+                animateCoordinates(binding.longitude, viewModel.prevLongitude, it)
             }
         })
 
@@ -105,22 +86,6 @@ class HomeFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    //defining value animator function
-    private fun animateCoordinates(view: TextView, begin: Double, end: Double) {
-        val valueAnimator: ValueAnimator = ValueAnimator.ofFloat(begin.toFloat(), end.toFloat())
-        valueAnimator.duration =1000 //in millis
-        valueAnimator.addUpdateListener{
-            animation ->  view.text = String.format("%.08f", animation.animatedValue)
-        }
-//        valueAnimator.doOnStart {
-//            view.setTextColor(Color.GREEN)
-//        }
-//        valueAnimator.doOnEnd {
-//            view.setTextColor(Color.BLACK)
-//        }
-        valueAnimator.start()
     }
 
     private fun hideKeyboard(v: View) {
