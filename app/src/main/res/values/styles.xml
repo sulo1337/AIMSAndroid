@@ -41,4 +41,7 @@
         <item name="android:textSize">8sp</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
+    <style name="dialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>
