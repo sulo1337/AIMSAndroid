@@ -20,7 +20,7 @@ class HomeViewModel(locationManager: LocationManager, application: Application) 
 
     private val database = getDatabase(application)
     private val reviewsRepository = ReviewsRepository(database)
-    private val reviews = reviewsRepository.reviews
+    val reviews = reviewsRepository.reviews
 
     private val _latitude = MutableLiveData<Double>()
     val latitude: LiveData<Double>

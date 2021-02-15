@@ -54,6 +54,12 @@ class HomeFragment : Fragment() {
         //enable live data to be bound from viewmodel to ui
         binding.lifecycleOwner = this
 
+        //creating recyclerview adapter
+        val adapter = ReviewsAdapter()
+
+        //assigning adapter to recycler view
+        binding.reviewItems.adapter = adapter
+
 //        viewModel.locationChanged.observe(viewLifecycleOwner, Observer {
 //            it?.let {
 //                this.animateCoordinates(binding.latitude, viewModel.prevLatitude.value!!, viewModel.latitude.value!!)
