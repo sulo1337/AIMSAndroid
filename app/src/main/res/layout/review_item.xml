@@ -11,13 +11,15 @@
 
    <RelativeLayout
        android:layout_width="match_parent"
-       android:layout_height="wrap_content">
+       android:layout_height="wrap_content"
+       android:theme="@style/Theme.AIMSAndroid">
 
        <com.google.android.material.card.MaterialCardView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            app:cardCornerRadius="20dp"
            android:layout_margin="10dp"
+           app:cardBackgroundColor="?attr/colorPrimaryVariant"
            app:cardElevation="3dp">
 
            <androidx.constraintlayout.widget.ConstraintLayout

@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -96,6 +97,11 @@ class HomeFragment : Fragment() {
                     else -> "None"
                 }
                 viewModel.onClickSubmit(description, atmosphere)
+                //reset form
+                binding.description.text = null
+                binding.atmosphere.clearCheck()
+                //hide keyboard
+                hideKeyboard(it)
             }
         }
 
@@ -107,7 +113,7 @@ class HomeFragment : Fragment() {
         val valueAnimator: ValueAnimator = ValueAnimator.ofFloat(begin.toFloat(), end.toFloat())
         valueAnimator.duration =1000 //in millis
         valueAnimator.addUpdateListener{
-            animation ->  view.text = String.format("%.15f", animation.animatedValue)
+            animation ->  view.text = String.format("%.08f", animation.animatedValue)
         }
 //        valueAnimator.doOnStart {
 //            view.setTextColor(Color.GREEN)
@@ -116,5 +122,10 @@ class HomeFragment : Fragment() {
 //            view.setTextColor(Color.BLACK)
 //        }
         valueAnimator.start()
+    }
+
+    private fun hideKeyboard(v: View) {
+        val imm: InputMethodManager = (activity as AppCompatActivity)!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(v.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
     }
 }
