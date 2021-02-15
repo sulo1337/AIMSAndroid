@@ -15,5 +15,5 @@ data class Review(
     @ColumnInfo(name="longitude")
     var longitude: Double = 0.0,
     @ColumnInfo(name="review")
-    var review: String = ""
+    var atmosphere: String = ""
 )

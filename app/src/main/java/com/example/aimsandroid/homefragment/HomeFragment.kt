@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
@@ -79,6 +80,24 @@ class HomeFragment : Fragment() {
                 this.animateCoordinates(binding.longitude, viewModel.prevLongitude, it)
             }
         })
+
+        /**
+         * On Click Listeners
+         * */
+
+        //submit button click listener
+        binding.submitButton.setOnClickListener {
+            it?.let {
+                val description = binding.description.text.toString()
+                val radioChoice = binding.atmosphere.checkedRadioButtonId
+                val atmosphere = when(radioChoice) {
+                    R.id.awesome -> "Awesome! \uD83D\uDE01"
+                    R.id.boring -> "Boring "
+                    else -> "None"
+                }
+                viewModel.onClickSubmit(description, atmosphere)
+            }
+        }
 
         return binding.root
     }

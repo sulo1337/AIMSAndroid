@@ -7,13 +7,13 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.aimsandroid.database.Review
 import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.repository.ReviewsRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @SuppressLint("MissingPermission")
 class HomeViewModel(locationManager: LocationManager, application: Application) : AndroidViewModel(application) {
@@ -63,6 +63,14 @@ class HomeViewModel(locationManager: LocationManager, application: Application) 
 
     fun doneOnLocationChanged() {
         _locationChanged.value = false
+    }
+
+    fun onClickSubmit(description: String, atmosphere: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                database.reviewDao.insertReview(Review(0L, description, _latitude.value!!, _longitude.value!!, atmosphere))
+            }
+        }
     }
 
     class MyLocationListener(argViewModel: HomeViewModel): LocationListener {
