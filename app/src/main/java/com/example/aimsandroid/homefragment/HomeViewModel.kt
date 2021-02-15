@@ -36,7 +36,11 @@ class HomeViewModel(locationManager: LocationManager) : ViewModel() {
         prevLatitude = 0.00000001
         prevLongitude = 0.00000001
         locationListener =  MyLocationListener(this)
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200,  0.02f, locationListener)
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200,  0.02f, locationListener)
+        } catch(e: SecurityException) {
+            Log.i("viewModel","no permission")
+        }
     }
 
     fun onLocationChanged(location: Location) {
