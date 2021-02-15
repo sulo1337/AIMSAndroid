@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         val locationManager: LocationManager = (activity as AppCompatActivity?)!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         //inject location manager to view model factory
-        val viewModelFactory: HomeViewModelFactory = HomeViewModelFactory(locationManager)
+        val viewModelFactory: HomeViewModelFactory = HomeViewModelFactory(locationManager, requireActivity().application)
 
         //generate view model using the factory
         viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
