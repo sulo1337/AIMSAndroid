@@ -4,25 +4,90 @@
 
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragment_home"
-        android:background="@android:color/white"
-    >
-        <fragment
-            android:elevation="1dp"
-            app:behavior_peekHeight="70dp"
-            android:id="@+id/current_trip_backdrop_fragment"
-            android:name="com.example.aimsandroid.fragments.currenttrip.CurrentTripFragment"
+        android:layout_height="match_parent">
+
+        <!--This the interface sitting behind the backdrop and shown when it is collapsed-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:behavior_skipCollapsed="true"
-            app:layout_behavior=".utils.GestureLockedBottomSheetBehavior"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout="@layout/fragment_current_trip"/>
+            android:orientation="vertical"
+            android:background="@color/primaryColor"
+            android:padding="16dp">
+
+            <EditText
+                android:id="@+id/searchTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_keyboard_arrow_down"
+                style="@style/san_francisco_bold_20"
+                android:hint="Hey..."/>
+
+            <EditText
+                android:id="@+id/datesFilterButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_keyboard_arrow_up"
+                style="@style/san_francisco_bold_20"
+                android:hint="Hello..."/>
+        </LinearLayout>
+
+        <!--This is the backdrop's content with a BottomSheetBehaviour applied to it-->
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:behavior_peekHeight="72dp"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
+
+            <!--This is the backdrop's header with a title and icon-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/backdrop_header"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:background="@drawable/bg_current_trip_container"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:elevation="4dp">
+
+                <TextView
+                    android:id="@+id/textView"
+                    style="@style/san_francisco_bold_20"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="Current Trip"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView style="@style/san_francisco_16" android:layout_width="wrap_content"
+                          android:layout_height="wrap_content" android:text="Click here to view your current trip"
+                          app:layout_constraintStart_toStartOf="parent"
+                          app:layout_constraintTop_toBottomOf="@+id/textView"/>
+                <ImageView
+                    android:id="@+id/filterIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_keyboard_arrow_up" app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--And finally this is the body of the backdrop's content. You can add here whatever you need inside a view group (LinearLayout, RelativeLayout, SwipeRefreshLayout, ConstraintLayout, etc.)-->
+            <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+                                                   android:layout_gravity="bottom"
+                                                   android:background="@color/gray"
+                                                   >
+
+            </androidx.core.widget.NestedScrollView>
+
+        </LinearLayout>
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
