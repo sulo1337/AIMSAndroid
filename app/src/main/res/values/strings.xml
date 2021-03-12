@@ -11,4 +11,7 @@
     <string name="your_reviews">Your Reviews</string>
     <string name="submit">Submit</string>
     <string name="review_id">Review ID:</string>
+    <string name="menu_text_navigation">My Truck</string>
+    <string name="menu_text_trips">My Trips</string>
+    <string name="menu_text_current">Current</string>
 </resources>

@@ -13,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jakewharton.processphoenix.ProcessPhoenix
 
 
@@ -21,7 +24,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-
+        val navController = findNavController(R.id.defaultNavHostFragment)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_bar)
+        bottomNavigationView.setupWithNavController(navController)
+        bottomNavigationView.setOnNavigationItemReselectedListener {  }
         //if we do not have location permission
         if(ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestLocationPermission()
