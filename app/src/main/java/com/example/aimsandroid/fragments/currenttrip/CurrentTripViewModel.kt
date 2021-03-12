@@ -1,4 +1,4 @@
-package com.example.aimsandroid
+package com.example.aimsandroid.fragments.currenttrip
 
 import androidx.lifecycle.ViewModel
 

@@ -1,4 +1,4 @@
-package com.example.aimsandroid
+package com.example.aimsandroid.fragments.navigation
 
 import androidx.lifecycle.ViewModel
 
