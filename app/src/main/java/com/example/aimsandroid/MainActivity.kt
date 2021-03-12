@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayShowTitleEnabled(false);
         val navController = findNavController(R.id.defaultNavHostFragment)
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_bar)
         bottomNavigationView.setupWithNavController(navController)

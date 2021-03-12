@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.example.aimsandroid.R
+import com.example.aimsandroid.databinding.FragmentCurrentTripBinding
 
 class CurrentTripFragment : Fragment() {
 
@@ -20,7 +22,10 @@ class CurrentTripFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_current_trip, container, false)
+        val binding = FragmentCurrentTripBinding.inflate(inflater);
+        val toolbarTitle = activity?.findViewById<TextView>(R.id.toolbarTitle) as TextView;
+        toolbarTitle.setText(getString(R.string.current_trip_toolbar_title));
+        return binding.root;
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -28,5 +33,4 @@ class CurrentTripFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(CurrentTripViewModel::class.java)
         // TODO: Use the ViewModel
     }
-
 }

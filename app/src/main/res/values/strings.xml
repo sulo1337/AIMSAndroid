@@ -14,4 +14,7 @@
     <string name="menu_text_navigation">My Truck</string>
     <string name="menu_text_trips">My Trips</string>
     <string name="menu_text_current">Current</string>
+    <string name="current_trip_toolbar_title">Current Trip</string>
+    <string name="trips_toolbar_title">Your Trips</string>
+    <string name="navigation_toolbar_title">Navigation</string>
 </resources>

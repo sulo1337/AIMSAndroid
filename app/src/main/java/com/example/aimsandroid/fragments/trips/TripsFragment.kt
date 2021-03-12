@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.example.aimsandroid.R
+import com.example.aimsandroid.databinding.FragmentCurrentTripBinding
+import com.example.aimsandroid.databinding.FragmentTripsBinding
 
 class TripsFragment : Fragment() {
 
@@ -20,7 +23,10 @@ class TripsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_trips, container, false)
+        val binding = FragmentTripsBinding.inflate(inflater);
+        val toolbarTitle = activity?.findViewById<TextView>(R.id.toolbarTitle) as TextView;
+        toolbarTitle.setText(getString(R.string.trips_toolbar_title));
+        return binding.root;
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -28,5 +34,4 @@ class TripsFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(TripsViewModel::class.java)
         // TODO: Use the ViewModel
     }
-
 }
