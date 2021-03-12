@@ -8,19 +8,29 @@
     android:theme="@style/Theme.AIMSAndroid"
     android:background="?attr/colorPrimary">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
+        android:id="@+id/toolbarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSecondary"
-        android:elevation="20dp"
-        android:fitsSystemWindows="true"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextAppearance="@style/san_francisco_bold_20"
-        app:titleTextColor="?attr/colorOnPrimary"
-    />
+    >
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSecondary"
+            android:elevation="20dp"
+            android:fitsSystemWindows="true"
+            app:titleTextAppearance="@style/san_francisco_bold_20"
+            app:titleTextColor="?attr/colorOnPrimary"
+        />
+
+        <View android:layout_width="match_parent" android:layout_height="0.1dp" android:background="@color/gray"/>
+    </LinearLayout>
+
 
     <fragment
         android:id="@+id/defaultNavHostFragment"
@@ -28,24 +38,34 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar"
+        app:layout_constraintBottom_toTopOf="@id/navBarContainer"
         app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" app:navGraph="@navigation/nav_default"/>
+        app:layout_constraintTop_toBottomOf="@+id/toolbarContainer" app:navGraph="@navigation/nav_default"/>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:theme="@style/Theme.AIMSAndroid"
-        android:id="@+id/bottom_navigation_bar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:itemRippleColor="@color/secondaryColor"
-        android:background="?attr/colorPrimary"
-        android:elevation="5dp"
-        app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@drawable/selector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu_navigation"
-    />
+    <LinearLayout
+        android:id="@+id/navBarContainer"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  app:layout_constraintStart_toStartOf="parent">
+
+        <View android:layout_width="match_parent" android:layout_height="0.1dp" android:background="@color/gray"/>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:theme="@style/Theme.AIMSAndroid"
+            android:id="@+id/bottom_navigation_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemRippleColor="@color/secondaryColor"
+            android:background="?attr/colorPrimary"
+            android:elevation="5dp"
+            app:itemIconTint="@drawable/selector"
+            app:itemTextColor="@drawable/selector"
+            app:itemIconSize="40dp"
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/menu_navigation"
+        />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
