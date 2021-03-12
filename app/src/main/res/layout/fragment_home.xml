@@ -16,21 +16,7 @@
             android:background="@color/primaryColor"
             android:padding="16dp">
 
-            <EditText
-                android:id="@+id/searchTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_keyboard_arrow_down"
-                style="@style/san_francisco_bold_20"
-                android:hint="Hey..."/>
 
-            <EditText
-                android:id="@+id/datesFilterButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_keyboard_arrow_up"
-                style="@style/san_francisco_bold_20"
-                android:hint="Hello..."/>
         </LinearLayout>
 
         <!--This is the backdrop's content with a BottomSheetBehaviour applied to it-->

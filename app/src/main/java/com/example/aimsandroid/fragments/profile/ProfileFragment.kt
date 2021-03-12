@@ -23,8 +23,8 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentProfileBinding.inflate(inflater);
-        val toolbarTitle = activity?.findViewById<TextView>(R.id.toolbarTitle) as TextView;
-        toolbarTitle.setText(getString(R.string.navigation_toolbar_title));
+        val fragmentTitle = binding.fragmentTitle
+        fragmentTitle.setText(getString(R.string.navigation_toolbar_title));
         return binding.root;
     }
 

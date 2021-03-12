@@ -31,8 +31,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater);
-        val toolbarTitle = activity?.findViewById<TextView>(R.id.toolbarTitle) as TextView;
-        toolbarTitle.setText(getString(R.string.current_trip_toolbar_title));
         val backdropHeader = binding.backdropHeader
         val contentLayout = binding.contentLayout
         sheetBehavior = BottomSheetBehavior.from(contentLayout)
