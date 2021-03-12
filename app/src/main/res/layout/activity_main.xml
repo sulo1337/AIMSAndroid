@@ -71,7 +71,7 @@
             android:elevation="5dp"
             app:itemIconTint="@drawable/selector"
             app:itemTextColor="@drawable/selector"
-            app:itemIconSize="40dp"
+            app:itemIconSize="32dp"
             app:labelVisibilityMode="unlabeled"
             app:menu="@menu/menu_navigation"
         />

@@ -7,12 +7,12 @@
         android:icon="@drawable/menu_trips_icon"/>
 
     <item
-        android:id="@+id/currentFragment"
+        android:id="@+id/homeFragment"
         android:title="@string/menu_text_current"
         android:icon="@drawable/menu_current_trip_icon"/>
 
     <item
         android:id="@+id/navigationFragment"
         android:title="@string/menu_text_navigation"
-        android:icon="@drawable/menu_navigation_icon"/>
+        android:icon="@drawable/menu_profile_icon"/>
 </menu>

@@ -11,10 +11,10 @@
     <string name="your_reviews">Your Reviews</string>
     <string name="submit">Submit</string>
     <string name="review_id">Review ID:</string>
-    <string name="menu_text_navigation">My Truck</string>
+    <string name="menu_text_navigation">Profile</string>
     <string name="menu_text_trips">My Trips</string>
-    <string name="menu_text_current">Current</string>
-    <string name="current_trip_toolbar_title">Current Trip</string>
+    <string name="menu_text_current">Home</string>
+    <string name="current_trip_toolbar_title">Home</string>
     <string name="trips_toolbar_title">Your Trips</string>
-    <string name="navigation_toolbar_title">Navigation</string>
+    <string name="navigation_toolbar_title">Profile</string>
 </resources>

@@ -6,16 +6,10 @@
     app:startDestination="@id/tripsFragment">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.aimsandroid.homefragment.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
         android:id="@+id/navigationFragment"
-        android:name="com.example.aimsandroid.fragments.navigation.NavigationFragment"
+        android:name="com.example.aimsandroid.fragments.profile.ProfileFragment"
         android:label="fragment_navigation"
-        tools:layout="@layout/fragment_navigation"/>
+        tools:layout="@layout/fragment_profile"/>
 
     <fragment
         android:id="@+id/tripsFragment"
@@ -24,10 +18,10 @@
         tools:layout="@layout/fragment_trips"/>
 
     <fragment
-        android:id="@+id/currentFragment"
-        android:name="com.example.aimsandroid.fragments.currenttrip.CurrentTripFragment"
-        android:label="fragment_current_trip"
-        tools:layout="@layout/fragment_current_trip"/>
+        android:id="@+id/homeFragment"
+        android:name="com.example.aimsandroid.fragments.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home"/>
 
 
 </navigation>

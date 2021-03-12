@@ -3,15 +3,17 @@
     <data>
 
     </data>
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.currenttrip.CurrentTripFragment">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@drawable/bg_current_trip_container"
+        tools:context=".HomeFragment"
+    android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Current Trip"/>
-
-    </FrameLayout>
+        <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:text="Current Trips"
+                  android:textAlignment="center"
+        />
+    </LinearLayout>
 </layout>
