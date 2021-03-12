@@ -1,47 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- //TODO refactor using inheritance concept -->
-    <style name="san_francisco_20">
-        <item name="android:fontFamily">@font/san_francisco_text_regular</item>
+
+    <style name="san_francisco_bold">
+        <item name="android:fontFamily">@font/san_francisco_display_regular</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="san_francisco_regular">
+        <item name="fontFamily">@font/san_francisco_display_regular</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="san_francisco_20" parent="san_francisco_regular">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
-    <style name="san_francisco_32">
-        <item name="android:fontFamily">@font/san_francisco_text_regular</item>
+
+    <style name="san_francisco_32" parent="san_francisco_regular">
         <item name="android:textSize">32sp</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
-    <style name="san_francisco_16">
-        <item name="android:fontFamily">@font/san_francisco_text_regular</item>
+
+    <style name="san_francisco_16" parent="san_francisco_regular">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
-    <style name="san_francisco_8">
-        <item name="android:fontFamily">@font/san_francisco_text_regular</item>
+
+    <style name="san_francisco_8" parent="san_francisco_regular">
         <item name="android:textSize">8sp</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
-    <style name="san_francisco_bold_20">
-        <item name="android:fontFamily">@font/san_francisco_text_bold</item>
+
+    <style name="san_francisco_bold_20" parent="san_francisco_bold">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
-    <style name="san_francisco_bold_32">
-        <item name="android:fontFamily">@font/san_francisco_text_bold</item>
+
+    <style name="san_francisco_bold_32" parent="san_francisco_bold">
         <item name="android:textSize">32sp</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
-    <style name="san_francisco_bold_16">
-        <item name="android:fontFamily">@font/san_francisco_text_bold</item>
+
+    <style name="san_francisco_bold_16" parent="san_francisco_bold">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
-    <style name="san_francisco_bold_8">
-        <item name="android:fontFamily">@font/san_francisco_text_bold</item>
+
+    <style name="san_francisco_bold_8" parent="san_francisco_bold">
         <item name="android:textSize">8sp</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
+
     <style name="dialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
     </style>
+<!--    <style name="san_francisco_20">-->
+<!--        <item name="android:fontFamily">@font/san_francisco_text_regular</item>-->
+<!--        <item name="android:textSize">20sp</item>-->
+<!--        <item name="android:textColor">?attr/colorOnPrimary</item>-->
+<!--    </style>-->
+<!--    <style name="san_francisco_32">-->
+<!--        <item name="android:fontFamily">@font/san_francisco_text_regular</item>-->
+<!--        <item name="android:textSize">32sp</item>-->
+<!--        <item name="android:textColor">?attr/colorOnPrimary</item>-->
+<!--    </style>-->
+<!--    <style name="san_francisco_16">-->
+<!--        <item name="android:fontFamily">@font/san_francisco_text_regular</item>-->
+<!--        <item name="android:textSize">16sp</item>-->
+<!--        <item name="android:textColor">?attr/colorOnPrimary</item>-->
+<!--    </style>-->
+<!--    <style name="san_francisco_8">-->
+<!--        <item name="android:fontFamily">@font/san_francisco_text_regular</item>-->
+<!--        <item name="android:textSize">8sp</item>-->
+<!--        <item name="android:textColor">?attr/colorOnPrimary</item>-->
+<!--    </style>-->
+<!--    <style name="san_francisco_bold_20">-->
+<!--        <item name="android:fontFamily">@font/san_francisco_text_bold</item>-->
+<!--        <item name="android:textSize">20sp</item>-->
+<!--        <item name="android:textColor">?attr/colorOnPrimary</item>-->
+<!--    </style>-->
+<!--    <style name="san_francisco_bold_32">-->
+<!--        <item name="android:fontFamily">@font/san_francisco_text_bold</item>-->
+<!--        <item name="android:textSize">32sp</item>-->
+<!--        <item name="android:textColor">?attr/colorOnPrimary</item>-->
+<!--    </style>-->
+<!--    <style name="san_francisco_bold_16">-->
+<!--        <item name="android:fontFamily">@font/san_francisco_text_bold</item>-->
+<!--        <item name="android:textSize">16sp</item>-->
+<!--        <item name="android:textColor">?attr/colorOnPrimary</item>-->
+<!--    </style>-->
+<!--    <style name="san_francisco_bold_8">-->
+<!--        <item name="android:fontFamily">@font/san_francisco_text_bold</item>-->
+<!--        <item name="android:textSize">8sp</item>-->
+<!--        <item name="android:textColor">?attr/colorOnPrimary</item>-->
+<!--    </style>-->
+<!--    <style name="dialog" parent="Theme.AppCompat.Dialog">-->
+<!--        <item name="android:windowNoTitle">true</item>-->
+<!--    </style>-->
 </resources>

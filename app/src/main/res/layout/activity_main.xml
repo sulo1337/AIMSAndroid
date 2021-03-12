@@ -21,14 +21,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorSecondary"
+            android:background="?attr/colorPrimary"
             android:elevation="20dp"
             android:fitsSystemWindows="true"
             app:titleTextAppearance="@style/san_francisco_bold_20"
             app:titleTextColor="?attr/colorOnPrimary">
 
-            <ImageView android:layout_width="48dp" android:layout_height="48dp"
-            android:src="@drawable/aims_logo_only"
+            <ImageView android:layout_width="64dp" android:layout_height="48dp"
+            android:src="@drawable/aims_logo"
                        android:layout_marginEnd="8dp"
             />
 
@@ -66,7 +66,7 @@
             android:id="@+id/bottom_navigation_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:itemRippleColor="@color/secondaryColor"
+            app:itemRippleColor="@color/gray"
             android:background="?attr/colorPrimary"
             android:elevation="5dp"
             app:itemIconTint="@drawable/selector"
