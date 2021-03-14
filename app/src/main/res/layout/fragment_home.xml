@@ -6,7 +6,9 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:theme="@style/Theme.AIMSAndroid"
+    >
 
         <!--This the interface sitting behind the backdrop and shown when it is collapsed-->
         <LinearLayout
@@ -14,8 +16,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="@color/primaryColor"
-            android:padding="16dp">
+            android:padding="0dp">
 
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
 
@@ -48,26 +54,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" android:text="Current Trip"
-                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-                <TextView style="@style/san_francisco_16" android:layout_width="wrap_content"
-                          android:layout_height="wrap_content" android:text="Click here to view your current trip"
-                          app:layout_constraintStart_toStartOf="parent"
-                          app:layout_constraintTop_toBottomOf="@+id/textView"/>
-                <ImageView
-                    android:id="@+id/filterIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:src="@drawable/ic_keyboard_arrow_up" app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+                <androidx.cardview.widget.CardView android:layout_width="50dp" android:layout_height="8dp"
+                    app:cardBackgroundColor="?attr/colorSecondaryVariant"
+                                                   app:layout_constraintStart_toStartOf="parent"
+                                                   app:layout_constraintEnd_toEndOf="parent"
+                                                   app:layout_constraintTop_toTopOf="parent"
+                                                   app:cardCornerRadius="5dp"
+                                                   app:cardElevation="0dp"
+                />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!--And finally this is the body of the backdrop's content. You can add here whatever you need inside a view group (LinearLayout, RelativeLayout, SwipeRefreshLayout, ConstraintLayout, etc.)-->
             <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent"
                                                    android:layout_gravity="bottom"
-                                                   android:background="@color/gray"
+                                                   android:background="@color/ltgray"
                                                    >
 
             </androidx.core.widget.NestedScrollView>
