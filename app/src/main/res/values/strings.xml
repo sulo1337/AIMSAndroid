@@ -17,4 +17,5 @@
     <string name="current_trip_toolbar_title">Home</string>
     <string name="trips_toolbar_title">Your Trips</string>
     <string name="navigation_toolbar_title">Profile</string>
+    <string name="fab_content_desc">Current Location</string>
 </resources>
