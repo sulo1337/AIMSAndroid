@@ -2,6 +2,7 @@ package com.example.aimsandroid.fragments.home
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,23 +12,22 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.here.android.mpa.common.GeoCoordinate
-import com.here.android.mpa.common.MapEngine
-import com.here.android.mpa.common.OnEngineInitListener
-import com.here.android.mpa.common.PositioningManager
+import com.here.android.mpa.common.*
 import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.here.android.mpa.mapping.Map
+import com.here.android.mpa.mapping.MapState
+import java.lang.ref.WeakReference
 
 
-class HomeFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = HomeFragment()
-    }
+class HomeFragment : Fragment(), PositioningManager.OnPositionChangedListener, Map.OnTransformListener {
     private lateinit var mapFragment: AndroidXMapFragment
     private lateinit var viewModel: HomeViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var mPositioningManager: PositioningManager
+    private lateinit var mHereLocation: LocationDataSourceHERE
+    private var mTransforming: Boolean = false
+    private var mPendingUpdate: Runnable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,10 +79,17 @@ class HomeFragment : Fragment() {
                     GeoCoordinate(39.8097, -98.5556, 0.0),
                     Map.Animation.NONE
                 )
-                map.positionIndicator.isVisible = true
-                map.positionIndicator.isSmoothPositionChange = true
                 map.setZoomLevel(map.maxZoomLevel * 0.15)
                 val mode = context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
+                map.addTransformListener(this)
+                mPositioningManager = PositioningManager.getInstance()
+                mHereLocation = LocationDataSourceHERE.getInstance()
+                mPositioningManager.setDataSource(mHereLocation)
+                mPositioningManager.addListener(WeakReference<PositioningManager.OnPositionChangedListener>(this))
+                if(mPositioningManager.start(PositioningManager.LocationMethod.GPS_NETWORK_INDOOR)) {
+                    Log.i("insideIf", "here")
+                    map.positionIndicator.setVisible(true)
+                }
                 when (mode) {
                     Configuration.UI_MODE_NIGHT_YES -> {
                         map.mapScheme = Map.Scheme.NORMAL_NIGHT
@@ -121,5 +128,32 @@ class HomeFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         mapFragment.onDestroy()
+    }
+
+    override fun onPositionUpdated(locationMethod: PositioningManager.LocationMethod?, geoPosition: GeoPosition?, mapMatched: Boolean) {
+        geoPosition?.let {
+            val coordinate: GeoCoordinate = geoPosition.coordinate
+            if (mTransforming) {
+                mPendingUpdate = Runnable { onPositionUpdated(locationMethod, geoPosition, mapMatched) }
+            } else {
+                viewModel.map.setCenter(coordinate, Map.Animation.BOW)
+            }
+        }
+    }
+
+    override fun onPositionFixChanged(p0: PositioningManager.LocationMethod?, p1: PositioningManager.LocationStatus?) {
+        //ignored
+    }
+
+    override fun onMapTransformStart() {
+        mTransforming = true
+    }
+
+    override fun onMapTransformEnd(mapState: MapState?) {
+        mTransforming = false
+        mPendingUpdate?.let {
+            mPendingUpdate!!.run()
+            mPendingUpdate = null
+        }
     }
 }
