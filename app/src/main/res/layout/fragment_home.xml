@@ -23,7 +23,7 @@
                 app:backgroundTint="?attr/colorPrimary"
                 app:tint="@color/secondaryLightColor"
                 android:contentDescription="@string/fab_content_desc"
-                android:onClick="@{() -> viewModel.onFabClick()}"
+                android:onClick="@{() -> viewModel.recenterMap()}"
             />
             <LinearLayout
                 android:layout_width="match_parent"

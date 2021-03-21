@@ -1,5 +1,6 @@
 package com.example.aimsandroid.fragments.home
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,9 @@ import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoCoordinate
+import com.here.android.mpa.common.MapEngine
 import com.here.android.mpa.common.OnEngineInitListener
+import com.here.android.mpa.common.PositioningManager
 import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.here.android.mpa.mapping.Map
 
@@ -69,7 +72,7 @@ class HomeFragment : Fragment() {
 //            ApplicationProvider.getApplicationContext()
 //                .getExternalFilesDir(nu  ll) + File.separator.toString() + ".here-maps"
 //        )
-        mapFragment.init({ error ->
+        mapFragment.init { error ->
             if (error == OnEngineInitListener.Error.NONE) {
                 val map = mapFragment.getMap()!!
                 map.setCenter(
@@ -78,18 +81,45 @@ class HomeFragment : Fragment() {
                 )
                 map.positionIndicator.isVisible = true
                 map.positionIndicator.isSmoothPositionChange = true
-                map.setZoomLevel(map.maxZoomLevel*0.15)
+                map.setZoomLevel(map.maxZoomLevel * 0.15)
+                val mode = context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
+                when (mode) {
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        map.mapScheme = Map.Scheme.NORMAL_NIGHT
+                    }
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        map.mapScheme = Map.Scheme.NORMAL_DAY
+                    }
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                        map.mapScheme = Map.Scheme.NORMAL_DAY
+                    }
+                }
                 initializeViewModel(map)
             } else {
                 println("ERROR: Cannot initialize Map Fragment")
             }
-        })
+        }
     }
 
     private fun initializeViewModel(map: Map) {
         val homeViewModelFactory = HomeViewModelFactory(requireActivity().application, map)
         viewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
         binding.viewModel = viewModel
+        viewModel.recenterMapNoAnimation()
     }
 
+    override fun onResume() {
+        super.onResume()
+        mapFragment.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapFragment.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapFragment.onDestroy()
+    }
 }
