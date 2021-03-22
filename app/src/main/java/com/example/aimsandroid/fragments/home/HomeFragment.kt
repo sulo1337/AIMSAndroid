@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
+import com.example.aimsandroid.utils.MapPositionChangedListener
+import com.example.aimsandroid.utils.MapTransformListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.*
 import com.here.android.mpa.mapping.AndroidXMapFragment
@@ -19,7 +21,7 @@ import com.here.android.mpa.mapping.MapState
 import java.lang.ref.WeakReference
 
 
-class HomeFragment : Fragment(), PositioningManager.OnPositionChangedListener, Map.OnTransformListener {
+class HomeFragment : Fragment() {
     private lateinit var mapFragment: AndroidXMapFragment
     private lateinit var viewModel: HomeViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<LinearLayout>
@@ -81,11 +83,11 @@ class HomeFragment : Fragment(), PositioningManager.OnPositionChangedListener, M
                 )
                 map.setZoomLevel(map.maxZoomLevel * 0.15)
                 val mode = context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
-                map.addTransformListener(this)
+                map.addTransformListener(MapTransformListener())
                 mPositioningManager = PositioningManager.getInstance()
                 mHereLocation = LocationDataSourceHERE.getInstance()
                 mPositioningManager.setDataSource(mHereLocation)
-                mPositioningManager.addListener(WeakReference<PositioningManager.OnPositionChangedListener>(this))
+                mPositioningManager.addListener(WeakReference<PositioningManager.OnPositionChangedListener>(MapPositionChangedListener()))
                 if(mPositioningManager.start(PositioningManager.LocationMethod.GPS_NETWORK_INDOOR)) {
                     Log.i("insideIf", "here")
                     map.positionIndicator.setVisible(true)
@@ -128,32 +130,5 @@ class HomeFragment : Fragment(), PositioningManager.OnPositionChangedListener, M
     override fun onDestroy() {
         super.onDestroy()
         mapFragment.onDestroy()
-    }
-
-    override fun onPositionUpdated(locationMethod: PositioningManager.LocationMethod?, geoPosition: GeoPosition?, mapMatched: Boolean) {
-        geoPosition?.let {
-            val coordinate: GeoCoordinate = geoPosition.coordinate
-            if (mTransforming) {
-                mPendingUpdate = Runnable { onPositionUpdated(locationMethod, geoPosition, mapMatched) }
-            } else {
-                viewModel.map.setCenter(coordinate, Map.Animation.BOW)
-            }
-        }
-    }
-
-    override fun onPositionFixChanged(p0: PositioningManager.LocationMethod?, p1: PositioningManager.LocationStatus?) {
-        //ignored
-    }
-
-    override fun onMapTransformStart() {
-        mTransforming = true
-    }
-
-    override fun onMapTransformEnd(mapState: MapState?) {
-        mTransforming = false
-        mPendingUpdate?.let {
-            mPendingUpdate!!.run()
-            mPendingUpdate = null
-        }
     }
 }
