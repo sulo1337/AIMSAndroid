@@ -1,5 +1,6 @@
 package com.example.aimsandroid.fragments.home
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -7,17 +8,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
+import com.example.aimsandroid.service.ForegroundService
 import com.example.aimsandroid.utils.MapPositionChangedListener
 import com.example.aimsandroid.utils.MapTransformListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.*
+import com.here.android.mpa.guidance.AudioPlayerDelegate
+import com.here.android.mpa.guidance.NavigationManager
+import com.here.android.mpa.guidance.NavigationManager.MapUpdateMode
+import com.here.android.mpa.guidance.NavigationManager.NavigationManagerEventListener
 import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.here.android.mpa.mapping.Map
-import com.here.android.mpa.mapping.MapState
+import com.here.android.mpa.mapping.MapRoute
+import com.here.android.mpa.routing.*
 import java.lang.ref.WeakReference
 
 
@@ -28,8 +37,11 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var mPositioningManager: PositioningManager
     private lateinit var mHereLocation: LocationDataSourceHERE
-    private var mTransforming: Boolean = false
-    private var mPendingUpdate: Runnable? = null
+    private lateinit var mNavigationManager: NavigationManager
+    private lateinit var mGeoBoundingBox: GeoBoundingBox
+    private lateinit var mRoute: Route
+    private var followMode: Boolean = false
+    private var mForegroundServiceStarted: Boolean = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,12 +60,18 @@ class HomeFragment : Fragment() {
         backdropHeader.setOnClickListener { it ->
             toggleFilters()
         }
+        binding.followFab.setOnClickListener {
+            if(mNavigationManager !=null) {
+                if(followMode) {
+                    followMode = false
+                    mNavigationManager.setMapUpdateMode(MapUpdateMode.NONE)
+                } else {
+                    followMode = true
+                    mNavigationManager.setMapUpdateMode(MapUpdateMode.ROADVIEW)
+                }
 
-//        binding.navFab.setOnClickListener {
-//            it?.let {
-//                viewModel.map.setCenter(GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!), Map.Animation.BOW, map.maxZoomLevel*0.75, 0.0f, 0.1f)
-//            }
-//        }
+            }
+        }
         return binding.root;
     }
 
@@ -70,10 +88,6 @@ class HomeFragment : Fragment() {
     private fun initializeMap() {
         mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as AndroidXMapFragment
 
-//        MapSettings.setDiskCacheRootPath(
-//            ApplicationProvider.getApplicationContext()
-//                .getExternalFilesDir(nu  ll) + File.separator.toString() + ".here-maps"
-//        )
         mapFragment.init { error ->
             if (error == OnEngineInitListener.Error.NONE) {
                 val map = mapFragment.getMap()!!
@@ -84,6 +98,7 @@ class HomeFragment : Fragment() {
                 map.setZoomLevel(map.maxZoomLevel * 0.15)
                 val mode = context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
                 map.addTransformListener(MapTransformListener())
+                mNavigationManager = NavigationManager.getInstance()
                 mPositioningManager = PositioningManager.getInstance()
                 mHereLocation = LocationDataSourceHERE.getInstance()
                 mPositioningManager.setDataSource(mHereLocation)
@@ -104,6 +119,7 @@ class HomeFragment : Fragment() {
                     }
                 }
                 initializeViewModel(map)
+                createRoute()
             } else {
                 println("ERROR: Cannot initialize Map Fragment")
             }
@@ -115,6 +131,136 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
         binding.viewModel = viewModel
         viewModel.recenterMapNoAnimation()
+    }
+
+    private fun createRoute() {
+        val coreRouter = CoreRouter()
+        val routePlan = RoutePlan()
+
+        val routeOptions = RouteOptions()
+        routeOptions.setTransportMode(RouteOptions.TransportMode.TRUCK)
+        routeOptions.setHighwaysAllowed(true)
+        routeOptions.setRouteType(RouteOptions.Type.SHORTEST)
+        routeOptions.setRouteCount(1)
+        routePlan.setRouteOptions(routeOptions)
+
+        val startPoint = RouteWaypoint(GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!))
+        val destination = RouteWaypoint(GeoCoordinate(32.5300467,-92.0782897))
+        routePlan.addWaypoint(startPoint)
+        routePlan.addWaypoint(destination)
+
+        coreRouter.calculateRoute(routePlan, object: Router.Listener<List<RouteResult>, RoutingError>{
+            override fun onProgress(percent: Int) {
+                //ignore
+            }
+
+            override fun onCalculateRouteFinished(routeResults: List<RouteResult>?, routingError: RoutingError) {
+                if(routingError == RoutingError.NONE){
+                    routeResults?.let {
+                        mRoute = routeResults.get(0).route
+                        val mapRoute = MapRoute(routeResults.get(0).route)
+                        mapRoute.setManeuverNumberVisible(true)
+                        viewModel.map.addMapObject(mapRoute)
+                        mGeoBoundingBox = routeResults.get(0).route.boundingBox!!
+                        viewModel.map.zoomTo(mGeoBoundingBox, Map.Animation.BOW, Map.MOVE_PRESERVE_ORIENTATION)
+                        startNavigation()
+                    }
+                } else {
+                    createRoute()
+                }
+            }
+
+        })
+    }
+
+    private fun startNavigation() {
+        mNavigationManager.setMap(viewModel.map)
+        mNavigationManager.startNavigation(mRoute)
+        viewModel.map.tilt = 0.0f
+        startForegroundService()
+        mNavigationManager.mapUpdateMode = MapUpdateMode.ROADVIEW
+        mNavigationManager.distanceUnit = NavigationManager.UnitSystem.IMPERIAL_US
+        addNavigationListeners()
+    }
+
+    private fun addNavigationListeners() {
+        /*
+         * Register a NavigationManagerEventListener to monitor the status change on
+         * NavigationManager
+         */
+        /*
+         * Register a NavigationManagerEventListener to monitor the status change on
+         * NavigationManager
+         */mNavigationManager.addNavigationManagerEventListener(
+            WeakReference(mNavigationManagerEventListener)
+        )
+
+        /* Register a PositionListener to monitor the position updates */
+
+        /* Register a PositionListener to monitor the position updates */mNavigationManager.addPositionListener(
+            WeakReference(mPositionListener)
+        )
+
+        /* Register a AudioPlayerDelegate to monitor TTS text */
+
+        /* Register a AudioPlayerDelegate to monitor TTS text */mNavigationManager.getAudioPlayer()
+            .setDelegate(mAudioPlayerDelegate)
+    }
+
+    private val mPositionListener: NavigationManager.PositionListener = object : NavigationManager.PositionListener() {
+        override fun onPositionUpdated(geoPosition: GeoPosition) {
+            /* Current position information can be retrieved in this callback */
+        }
+    }
+
+    private val mNavigationManagerEventListener: NavigationManagerEventListener =
+        object : NavigationManagerEventListener() {
+            override fun onRunningStateChanged() {
+            }
+
+            override fun onNavigationModeChanged() {
+            }
+
+            override fun onEnded(navigationMode: NavigationManager.NavigationMode) {
+                stopForegroundService()
+            }
+
+            override fun onMapUpdateModeChanged(mapUpdateMode: MapUpdateMode) {
+            }
+
+            override fun onRouteUpdated(p0: Route) {
+            }
+
+            override fun onCountryInfo(s: String, s1: String) {
+            }
+        }
+
+    private val mAudioPlayerDelegate: AudioPlayerDelegate = object : AudioPlayerDelegate {
+        override fun playText(s: String): Boolean {
+            return false
+        }
+
+        override fun playFiles(strings: Array<String>): Boolean {
+            return false
+        }
+    }
+
+    private fun startForegroundService() {
+        if(!mForegroundServiceStarted) {
+            mForegroundServiceStarted = true
+            val startIntent = Intent(requireActivity(), ForegroundService::class.java)
+            startIntent.setAction(ForegroundService.START_ACTION)
+            requireActivity().applicationContext.startService(startIntent)
+        }
+    }
+
+    private fun stopForegroundService() {
+        if (mForegroundServiceStarted) {
+            mForegroundServiceStarted = false
+            val stopIntent = Intent(requireActivity(), ForegroundService::class.java)
+            stopIntent.action = ForegroundService.STOP_ACTION
+            requireActivity().getApplicationContext().startService(stopIntent)
+        }
     }
 
     override fun onResume() {
@@ -130,5 +276,9 @@ class HomeFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         mapFragment.onDestroy()
+        if(mNavigationManager !=null) {
+            stopForegroundService()
+            mNavigationManager.stop()
+        }
     }
 }

@@ -6,7 +6,7 @@
     app:startDestination="@id/tripsFragment">
 
     <fragment
-        android:id="@+id/navigationFragment"
+        android:id="@+id/profileFragment"
         android:name="com.example.aimsandroid.fragments.profile.ProfileFragment"
         android:label="fragment_navigation"
         tools:layout="@layout/fragment_profile"/>
@@ -15,7 +15,9 @@
         android:id="@+id/tripsFragment"
         android:name="com.example.aimsandroid.fragments.trips.TripsFragment"
         android:label="fragment_trips"
-        tools:layout="@layout/fragment_trips"/>
+        tools:layout="@layout/fragment_trips">
+        <action android:id="@+id/action_tripsFragment_to_homeFragment" app:destination="@id/homeFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/homeFragment"

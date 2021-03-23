@@ -12,7 +12,7 @@
         android:icon="@drawable/menu_current_trip_icon"/>
 
     <item
-        android:id="@+id/navigationFragment"
+        android:id="@+id/profileFragment"
         android:title="@string/menu_text_navigation"
         android:icon="@drawable/menu_profile_icon"/>
 </menu>

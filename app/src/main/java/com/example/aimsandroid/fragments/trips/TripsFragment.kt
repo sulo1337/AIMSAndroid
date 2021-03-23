@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentTripsBinding
 
@@ -25,6 +26,10 @@ class TripsFragment : Fragment() {
         val binding = FragmentTripsBinding.inflate(inflater);
         val fragmentTitle = binding.fragmentTitle
         fragmentTitle.setText(getString(R.string.trips_toolbar_title));
+
+        binding.navigateButton.setOnClickListener {
+            this.findNavController().navigate(TripsFragmentDirections.actionTripsFragmentToHomeFragment())
+        }
         return binding.root;
     }
 

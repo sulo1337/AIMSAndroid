@@ -25,6 +25,21 @@
                 android:contentDescription="@string/fab_content_desc"
                 android:onClick="@{() -> viewModel.recenterMap()}"
             />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton android:layout_width="wrap_content"
+                                                                                   android:layout_height="wrap_content"
+            android:id="@+id/followFab"
+                                                                                   android:layout_gravity="end|bottom"
+                                                                                   android:layout_marginEnd="108dp"
+                                                                                   android:layout_marginBottom="92dp"
+                                                                                   android:src="@drawable/ic_recenter_fab"
+                                                                                   app:backgroundTint="?attr/colorPrimary"
+                                                                                   app:tint="@color/secondaryLightColor"
+                                                                                   android:tint="@color/secondaryLightColor"
+                                                                                   android:contentDescription="Recenter"
+
+
+            />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

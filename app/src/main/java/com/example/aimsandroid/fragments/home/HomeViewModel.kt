@@ -11,9 +11,7 @@ import com.here.android.mpa.common.GeoCoordinate
 import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.here.android.mpa.mapping.Map
 
-class HomeViewModel(application: Application, map: Map) : AndroidViewModel(application) {
-
-    var map: Map = map
+class HomeViewModel(application: Application, val map: Map) : AndroidViewModel(application) {
 //    private lateinit var mapFragment: AndroidXMapFragment
 
     private val locationRepository = LocationRepository(application)
