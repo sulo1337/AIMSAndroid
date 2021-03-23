@@ -9,21 +9,31 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.here.android.mpa.mapping.Map
 
 
 class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var mapFragmentView: MapFragmentView
+    private var mapFragmentView: MapFragmentView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater);
-        mapFragmentView = MapFragmentView(requireActivity(), childFragmentManager)
+
+        //initialize map fragment
+        mapFragmentView = MapFragmentView(requireActivity(), childFragmentManager, Runnable {
+            //initialize viewmodel
+            val homeViewModelFactory = HomeViewModelFactory(requireActivity().application)
+            viewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
+            mapFragmentView?.let {
+                viewModel.map = it.getMap()
+            }
+            binding.viewModel = viewModel
+        })
+
         binding.lifecycleOwner = this
         //drawer layout
         val backdropHeader = binding.backdropHeader
@@ -100,20 +110,13 @@ class HomeFragment : Fragment() {
 //        }
 //    }
 
-    private fun initializeViewModel(map: Map) {
-        val homeViewModelFactory = HomeViewModelFactory(requireActivity().application, map)
-        viewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
-        binding.viewModel = viewModel
-        viewModel.recenterMapNoAnimation()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        mapFragmentView.onDestroy()
+        mapFragmentView?.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
-        mapFragmentView.onPause()
+        mapFragmentView?.onPause()
     }
 }

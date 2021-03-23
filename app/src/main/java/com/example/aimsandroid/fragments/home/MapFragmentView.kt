@@ -34,7 +34,8 @@ import java.lang.ref.WeakReference
  */
 class MapFragmentView(
     private val m_activity: FragmentActivity,
-    childFragmentManager: FragmentManager
+    childFragmentManager: FragmentManager,
+    private val initializeViewModel: Runnable
 ) {
     private var m_mapFragment: AndroidXMapFragment? = null
     private var m_naviControlButton: Button? = null
@@ -46,6 +47,10 @@ class MapFragmentView(
     private var m_route: Route? = null
     private var m_foregroundServiceStarted = false
     private lateinit var mapFragment: AndroidXMapFragment
+
+    fun getMap(): Map? {
+        return m_map
+    }
 
     private fun initMapFragment(latitude: Double, longitude: Double, zoomLevel: Double) {
         /* Locate the mapFragment UI element */
@@ -88,6 +93,7 @@ class MapFragmentView(
                             }
                         }
                     }
+                    initializeViewModel.run()
                     createRoute()
                 } else {
                     Toast.makeText(m_activity, "Cannot init map", Toast.LENGTH_LONG).show()
