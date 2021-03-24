@@ -55,7 +55,6 @@ class MapFragmentView(
     private fun initMapFragment(latitude: Double, longitude: Double, zoomLevel: Double) {
         /* Locate the mapFragment UI element */
         m_mapFragment = mapFragment
-        Log.i("here", "here1")
         if (m_mapFragment != null) {
             Log.i("here", "here2")
             /* Initialize the AndroidXMapFragment, results will be given via the called back. */
