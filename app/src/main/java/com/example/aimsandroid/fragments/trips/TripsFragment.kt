@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentTripsBinding
+import com.example.aimsandroid.databinding.TripItemBinding
 
 class TripsFragment : Fragment() {
 
@@ -20,27 +21,23 @@ class TripsFragment : Fragment() {
     }
 
     private lateinit var viewModel: TripsViewModel
+    private lateinit var binding: FragmentTripsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentTripsBinding.inflate(inflater);
-        val fragmentTitle = binding.fragmentTitle
-        fragmentTitle.setText(getString(R.string.trips_toolbar_title));
-
-        binding.navigateButton.setOnClickListener {
-            this.findNavController().navigate(TripsFragmentDirections.actionTripsFragmentToHomeFragment())
-        }
-        return binding.root;
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        binding = FragmentTripsBinding.inflate(inflater);
         val tripsViewModelFactory = TripsViewModelFactory(requireActivity().application)
         viewModel = ViewModelProvider(this, tripsViewModelFactory).get(TripsViewModel::class.java)
-        viewModel.trips.observe(viewLifecycleOwner, Observer {
-            Log.i("aims_tripfragment", viewModel.trips.value.toString())
+        val fragmentTitle = binding.fragmentTitle
+        fragmentTitle.setText(getString(R.string.trips_toolbar_title));
+        binding.lifecycleOwner = this
+        binding.tripsRecyclerView.adapter = TripsAdapter()
+        viewModel.trips.observe(viewLifecycleOwner, Observer{
+            val adapter = binding.tripsRecyclerView.adapter as TripsAdapter
+            adapter.submitList(it)
         })
+        return binding.root;
     }
 }
