@@ -3,8 +3,9 @@
     <style name="Theme.AIMSAndroid" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primaryDarkColorDM</item>
-        <item name="colorPrimaryVariant">@color/primaryLightColorDM</item>
+        <item name="colorPrimaryVariant">@color/primaryColorDM</item>
         <item name="colorOnPrimary">@color/primaryTextColorDM</item>
+        <item name="coloROnPrimaryVariant">@color/gray</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/primaryDarkColorDM</item>
         <item name="colorSecondaryVariant">@color/primaryLightColorDM</item>

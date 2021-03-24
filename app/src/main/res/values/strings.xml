@@ -18,4 +18,6 @@
     <string name="trips_toolbar_title">Your Trips</string>
     <string name="navigation_toolbar_title">Profile</string>
     <string name="fab_content_desc">Current Location</string>
+    <string name="view_trip">View Trip</string>
+    <string name="list_item">List Item</string>
 </resources>
