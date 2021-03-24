@@ -3,15 +3,18 @@ package com.example.aimsandroid.database
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.Deferred
 
 @Dao
 interface TripDao {
-    @Transaction
-    @Query("select * from trips")
-    fun getTripsWithWaypoints(): List<TripWithWaypoints>
+    @Query("select * from trips_table")
+    fun getTripsWithWaypoints(): LiveData<List<TripWithWaypoints>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTrip(trip: Trip): Long
 }
 
-@Database(entities = [Trip::class, WayPoint::class, TripWithWaypoints::class], version = 1)
+@Database(entities = [Trip::class, WayPoint::class], version = 1)
 abstract class TripDatabase: RoomDatabase() {
     abstract val tripDao: TripDao
 }

@@ -1,6 +1,7 @@
 package com.example.aimsandroid.database
 
 import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 
 @Entity(tableName = "review_table")
 data class Review(
@@ -16,9 +17,10 @@ data class Review(
     var atmosphere: String = ""
 )
 
-@Entity(tableName = "trips")
+@Entity(tableName = "trips_table")
 data class Trip(
-    @PrimaryKey val tripId: Long,
+    @PrimaryKey
+    val tripId: Long,
     val tripName: String,
     val trailerDesc: String,
     val trailerCode: String,
@@ -30,8 +32,14 @@ data class Trip(
     val driverCode: String
 )
 
-@Entity(tableName="waypoint", primaryKeys = ["owningTripId", "seqNum"])
+@Entity(tableName="waypoint_table", primaryKeys = ["owningTripId", "seqNum"])
 data class WayPoint(
+    @ForeignKey(
+        entity = Trip::class,
+        parentColumns = ["tripId"],
+        childColumns = ["owningTripId"],
+        onDelete = CASCADE
+    )
     val owningTripId: Long,
     val seqNum: Long,
     val waypointTypeDescription: String,

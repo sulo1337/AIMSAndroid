@@ -50,6 +50,10 @@ android {
     }
 }
 
+kapt{
+    generateStubs = true
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation(name: 'HERE-sdk', ext: 'aar')
@@ -75,6 +79,7 @@ dependencies {
     implementation "com.squareup.moshi:moshi:1.8.0"
     implementation "com.squareup.moshi:moshi-kotlin:1.8.0"
     implementation "com.squareup.okhttp3:logging-interceptor:3.8.0"
+    implementation 'com.amitshekhar.android:debug-db:1.0.4'
     kapt 'org.xerial:sqlite-jdbc:3.34.0'
     kapt 'androidx.room:room-compiler:2.2.6'
     testImplementation 'junit:junit:4.+'

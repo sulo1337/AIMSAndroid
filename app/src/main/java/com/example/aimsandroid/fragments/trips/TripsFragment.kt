@@ -2,11 +2,13 @@ package com.example.aimsandroid.fragments.trips
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentTripsBinding
@@ -35,7 +37,10 @@ class TripsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(TripsViewModel::class.java)
-        // TODO: Use the ViewModel
+        val tripsViewModelFactory = TripsViewModelFactory(requireActivity().application)
+        viewModel = ViewModelProvider(this, tripsViewModelFactory).get(TripsViewModel::class.java)
+        viewModel.trips.observe(viewLifecycleOwner, Observer {
+            Log.i("tripsFromDB", viewModel.trips.value.toString())
+        })
     }
 }
