@@ -1,9 +1,11 @@
 package com.example.aimsandroid.network
 
+import com.example.aimsandroid.database.Trip
+import com.example.aimsandroid.database.WayPoint
 import com.squareup.moshi.Json
 
 data class TripData(
-    @Json(name = "resultSet2") val requestStatus: List<RequestStatus>,
+    @Json(name = "resultSet2") val responseStatus: List<ResponseStatus>,
     @Json(name = "resultSet1") val tripSections: List<TripSection>
 )
 
@@ -12,7 +14,7 @@ data class TripDataContainer(
     @Json(name = "status") val status: String
 )
 
-data class RequestStatus(
+data class ResponseStatus(
     @Json(name = "StatusCode") val statusCode: Int,
     @Json(name = "Status") val status: String
 )
@@ -51,4 +53,44 @@ data class TripSection(
     @Json(name = "RequestedQty") val requestedQty: Double?,
     @Json(name = "UOM") val uom: String?,
     @Json(name = "Fill") val fill: String?
-)
+) {
+    fun getTrip(): Trip {
+        return Trip(
+            tripId,
+            tripName,
+            trailerDesc,
+            trailerCode,
+            trailerId,
+            truckDesc,
+            truckCode,
+            truckId,
+            driverName,
+            driverCode
+        )
+    }
+    fun getWaypoint(): WayPoint{
+        return WayPoint(
+            tripId,
+            seqNum,
+            waypointTypeDescription,
+            latitude,
+            longitude,
+            destinationCode,
+            destinationName,
+            siteContainerCode,
+            siteContainerDescription,
+            address1,
+            address2,
+            city,
+            state,
+            postalCode,
+            delReqNum,
+            productId,
+            productCode,
+            productDesc,
+            requestedQty,
+            uom,
+            fill
+        )
+    }
+}

@@ -40,7 +40,7 @@ class TripsFragment : Fragment() {
         val tripsViewModelFactory = TripsViewModelFactory(requireActivity().application)
         viewModel = ViewModelProvider(this, tripsViewModelFactory).get(TripsViewModel::class.java)
         viewModel.trips.observe(viewLifecycleOwner, Observer {
-            Log.i("tripsFromDB", viewModel.trips.value.toString())
+            Log.i("aims_tripfragment", viewModel.trips.value.toString())
         })
     }
 }

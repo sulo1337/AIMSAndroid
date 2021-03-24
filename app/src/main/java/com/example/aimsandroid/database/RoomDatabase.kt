@@ -12,6 +12,9 @@ interface TripDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrip(trip: Trip): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertWaypoint(wayPoint: WayPoint): Long
 }
 
 @Database(entities = [Trip::class, WayPoint::class], version = 1)
