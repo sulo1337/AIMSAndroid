@@ -5,26 +5,24 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
-interface ReviewDao {
-    @Query("select * from review_table order by id desc")
-    fun getReviews(): LiveData<List<Review>>
-
-    @Insert
-    fun insertReview(review: Review)
+interface TripDao {
+    @Transaction
+    @Query("select * from trips")
+    fun getTripsWithWaypoints(): List<TripWithWaypoints>
 }
 
-@Database(entities = [Review::class], version = 1)
-abstract class ReviewDatabase: RoomDatabase() {
-    abstract val reviewDao: ReviewDao
+@Database(entities = [Trip::class, WayPoint::class, TripWithWaypoints::class], version = 1)
+abstract class TripDatabase: RoomDatabase() {
+    abstract val tripDao: TripDao
 }
 
-private lateinit var INSTANCE: ReviewDatabase
+private lateinit var INSTANCE: TripDatabase
 
-fun getDatabase(context: Context): ReviewDatabase {
-    synchronized(ReviewDatabase::class.java) {
+fun getDatabase(context: Context): TripDatabase {
+    synchronized(TripDatabase::class.java) {
         if(!::INSTANCE.isInitialized) {
             INSTANCE = Room.databaseBuilder(context.applicationContext,
-            ReviewDatabase::class.java, "reviews").build()
+            TripDatabase::class.java, "trips").build()
         }
     }
     return INSTANCE
