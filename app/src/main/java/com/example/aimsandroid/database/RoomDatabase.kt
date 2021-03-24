@@ -7,6 +7,7 @@ import kotlinx.coroutines.Deferred
 
 @Dao
 interface TripDao {
+    @Transaction
     @Query("select * from trips_table")
     fun getTripsWithWaypoints(): LiveData<List<TripWithWaypoints>>
 
@@ -15,6 +16,14 @@ interface TripDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWaypoint(wayPoint: WayPoint): Long
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllTrips(trips: List<Trip>)
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllWaypoints(wayPoints: List<WayPoint>)
 }
 
 @Database(entities = [Trip::class, WayPoint::class], version = 1)

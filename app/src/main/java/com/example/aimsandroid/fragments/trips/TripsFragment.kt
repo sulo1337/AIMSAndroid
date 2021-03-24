@@ -38,6 +38,12 @@ class TripsFragment : Fragment() {
             val adapter = binding.tripsRecyclerView.adapter as TripsAdapter
             adapter.submitList(it)
         })
+        viewModel.refreshing.observe(viewLifecycleOwner, Observer {
+            binding.swipeRefreshContainer.isRefreshing = it
+        })
+        binding.swipeRefreshContainer.setOnRefreshListener {
+            viewModel.refreshTrips()
+        }
         return binding.root;
     }
 }

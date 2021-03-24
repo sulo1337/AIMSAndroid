@@ -15,6 +15,8 @@ class TripRepository(private val database: TripDatabase) {
     val trips = database.tripDao.getTripsWithWaypoints()
     suspend fun insertTrip(trip: Trip) = database.tripDao.insertTrip(trip)
     suspend fun insertWaypoint(wayPoint: WayPoint) = database.tripDao.insertWaypoint(wayPoint)
+    suspend fun insertAllTrips(trips: List<Trip>) = database.tripDao.insertAllTrips(trips)
+    suspend fun insertAllWaypoints(waypoints:List<WayPoint>) = database.tripDao.insertAllWaypoints(waypoints)
     suspend fun refreshTrips() {
         withContext(Dispatchers.IO){
             val tripData = Network.dispatcher.getTripsAsync("D1", "f20f8b25-b149-481c-9d2c-41aeb76246ef").await()
@@ -22,12 +24,16 @@ class TripRepository(private val database: TripDatabase) {
             val responseStatus = data.responseStatus
             Log.i("aims_network", responseStatus.toString())
             val tripSections = data.tripSections
+            val trips = ArrayList<Trip>()
+            val waypoints = ArrayList<WayPoint>()
             for(tripSection in tripSections){
                 val trip = tripSection.getTrip()
                 val waypoint = tripSection.getWaypoint()
-                insertTrip(trip)
-                insertWaypoint(waypoint)
+                trips.add(trip)
+                waypoints.add(waypoint)
             }
+            insertAllTrips(trips)
+            insertAllWaypoints(waypoints)
         }
     }
 }
