@@ -8,19 +8,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.databinding.TripItemBinding
 
-class TripsAdapter: ListAdapter<TripWithWaypoints, TripsAdapter.TripsViewHolder>(DiffCallback) {
+class TripsAdapter(val tripsClickListener: TripsClickListener): ListAdapter<TripWithWaypoints, TripsAdapter.TripsViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripsAdapter.TripsViewHolder {
         return TripsViewHolder(TripItemBinding.inflate(LayoutInflater.from(parent.context)))
     }
 
     override fun onBindViewHolder(holder: TripsAdapter.TripsViewHolder, position: Int) {
         val thisTripWithWaypoints = getItem(position)
-        holder.bind(thisTripWithWaypoints)
+        holder.bind(thisTripWithWaypoints, tripsClickListener)
     }
 
     class TripsViewHolder(private var binding: TripItemBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(thisTripWithWaypoints: TripWithWaypoints){
+        fun bind(thisTripWithWaypoints: TripWithWaypoints, tripsClickListener: TripsClickListener){
             binding.tripWithWaypoints = thisTripWithWaypoints
+            binding.clickListener = tripsClickListener
             binding.executePendingBindings()
         }
     }
@@ -34,5 +35,9 @@ class TripsAdapter: ListAdapter<TripWithWaypoints, TripsAdapter.TripsViewHolder>
             return (oldItem.waypoints == newItem.waypoints && oldItem.trip == newItem.trip)
         }
 
+    }
+
+    class TripsClickListener(val clickListener: (trip: TripWithWaypoints) -> Unit) {
+        fun onClick(tripWithWaypoints: TripWithWaypoints) = clickListener(tripWithWaypoints)
     }
 }

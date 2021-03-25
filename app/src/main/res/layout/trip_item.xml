@@ -5,6 +5,7 @@
 
     <data>
         <variable name="tripWithWaypoints" type="com.example.aimsandroid.database.TripWithWaypoints"/>
+        <variable name="clickListener" type="com.example.aimsandroid.fragments.trips.TripsAdapter.TripsClickListener"/>
     </data>
 
     <RelativeLayout
@@ -20,6 +21,7 @@
             app:cardBackgroundColor="?attr/colorPrimaryVariant"
             app:cardElevation="5dp"
             android:layout_margin="10dp"
+            android:onClick="@{() -> clickListener.onClick(tripWithWaypoints)}"
         >
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,60 +38,84 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:contentDescription="@string/list_item"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/left_tick" android:contentDescription="@string/list_item"/>
+                    app:layout_constraintTop_toTopOf="parent" app:srcCompat="@drawable/left_tick"/>
 
                 <TextView
                     android:id="@+id/textView4"
-                    style="@style/san_francisco_8"
+                    style="@style/san_francisco_bold_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:textColor="?attr/colorOnPrimary"
                     android:textSize="16sp"
+                    app:bindSiteTitleAddress="@{tripWithWaypoints}"
                     app:layout_constraintStart_toStartOf="@+id/textView"
                     app:layout_constraintTop_toBottomOf="@+id/textView5"
-                    app:bindSiteTitleAddress = "@{tripWithWaypoints}"
-                    tools:text="314 Columbia Ave, Monroe, LA 71203" />
+                    tools:text="314 Columbia Ave, Monroe, LA 71203"/>
 
                 <TextView
                     android:id="@+id/textView8"
-                    style="@style/san_francisco_8"
+                    style="@style/san_francisco_bold_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:textColor="?attr/colorOnPrimary"
                     android:textSize="16sp"
+                    app:bindSourceTitleAddress="@{tripWithWaypoints}"
                     app:layout_constraintStart_toStartOf="@+id/textView6"
                     app:layout_constraintTop_toBottomOf="@+id/textView7"
-                    app:bindSourceTitleAddress="@{tripWithWaypoints}"
-                    tools:text="314 Columbia Ave, Monroe, LA 71203" />
+                    tools:text="314 Columbia Ave, Monroe, LA 71203"/>
 
                 <TextView
                     android:id="@+id/textView"
-                    style="@style/san_francisco_bold_20"
+                    style="@style/san_francisco_bold_24"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
                     android:textColor="?attr/colorOnPrimary"
+                    app:bindSiteTitle="@{tripWithWaypoints}"
                     app:layout_constraintStart_toStartOf="@+id/textView6"
                     app:layout_constraintTop_toBottomOf="@+id/textView9"
-                    app:bindSiteTitle = "@{tripWithWaypoints}"
-                    tools:text="Texaco" />
-
+                    tools:text="Texaco"/>
                 <TextView
                     android:id="@+id/textView2"
                     style="@style/san_francisco_8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textSize="14sp"
+                    android:text="Deliver until 18 Dec 2018, 8:00am"
                     android:textColor="?attr/coloROnPrimaryVariant"
+                    android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="@+id/textView"
                     app:layout_constraintTop_toBottomOf="@+id/textView4"
-                    android:text = "Deliver until 18 Dec 2018, 8:00am"
-                    tools:text="Deliver until 18 Dec 2018, 8:00am" />
+                    tools:text="Deliver until 18 Dec 2018, 8:00am"/>
+
+                <TextView
+                    style="@style/san_francisco_bold_16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/view_trip"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                    app:layout_constraintEnd_toStartOf="@+id/imageView2"
+                    app:layout_constraintTop_toTopOf="@+id/imageView2" tools:text="View Trip"/>
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="Go"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:tint="@color/secondaryLightColor"
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    app:srcCompat="@drawable/ic_view_trip"/>
 
                 <TextView
                     android:id="@+id/textView9"
@@ -97,72 +123,72 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textSize="14sp"
+                    android:text="Load until 18 Dec 2018, 8:00am"
                     android:textColor="?attr/coloROnPrimaryVariant"
+                    android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="@+id/textView6"
                     app:layout_constraintTop_toBottomOf="@+id/textView8"
-                    android:text = "Load until 18 Dec 2018, 8:00am"
-                    tools:text="Load until 18 Dec 2018, 8:00am" />
+                    tools:text="Load until 18 Dec 2018, 8:00am"/>
 
                 <ImageView
                     android:id="@+id/imageView4"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
+                    android:contentDescription="Destination"
                     app:layout_constraintBottom_toBottomOf="@+id/textView"
                     app:layout_constraintEnd_toStartOf="@+id/textView"
                     app:layout_constraintTop_toTopOf="@+id/textView"
                     app:srcCompat="@drawable/ic_destination"
-                    tools:srcCompat="@drawable/ic_destination"
                     app:tint="@color/secondaryLightColor"
-                    android:contentDescription="Destination" />
+                    tools:srcCompat="@drawable/ic_destination"/>
 
                 <TextView
                     android:id="@+id/textView5"
                     style="@style/san_francisco_16"
-                    android:textColor="?attr/coloROnPrimaryVariant"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/coloROnPrimaryVariant"
+                    app:bindSiteNumber="@{tripWithWaypoints}"
                     app:layout_constraintStart_toStartOf="@+id/textView"
                     app:layout_constraintTop_toBottomOf="@+id/textView"
-                    app:bindSiteNumber = "@{tripWithWaypoints}"
-                    tools:text="+3 destinations" />
+                    tools:text="+3 destinations"/>
 
                 <TextView
                     android:id="@+id/textView7"
                     style="@style/san_francisco_16"
-                    android:textColor="?attr/coloROnPrimaryVariant"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/coloROnPrimaryVariant"
+                    app:bindSourceNumber="@{tripWithWaypoints}"
                     app:layout_constraintStart_toStartOf="@+id/textView6"
                     app:layout_constraintTop_toBottomOf="@+id/textView6"
-                    app:bindSourceNumber = "@{tripWithWaypoints}"
-                    tools:text="+1 sources" />
+                    tools:text="+1 sources"/>
 
                 <TextView
                     android:id="@+id/textView6"
-                    style="@style/san_francisco_bold_20"
+                    style="@style/san_francisco_bold_24"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:textColor="?attr/colorOnPrimary"
+                    app:bindSourceTitle="@{tripWithWaypoints}"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                     app:layout_constraintStart_toEndOf="@+id/imageView3"
                     app:layout_constraintTop_toTopOf="@+id/imageView3"
-                    app:bindSourceTitle="@{tripWithWaypoints}"
-                    tools:text="Lorem Petroleum" />
+                    tools:text="Lorem Petroleum"/>
 
                 <ImageView
                     android:id="@+id/imageView3"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:layout_marginStart="16dp"
+                    android:contentDescription="Source"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView"
                     app:layout_constraintStart_toEndOf="@+id/imageView"
                     app:layout_constraintTop_toTopOf="@+id/imageView"
                     app:srcCompat="@drawable/ic_source"
-                    app:tint="@color/secondaryLightColor"
-                    android:contentDescription="Source" />
+                    app:tint="@color/secondaryLightColor"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

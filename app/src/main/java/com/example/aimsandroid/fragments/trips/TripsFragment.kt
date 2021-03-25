@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.aimsandroid.R
@@ -33,7 +34,9 @@ class TripsFragment : Fragment() {
         val fragmentTitle = binding.fragmentTitle
         fragmentTitle.setText(getString(R.string.trips_toolbar_title));
         binding.lifecycleOwner = this
-        binding.tripsRecyclerView.adapter = TripsAdapter()
+        binding.tripsRecyclerView.adapter = TripsAdapter(TripsAdapter.TripsClickListener{
+            Toast.makeText(requireContext(), it.trip.tripId.toString(), Toast.LENGTH_LONG).show()
+        })
         viewModel.trips.observe(viewLifecycleOwner, Observer{
             val adapter = binding.tripsRecyclerView.adapter as TripsAdapter
             adapter.submitList(it)
