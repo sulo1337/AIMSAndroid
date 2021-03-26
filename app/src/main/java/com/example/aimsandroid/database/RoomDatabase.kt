@@ -11,6 +11,10 @@ interface TripDao {
     @Query("select * from trips_table")
     fun getTripsWithWaypoints(): LiveData<List<TripWithWaypoints>>
 
+    @Transaction
+    @Query("select * from trips_table where tripId = :tripId")
+    fun getTripWithWaypointsByTripId(tripId: Long): LiveData<TripWithWaypoints>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrip(trip: Trip): Long
 

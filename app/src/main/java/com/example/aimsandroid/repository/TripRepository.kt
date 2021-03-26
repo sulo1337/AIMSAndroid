@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 
 class TripRepository(private val database: TripDatabase) {
     val trips = database.tripDao.getTripsWithWaypoints()
+    fun getTripWithWaypointsByTripId(tripId: Long) = database.tripDao.getTripWithWaypointsByTripId(tripId)
     suspend fun insertTrip(trip: Trip) = database.tripDao.insertTrip(trip)
     suspend fun insertWaypoint(wayPoint: WayPoint) = database.tripDao.insertWaypoint(wayPoint)
     suspend fun insertAllTrips(trips: List<Trip>) = database.tripDao.insertAllTrips(trips)

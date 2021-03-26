@@ -8,15 +8,12 @@ import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.aimsandroid.utils.MapPositionChangedListener
-import com.here.android.mpa.common.GeoPosition
-import com.here.android.mpa.common.LocationDataSourceHERE
-import com.here.android.mpa.common.PositioningManager
-import java.lang.ref.WeakReference
 
-class LocationRepository(private val application: Application): PositioningManager.OnPositionChangedListener {
-    private var mPositioningManager: PositioningManager
-    private var mHereLocation: LocationDataSourceHERE
+class LocationRepository(private val application: Application) {
+
+    private var locationManager: LocationManager = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    private val locationListener: MyLocationListener = MyLocationListener(this)
+
     private val _latitude = MutableLiveData<Double>()
     val latitude: LiveData<Double>
         get() = _latitude
@@ -28,36 +25,29 @@ class LocationRepository(private val application: Application): PositioningManag
     var prevLatitude = 0.0
     var prevLongitude = 0.0
 
-    fun onLocationChanged(latitude: Double, longitude: Double) {
+    fun onLocationChanged(location: Location) {
         prevLatitude = this._latitude.value!!
         prevLongitude = this._longitude.value!!
-        this._latitude.value = latitude
-        this._longitude.value = longitude
+        this._latitude.value = location.latitude
+        this._longitude.value = location.longitude
     }
 
     init {
         _latitude.value = 0.0
         _longitude.value = 0.0
-        mPositioningManager = PositioningManager.getInstance()
-        mHereLocation = LocationDataSourceHERE.getInstance()
-        mPositioningManager.setDataSource(mHereLocation)
-        mPositioningManager.addListener(
-            WeakReference<PositioningManager.OnPositionChangedListener>(
-                this
-            )
-        )
-        mPositioningManager.start(PositioningManager.LocationMethod.GPS_NETWORK_INDOOR)
-    }
-
-    override fun onPositionUpdated(p0: PositioningManager.LocationMethod?, p1: GeoPosition?, p2: Boolean) {
-        p1?.let {
-            onLocationChanged(it.coordinate.latitude, it.coordinate.longitude)
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200,  0.02f, locationListener)
+            val lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            _latitude.value = lastLocation?.latitude
+            _longitude.value = lastLocation?.longitude
+        } catch(e: SecurityException) {
+            Log.i("locationRepository","no permission")
         }
     }
 
-    override fun onPositionFixChanged(p0: PositioningManager.LocationMethod?, p1: PositioningManager.LocationStatus?) {
-
+    class MyLocationListener(private val locationRepository: LocationRepository): LocationListener {
+        override fun onLocationChanged(location: Location) {
+            locationRepository.onLocationChanged(location)
+        }
     }
-
 }
-
