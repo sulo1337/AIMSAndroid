@@ -11,9 +11,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.lang.Exception
 
 interface Dispatcher {
     @GET("{Id}")
+    @Throws(Exception::class)
     fun getTripsAsync(
         @Path("Id") driverId: String,
         @Query("apiKey") apiKey: String
