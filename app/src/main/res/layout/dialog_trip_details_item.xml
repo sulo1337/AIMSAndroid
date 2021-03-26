@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="wayPoint" type="com.example.aimsandroid.database.WayPoint"/>
+        <variable name="clickListener" type="com.example.aimsandroid.fragments.trips.detaildialog.TripsDetailAdapter.TripsDetailClickListener"/>
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="?attr/colorPrimary"
+        android:background="?attr/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -16,18 +19,18 @@
             android:layout_marginTop="12dp"
             tools:text="L1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
             android:id="@+id/waypointTypeIcon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginStart="32dp"
             app:layout_constraintBottom_toBottomOf="@+id/waypointType"
             app:layout_constraintStart_toStartOf="@+id/waypointType"
             app:layout_constraintTop_toTopOf="@+id/waypointType"
-            tools:tint = "@color/secondaryLightColor"
-            tools:srcCompat = "@drawable/ic_source"/>
+            tools:tint="@color/secondaryLightColor"
+            tools:srcCompat="@drawable/ic_source" app:tint="@color/secondaryLightColor"/>
 
         <TextView
             android:id="@+id/waypointTitle"
@@ -40,7 +43,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/waypointType"
             app:layout_constraintStart_toEndOf="@+id/waypointTypeIcon"
             app:layout_constraintTop_toTopOf="@+id/waypointType"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"/>
 
         <TextView
             android:id="@+id/deadline"
@@ -50,7 +53,7 @@
             android:layout_marginTop="4dp"
             tools:text="Load on December 18th at 7:30am"
             app:layout_constraintStart_toStartOf="@+id/waypointTitle"
-            app:layout_constraintTop_toBottomOf="@+id/address" />
+            app:layout_constraintTop_toBottomOf="@+id/address"/>
 
         <TextView
             android:id="@+id/address"
@@ -61,7 +64,7 @@
             tools:text="2600 El Camino Real, Arlington, TX 75010"
             android:textColor="?attr/colorOnPrimary"
             app:layout_constraintStart_toStartOf="@+id/waypointTitle"
-            app:layout_constraintTop_toBottomOf="@+id/waypointTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/waypointTitle"/>
 
         <View
             android:id="@+id/divider"
@@ -83,7 +86,7 @@
             android:layout_marginTop="4dp"
             tools:text="Type: Diesel"
             app:layout_constraintStart_toStartOf="@+id/waypointTitle"
-            app:layout_constraintTop_toBottomOf="@+id/deadline" />
+            app:layout_constraintTop_toBottomOf="@+id/deadline"/>
 
         <TextView
             android:id="@+id/fuelQuantity"
@@ -94,13 +97,14 @@
             tools:text="Quantity: 78 tons"
             app:layout_constraintBottom_toBottomOf="@+id/fuelType"
             app:layout_constraintStart_toEndOf="@+id/fuelType"
-            app:layout_constraintTop_toTopOf="@+id/fuelType" />
+            app:layout_constraintTop_toTopOf="@+id/fuelType"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/detailsButton"
             style="@style/san_francisco_bold_16"
             android:textSize="12sp"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:backgroundTint="?attr/colorOnPrimary"
             android:paddingStart="20dp"
@@ -110,12 +114,15 @@
             android:textAllCaps="false"
             android:textColor="?attr/colorPrimary"
             app:layout_constraintStart_toStartOf="@+id/fuelType"
-            app:layout_constraintTop_toBottomOf="@+id/fuelQuantity"/>
+            app:layout_constraintTop_toBottomOf="@+id/fuelQuantity"
+            android:onClick="@{() -> clickListener.onClick(wayPoint)}"
+        />
 
 
-    <View android:layout_width="match_parent" android:layout_height="10dip"
-          app:layout_constraintTop_toBottomOf="@id/detailsButton"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"/>
+        <View android:layout_width="match_parent" android:layout_height="10dip"
+              app:layout_constraintTop_toBottomOf="@id/detailsButton"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

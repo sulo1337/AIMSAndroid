@@ -101,4 +101,9 @@
 <!--    <style name="dialog" parent="Theme.AppCompat.Dialog">-->
 <!--        <item name="android:windowNoTitle">true</item>-->
 <!--    </style>-->
+
+    <style name="FullscreenDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="android:statusBarColor">?android:attr/statusBarColor</item>
+        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
+    </style>
 </resources>

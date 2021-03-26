@@ -9,11 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentTripsBinding
 import com.example.aimsandroid.databinding.TripItemBinding
+import com.example.aimsandroid.fragments.trips.detaildialog.TripsDetailDialog
 
 class TripsFragment : Fragment() {
 
@@ -35,7 +37,8 @@ class TripsFragment : Fragment() {
         fragmentTitle.setText(getString(R.string.trips_toolbar_title));
         binding.lifecycleOwner = this
         binding.tripsRecyclerView.adapter = TripsAdapter(TripsAdapter.TripsClickListener{
-            Toast.makeText(requireContext(), it.trip.tripId.toString(), Toast.LENGTH_LONG).show()
+            val dialog: DialogFragment = TripsDetailDialog.newInstance(it)
+            dialog.show(requireActivity().supportFragmentManager, "tripsDetailDialog")
         })
         viewModel.trips.observe(viewLifecycleOwner, Observer{
             val adapter = binding.tripsRecyclerView.adapter as TripsAdapter
