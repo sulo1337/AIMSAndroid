@@ -20,4 +20,5 @@
     <string name="fab_content_desc">Current Location</string>
     <string name="view_trip">View Trip</string>
     <string name="list_item">List Item</string>
+    <string name="details">Details</string>
 </resources>

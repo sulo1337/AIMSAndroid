@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/waypointType"
+            style="@style/san_francisco_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            tools:text="L1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/waypointTypeIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="32dp"
+            app:layout_constraintBottom_toBottomOf="@+id/waypointType"
+            app:layout_constraintStart_toStartOf="@+id/waypointType"
+            app:layout_constraintTop_toTopOf="@+id/waypointType"
+            tools:tint = "@color/secondaryLightColor"
+            tools:srcCompat = "@drawable/ic_source"/>
+
+        <TextView
+            android:id="@+id/waypointTitle"
+            style="@style/san_francisco_bold_20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            tools:text="Shreveport Refinery"
+            android:textColor="?attr/colorOnPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/waypointType"
+            app:layout_constraintStart_toEndOf="@+id/waypointTypeIcon"
+            app:layout_constraintTop_toTopOf="@+id/waypointType"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/deadline"
+            style="@style/san_francisco_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            tools:text="Load on December 18th at 7:30am"
+            app:layout_constraintStart_toStartOf="@+id/waypointTitle"
+            app:layout_constraintTop_toBottomOf="@+id/address" />
+
+        <TextView
+            android:id="@+id/address"
+            style="@style/san_francisco_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            tools:text="2600 El Camino Real, Arlington, TX 75010"
+            android:textColor="?attr/colorOnPrimary"
+            app:layout_constraintStart_toStartOf="@+id/waypointTitle"
+            app:layout_constraintTop_toBottomOf="@+id/waypointTitle" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="0dp"
+            android:background="@color/secondaryLightColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/waypointTypeIcon"
+            app:layout_constraintStart_toStartOf="@+id/waypointTypeIcon"
+            app:layout_constraintTop_toBottomOf="@+id/waypointTypeIcon"/>
+
+        <TextView
+            android:id="@+id/fuelType"
+            style="@style/san_francisco_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            tools:text="Type: Diesel"
+            app:layout_constraintStart_toStartOf="@+id/waypointTitle"
+            app:layout_constraintTop_toBottomOf="@+id/deadline" />
+
+        <TextView
+            android:id="@+id/fuelQuantity"
+            style="@style/san_francisco_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            tools:text="Quantity: 78 tons"
+            app:layout_constraintBottom_toBottomOf="@+id/fuelType"
+            app:layout_constraintStart_toEndOf="@+id/fuelType"
+            app:layout_constraintTop_toTopOf="@+id/fuelType" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/detailsButton"
+            style="@style/san_francisco_bold_16"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="8dp"
+            app:backgroundTint="?attr/colorOnPrimary"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            app:cornerRadius="20dp"
+            android:text="@string/details"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorPrimary"
+            app:layout_constraintStart_toStartOf="@+id/fuelType"
+            app:layout_constraintTop_toBottomOf="@+id/fuelQuantity"/>
+
+
+    <View android:layout_width="match_parent" android:layout_height="10dip"
+          app:layout_constraintTop_toBottomOf="@id/detailsButton"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

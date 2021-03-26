@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/primaryDarkColorDM</item>
         <item name="colorPrimaryVariant">@color/primaryColorDM</item>
         <item name="colorOnPrimary">@color/primaryTextColorDM</item>
-        <item name="coloROnPrimaryVariant">@color/gray</item>
+        <item name="colorOnPrimaryVariant">@color/gray</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/primaryDarkColorDM</item>
         <item name="colorSecondaryVariant">@color/primaryLightColorDM</item>
