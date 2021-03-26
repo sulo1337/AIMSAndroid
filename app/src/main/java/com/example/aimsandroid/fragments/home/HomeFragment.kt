@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.databinding.FragmentHomeBinding
+import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.trips.detaildialog.TripsDetailAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -53,15 +54,18 @@ class HomeFragment : Fragment() {
             toggleFilters()
         }
 
-        val adapter = TripsDetailAdapter(TripsDetailAdapter.TripsDetailClickListener{
-            Toast.makeText(requireActivity(), "Not yet implemented...", Toast.LENGTH_SHORT).show()
-        })
-
         viewModel.currentTrip.observe(viewLifecycleOwner, Observer {
             if(it == null) {
-                Log.i("aims_debug", "null")
+                binding.currentTripRecyclerView.visibility = View.GONE
+                binding.currentTripTitle.text = "You have not started any trips"
             } else {
-                Log.i("aims_debug", it.toString())
+                binding.currentTripRecyclerView.visibility = View.VISIBLE
+                binding.currentTripTitle.text = "Trip #"+it.trip.tripId
+                val adapter = CurrentTripAdapter(CurrentTripAdapter.CurrentTripClickListener {
+                    Toast.makeText(requireActivity(), "Yet to be implemented...", Toast.LENGTH_SHORT).show()
+                })
+                adapter.submitList(it.waypoints)
+                binding.currentTripRecyclerView.adapter = adapter
             }
         })
 

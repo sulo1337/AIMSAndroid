@@ -12,6 +12,7 @@
 
         <TextView
             android:id="@+id/waypointType"
+            android:textSize="24sp"
             style="@style/san_francisco_bold_20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,8 +24,8 @@
 
         <ImageView
             android:id="@+id/waypointTypeIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginStart="32dp"
             app:layout_constraintBottom_toBottomOf="@+id/waypointType"
             app:layout_constraintStart_toStartOf="@+id/waypointType"
@@ -102,7 +103,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/detailsButton"
             style="@style/san_francisco_bold_16"
-            android:textSize="12sp"
+            android:letterSpacing="0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

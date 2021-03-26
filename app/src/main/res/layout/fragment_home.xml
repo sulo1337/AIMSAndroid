@@ -87,7 +87,7 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <androidx.cardview.widget.CardView android:layout_width="50dp" android:layout_height="8dp"
-                    app:cardBackgroundColor="?attr/colorSecondaryVariant"
+                    app:cardBackgroundColor="@color/secondaryLightColor"
                                                    app:layout_constraintStart_toStartOf="parent"
                                                    app:layout_constraintEnd_toEndOf="parent"
                                                    app:layout_constraintTop_toTopOf="parent"
@@ -100,8 +100,28 @@
             <!--And finally this is the body of the backdrop's content. You can add here whatever you need inside a view group (LinearLayout, RelativeLayout, SwipeRefreshLayout, ConstraintLayout, etc.)-->
             <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent"
                                                    android:layout_gravity="bottom"
-                                                   android:background="@color/ltgray"
+                                                   android:background="?attr/colorPrimary"
                                                    >
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                              android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              style="@style/san_francisco_bold_20"
+                              android:layout_marginStart="16dp"
+                              android:layout_marginTop="16dp"
+                              android:layout_marginEnd="16dp"
+                              android:layout_marginBottom="8dp"
+                              android:id="@+id/currentTripTitle"
+                              tools:text = "Trip #273"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/currentTripRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:itemCount="16"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="1"
+                        tools:listitem="@layout/current_trip_detail_item"
+                        android:clipToPadding="false"/>
+                </LinearLayout>
 
             </androidx.core.widget.NestedScrollView>
 
