@@ -17,3 +17,5 @@ local.properties
 /app/libs
 /app/debug/app-debug.apk
 /app/release/app-release.apk
+/app/debug
+/app/release
