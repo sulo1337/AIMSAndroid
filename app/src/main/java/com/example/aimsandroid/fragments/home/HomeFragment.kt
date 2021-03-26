@@ -49,17 +49,23 @@ class HomeFragment : Fragment() {
         sheetBehavior = BottomSheetBehavior.from(contentLayout)
         sheetBehavior.isFitToContents = false
         sheetBehavior.isHideable = false
+        sheetBehavior.isDraggable = false
         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         backdropHeader.setOnClickListener { it ->
-            toggleFilters()
+            if(viewModel.currentTrip.value != null) {
+                toggleFilters()
+            }
         }
 
         viewModel.currentTrip.observe(viewLifecycleOwner, Observer {
             if(it == null) {
                 binding.currentTripRecyclerView.visibility = View.GONE
                 binding.currentTripTitle.text = "You have not started any trips"
+                binding.bottomSheetTitle.text = "You have not started any trips"
             } else {
                 binding.currentTripRecyclerView.visibility = View.VISIBLE
+                binding.bottomSheetTitle.text = "Tap here to see your current trip"
+                sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 binding.currentTripTitle.text = "Trip #"+it.trip.tripId
                 val adapter = CurrentTripAdapter(CurrentTripAdapter.CurrentTripClickListener {
                     Toast.makeText(requireActivity(), "Yet to be implemented...", Toast.LENGTH_SHORT).show()
@@ -74,10 +80,10 @@ class HomeFragment : Fragment() {
 
     private fun toggleFilters() {
         if(sheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED){
-            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        } else if(sheetBehavior.state == BottomSheetBehavior.STATE_HALF_EXPANDED) {
+            binding.bottomSheetTitle.text = "Tap here to see your current trip"
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {
+            binding.bottomSheetTitle.text = "Current Trip"
             sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }

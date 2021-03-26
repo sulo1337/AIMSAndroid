@@ -78,11 +78,12 @@
                 android:elevation="4dp">
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/bottomSheetTitle"
                     style="@style/san_francisco_bold_20"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" android:text="Current Trip"
+                    android:layout_weight="1"
+                    tools:text="Current Trip"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 

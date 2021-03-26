@@ -130,10 +130,11 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView8"
                     tools:text="Load until 18 Dec 2018, 8:00am"/>
 
+
                 <ImageView
                     android:id="@+id/imageView4"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_marginEnd="16dp"
                     android:contentDescription="Destination"
                     app:layout_constraintBottom_toBottomOf="@+id/textView"
@@ -180,8 +181,8 @@
 
                 <ImageView
                     android:id="@+id/imageView3"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_marginStart="16dp"
                     android:contentDescription="Source"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView"

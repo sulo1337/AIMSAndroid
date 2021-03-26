@@ -93,7 +93,7 @@ class MapFragmentView(
                         }
                     }
                     initializeViewModel.run()
-                    createRoute()
+//                    createRoute()
                 } else {
                     Toast.makeText(m_activity, "Cannot init map", Toast.LENGTH_LONG).show()
                 }
