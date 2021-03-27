@@ -22,4 +22,11 @@
     <string name="list_item">List Item</string>
     <string name="details">Details</string>
     <string name="navigate">Navigate</string>
+    <string name="address">Address</string>
+    <string name="fuel">Fuel</string>
+    <string name="requested_quantity">Requested Quantity</string>
+    <string name="trip_name">Trip Name</string>
+    <string name="truck">Truck</string>
+    <string name="trailer">Trailer</string>
+    <string name="site_container">Site Container</string>
 </resources>

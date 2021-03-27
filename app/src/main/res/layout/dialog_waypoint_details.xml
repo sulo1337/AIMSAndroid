@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable name="waypoint" type="com.example.aimsandroid.database.WayPoint"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:theme="@style/Theme.AIMSAndroid"
+        android:background="?attr/colorPrimary">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/detailsDialogToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textView26"
+                style="@style/san_francisco_bold_20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Details"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="@+id/closeButton"
+                app:layout_constraintStart_toEndOf="@+id/closeButton"
+                app:layout_constraintTop_toTopOf="@+id/closeButton"
+                app:layout_constraintVertical_bias="0.52"/>
+
+            <ImageView
+                android:id="@+id/closeButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_close"
+                app:tint="?attr/colorOnPrimary"
+            />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/closeButton"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/detailsDialogToolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            >
+
+                <TextView android:id="@+id/destinationName" style="@style/san_francisco_bold_20"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="16dp"
+                          android:textColor="?attr/colorOnPrimary" android:textSize="24sp"
+                          android:text="@{waypoint.destinationName}"
+                          app:layout_constraintEnd_toEndOf="parent"
+                          app:layout_constraintStart_toStartOf="parent"
+                          app:layout_constraintTop_toTopOf="parent" tools:text="Monroe Bulk Plant"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/captureBol"
+                    style="@style/san_francisco_bold_16"
+                    app:icon="@drawable/ic_capture_bol"
+                    app:iconTint="?attr/colorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:backgroundTint="@color/secondaryLightColor"
+                    android:letterSpacing="0"
+                    app:cornerRadius="20dp"
+                    android:text="Capture Bill of Lading"
+                    android:textAllCaps="false"
+                    android:textColor="?attr/colorPrimary"
+                    app:layout_constraintTop_toBottomOf="@id/destinationName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                />
+
+                <TextView
+                    android:id="@+id/addressTitle"
+                    style="@style/san_francisco_bold_20" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/address"
+                    android:textColor="?attr/colorOnPrimary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/captureBol" tools:text="Address"/>
+
+                <TextView android:id="@+id/address" style="@style/san_francisco_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="16dp"
+                          android:layout_marginTop="8dp"
+                          app:layout_constraintStart_toStartOf="@id/addressTitle"
+                          app:layout_constraintTop_toBottomOf="@id/addressTitle"
+                          tools:text="314 Columbia Ave, Monroe, LA, 71203"/>
+
+                <TextView android:id="@+id/pickupOrDeliverTitle" style="@style/san_francisco_bold_20"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="16dp"
+                          app:layout_constraintStart_toStartOf="@+id/addressTitle"
+                          app:layout_constraintTop_toBottomOf="@id/address" tools:text="Pickup"/>
+
+                <TextView android:id="@+id/fuelTypeTitle" style="@style/san_francisco_bold_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="16dp"
+                          android:text="@string/fuel"
+                          android:layout_marginTop="8dp"
+                          app:layout_constraintStart_toStartOf="@id/pickupOrDeliverTitle"
+                          app:layout_constraintTop_toBottomOf="@id/pickupOrDeliverTitle" tools:text="Fuel"/>
+
+                <TextView android:id="@+id/fuelType" style="@style/san_francisco_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="8dp"
+                          android:text="@{waypoint.productDesc}"
+                          app:layout_constraintBaseline_toBaselineOf="@+id/fuelTypeTitle"
+                          app:layout_constraintStart_toEndOf="@id/fuelTypeTitle" tools:text="REG87 GASOLINE"/>
+
+                <TextView android:id="@+id/fuelQuantityTitle" style="@style/san_francisco_bold_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="8dp"
+                          android:text="@string/requested_quantity"
+                          app:layout_constraintStart_toStartOf="@id/fuelTypeTitle"
+                          app:layout_constraintTop_toBottomOf="@id/fuelTypeTitle" tools:text="Requested Quantity"/>
+
+                <TextView android:id="@+id/fuelQuantity" style="@style/san_francisco_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="8dp"
+                          android:text="@{String.valueOf(waypoint.requestedQty)+` `+waypoint.uom}"
+                          app:layout_constraintBaseline_toBaselineOf="@+id/fuelQuantityTitle"
+                          app:layout_constraintStart_toEndOf="@id/fuelQuantityTitle" tools:text="10000 GL"/>
+
+                <TextView android:id="@+id/tripTitle" style="@style/san_francisco_bold_20"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="16dp"
+                          app:layout_constraintStart_toStartOf="@id/pickupOrDeliverTitle"
+                          app:layout_constraintTop_toBottomOf="@id/fuelQuantity"
+                          android:text="@{`Trip #`+String.valueOf(waypoint.owningTripId)}"
+                          tools:text="Trip #159"/>
+
+                <TextView android:id="@+id/tripNameTitle" style="@style/san_francisco_bold_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="16dp"
+                          android:layout_marginTop="8dp"
+                          app:layout_constraintStart_toStartOf="@id/tripTitle"
+                          app:layout_constraintTop_toBottomOf="@id/tripTitle"
+                          tools:text="Trip Name"
+                            android:text="@string/trip_name"
+                />
+
+                <TextView android:id="@+id/tripName" style="@style/san_francisco_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="8dp"
+                          app:layout_constraintBaseline_toBaselineOf="@id/tripNameTitle"
+                          app:layout_constraintStart_toEndOf="@id/tripNameTitle" tools:text="A-159"/>
+
+                <TextView android:id="@+id/truckTitle" style="@style/san_francisco_bold_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="8dp"
+                          android:text="@string/truck" app:layout_constraintStart_toStartOf="@id/tripNameTitle"
+                          app:layout_constraintTop_toBottomOf="@id/tripNameTitle"
+                          tools:text="Truck"/>
+
+                <TextView android:id="@+id/truck" style="@style/san_francisco_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="8dp"
+                          app:layout_constraintBaseline_toBaselineOf="@id/truckTitle"
+                          app:layout_constraintStart_toEndOf="@id/truckTitle" tools:text="PETERBILT TRANSPORT"/>
+
+                <TextView android:id="@+id/trailerTitle" style="@style/san_francisco_bold_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="8dp"
+                          android:text="@string/trailer" app:layout_constraintStart_toStartOf="@id/truckTitle"
+                          app:layout_constraintTop_toBottomOf="@id/truckTitle"
+                          tools:text="Trailer"/>
+
+                <TextView android:id="@+id/trailer" style="@style/san_francisco_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="8dp"
+                          app:layout_constraintBaseline_toBaselineOf="@id/trailerTitle"
+                          app:layout_constraintStart_toEndOf="@id/trailerTitle" tools:text="TANKER #2"/>
+
+
+                <TextView android:id="@+id/siteContainerTitle" style="@style/san_francisco_bold_20"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="16dp"
+                          app:layout_constraintStart_toStartOf="@id/tripTitle"
+                          app:layout_constraintTop_toBottomOf="@id/trailerTitle"
+                          android:text="@string/site_container"
+                          tools:text="Site Container"/>
+
+                <TextView style="@style/san_francisco_16" android:layout_width="wrap_content"
+                          android:id="@+id/siteContainer"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="16dp"
+                          android:layout_marginTop="8dp"
+                          app:layout_constraintStart_toStartOf="@id/siteContainerTitle"
+                          app:layout_constraintTop_toBottomOf="@id/siteContainerTitle"
+                          tools:text="Unlead Tank - To Full"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -31,7 +31,8 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
         }
         binding.lifecycleOwner = this
         val adapter = TripsDetailAdapter(TripsDetailAdapter.TripsDetailClickListener {
-            Toast.makeText(requireActivity(), "Yet to be implemented...", Toast.LENGTH_SHORT).show()
+            val dialog: WaypointDetailDialog = WaypointDetailDialog.newInstance(it)
+            dialog.show(requireActivity().supportFragmentManager, "wayPointDetailDialog")
         })
         adapter.submitList(tripWithWaypoints.waypoints)
         binding.tripDetailRecyclerView.adapter = adapter
