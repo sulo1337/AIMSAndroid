@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+
+    </data>
+    <LinearLayout
+        android:id="@+id/alertStartForm"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                                                               android:layout_height="wrap_content"
+                                                               app:endIconMode="clear_text"
+                                                               app:endIconDrawable="@drawable/ic_close"
+                                                               app:helperText="Please enter current meter reading on the trailer."
+                                                               android:hint="Fuel Meter Reading"
+                                                               app:hintTextColor="@color/secondaryLightColor"
+                                                               app:placeholderTextColor="@color/secondaryLightColor"
+                                                               style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                                               app:boxStrokeColor="@color/secondaryLightColor"
+        >
+            <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="numberDecimal"
+                                                                     android:id="@+id/fuelStickReading"/>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fuelStickReadingBtn"
+            style="@style/san_francisco_bold_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorPrimary"
+            app:backgroundTint="@color/secondaryLightColor"
+            app:cornerRadius="20dp"
+            android:layout_marginTop="4dp"
+            android:text="Done"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </LinearLayout>
+</layout>

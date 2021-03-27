@@ -76,30 +76,54 @@
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginTop="16dp"
-                          android:textColor="?attr/colorOnPrimary" android:textSize="24sp"
-                          android:text="@{waypoint.destinationName}"
+                          android:text="@{waypoint.destinationName}" android:textColor="?attr/colorOnPrimary"
+                          android:textSize="24sp"
                           app:layout_constraintEnd_toEndOf="parent"
                           app:layout_constraintStart_toStartOf="parent"
                           app:layout_constraintTop_toTopOf="parent" tools:text="Monroe Bulk Plant"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/captureBol"
-                    style="@style/san_francisco_bold_16"
-                    app:icon="@drawable/ic_capture_bol"
-                    app:iconTint="?attr/colorPrimary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:backgroundTint="@color/secondaryLightColor"
-                    android:letterSpacing="0"
-                    app:cornerRadius="20dp"
-                    android:text="Capture Bill of Lading"
-                    android:textAllCaps="false"
-                    android:textColor="?attr/colorPrimary"
-                    app:layout_constraintTop_toBottomOf="@id/destinationName"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                />
+                <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/buttonContainer"
+                                                                   android:layout_width="wrap_content"
+                                                                   android:layout_height="wrap_content"
+                                                                   android:layout_marginTop="8dp"
+                                                                   app:layout_constraintEnd_toEndOf="parent"
+                                                                   app:layout_constraintStart_toStartOf="parent"
+                                                                   app:layout_constraintTop_toBottomOf="@id/destinationName">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/startLoading"
+                        style="@style/san_francisco_bold_16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/colorPrimary"
+                        app:backgroundTint="@color/secondaryLightColor"
+                        app:cornerRadius="20dp"
+                        android:text="Start Loading"
+                        app:icon="@drawable/ic_capture_bol"
+                        app:iconTint="?attr/colorPrimary"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Start Loading"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/stopLoading"
+                        style="@style/san_francisco_bold_16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:letterSpacing="0"
+                        android:text="Stop Loading"
+                        android:textAllCaps="false"
+                        android:textColor="?attr/colorPrimary"
+                        app:backgroundTint="@color/secondaryLightColor"
+                        app:cornerRadius="20dp" app:icon="@drawable/ic_capture_bol"
+                        app:iconTint="?attr/colorPrimary"
+                        app:layout_constraintStart_toEndOf="@+id/startLoading"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Stop Loading"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/addressTitle"
@@ -110,7 +134,7 @@
                     android:text="@string/address"
                     android:textColor="?attr/colorOnPrimary"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/captureBol" tools:text="Address"/>
+                    app:layout_constraintTop_toBottomOf="@id/buttonContainer" tools:text="Address"/>
 
                 <TextView android:id="@+id/address" style="@style/san_francisco_16"
                           android:layout_width="wrap_content"
@@ -237,7 +261,21 @@
                           app:layout_constraintTop_toBottomOf="@id/siteContainerTitle"
                           tools:text="Unlead Tank - To Full"/>
 
+                <TextView android:id="@+id/billOfLadingTitle" style="@style/san_francisco_bold_20"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="16dp"
+                          android:text="Bill Of Lading"
+                          app:layout_constraintStart_toStartOf="@id/tripTitle"
+                          app:layout_constraintTop_toBottomOf="@id/siteContainer"/>
 
+                <TextView android:id="@+id/billOfLadingDescription" style="@style/san_francisco_16"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="16dp"
+                          android:layout_marginTop="8dp"
+                          app:layout_constraintStart_toStartOf="@id/billOfLadingTitle" app:layout_constraintTop_toBottomOf="@id/billOfLadingTitle"
+                          tools:text="Not yet recorded"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
