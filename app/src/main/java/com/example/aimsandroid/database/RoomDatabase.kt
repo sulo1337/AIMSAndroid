@@ -28,9 +28,18 @@ interface TripDao {
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllWaypoints(wayPoints: List<WayPoint>)
+
+    @Query("select w.*, b.* from waypoint_table w left join billoflading_table b on w.owningTripId = b.tripIdFk and w.seqNum = b.wayPointSeqNum where w.seqNum = :seqNum and w.owningTripId = :tripId")
+    suspend fun getWayPointWithBillOfLading(seqNum: Long, tripId: Long): WaypointWithBillOfLading
+
+    @Query("select * from billoflading_table where wayPointSeqNum = :seqNum and tripIdFk = :tripId")
+    fun getBillOfLading(seqNum: Long, tripId: Long): LiveData<BillOfLading>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBillOfLading(billOfLading: BillOfLading)
 }
 
-@Database(entities = [Trip::class, WayPoint::class], version = 1)
+@Database(entities = [Trip::class, WayPoint::class, BillOfLading::class], version = 1)
 abstract class TripDatabase: RoomDatabase() {
     abstract val tripDao: TripDao
 }

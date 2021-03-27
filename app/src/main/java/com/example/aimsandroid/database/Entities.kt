@@ -2,6 +2,7 @@ package com.example.aimsandroid.database
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
+import java.util.*
 
 @Entity(tableName = "review_table")
 data class Review(
@@ -61,6 +62,32 @@ data class WayPoint(
     val requestedQty: Double?,
     val uom: String?,
     val fill: String?
+)
+
+@Entity(tableName = "billoflading_table", primaryKeys = ["tripIdFk", "wayPointSeqNum"])
+data class BillOfLading(
+    @ForeignKey(
+        entity = WayPoint::class,
+        parentColumns = ["owningTripId", "seqNum"],
+        childColumns = ["owningTripId", "wayPointSeqNum"],
+        onDelete = CASCADE
+    )
+    val wayPointSeqNum: Long,
+    val tripIdFk: Long,
+    val complete: Boolean?,
+    val deliveryTicketNumber: Long?,
+    val initialMeterReading: Double?,
+    val finalMeterReading: Double?,
+    val pickedUpBy: String?,
+    val comments: String?,
+    val billOfLadingNumber: Long?,
+    val loadingStarted: String?,
+    val loadingEnded: String?
+)
+
+data class WaypointWithBillOfLading(
+    @Embedded val waypoint: WayPoint?,
+    @Embedded val billOfLading: BillOfLading?
 )
 
 data class TripWithWaypoints(

@@ -2,10 +2,7 @@ package com.example.aimsandroid.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.aimsandroid.database.Trip
-import com.example.aimsandroid.database.TripDatabase
-import com.example.aimsandroid.database.TripWithWaypoints
-import com.example.aimsandroid.database.WayPoint
+import com.example.aimsandroid.database.*
 import com.example.aimsandroid.network.Network
 import com.example.aimsandroid.network.TripSection
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +14,9 @@ class TripRepository(private val database: TripDatabase) {
     fun getTripWithWaypointsByTripId(tripId: Long) = database.tripDao.getTripWithWaypointsByTripId(tripId)
     suspend fun insertTrip(trip: Trip) = database.tripDao.insertTrip(trip)
     suspend fun insertWaypoint(wayPoint: WayPoint) = database.tripDao.insertWaypoint(wayPoint)
+    suspend fun insertBillOfLading(billOfLading: BillOfLading) = database.tripDao.insertBillOfLading(billOfLading)
+    fun getBillOfLading(seqNum: Long, owningTripId: Long) = database.tripDao.getBillOfLading(seqNum, owningTripId)
+    suspend fun getWaypointWithBillOfLading(seqNum: Long, owningTripId: Long) = database.tripDao.getWayPointWithBillOfLading(seqNum, owningTripId)
     suspend fun insertAllTrips(trips: List<Trip>) = database.tripDao.insertAllTrips(trips)
     suspend fun insertAllWaypoints(waypoints:List<WayPoint>) = database.tripDao.insertAllWaypoints(waypoints)
     @Throws(Exception::class)
@@ -38,6 +38,8 @@ class TripRepository(private val database: TripDatabase) {
                 }
                 insertAllTrips(trips)
                 insertAllWaypoints(waypoints)
+                val test = getWaypointWithBillOfLading(2, 159)
+                Log.i("aims_debug_repository", java.lang.String.valueOf(test))
             } catch (e: Exception){
                 Log.i("aims_debug_repository", e.message!!)
             }
