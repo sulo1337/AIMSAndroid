@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
+import com.example.aimsandroid.fragments.home.currenttrip.WaypointDetailDialog
 import com.example.aimsandroid.fragments.trips.detaildialog.TripsDetailAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -68,7 +69,8 @@ class HomeFragment : Fragment() {
                 sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 binding.currentTripTitle.text = "Trip #"+it.trip.tripId
                 val adapter = CurrentTripAdapter(CurrentTripAdapter.CurrentTripClickListener {
-                    Toast.makeText(requireActivity(), "Yet to be implemented...", Toast.LENGTH_SHORT).show()
+                    val dialog: WaypointDetailDialog = WaypointDetailDialog.newInstance(it)
+                    dialog.show(requireActivity().supportFragmentManager, "wayPointDetailDialogCurrentTrip")
                 })
                 adapter.submitList(it.waypoints)
                 binding.currentTripRecyclerView.adapter = adapter
