@@ -13,6 +13,7 @@ import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.WaypointDetailDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.here.android.mpa.common.GeoCoordinate
 
 
 class HomeFragment : Fragment() {
@@ -70,14 +71,19 @@ class HomeFragment : Fragment() {
                 binding.currentTripRecyclerView.visibility = View.VISIBLE
                 binding.bottomSheetTitle.text = "Current Trip"
                 binding.currentTripTitle.text = "Trip #"+it.trip.tripId
+
                 val clickListeners = CurrentTripAdapter.CurrentTripClickListener(
                     detailsClickListener = {
                         val dialog: WaypointDetailDialog = WaypointDetailDialog.newInstance(it)
                         dialog.show(requireActivity().supportFragmentManager, "wayPointDetailDialogCurrentTrip")
                     },
                     navigateClickListener = {
-                        Toast.makeText(requireContext(), it.address1, Toast.LENGTH_LONG).show()
+                        val source = GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!)
+                        val destination = GeoCoordinate(it.latitude, it.longitude)
+                        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                        mapFragmentView?.navigate(source, destination)
                     })
+
                 val adapter = CurrentTripAdapter(clickListeners)
                 adapter.submitList(it.waypoints)
                 binding.currentTripRecyclerView.adapter = adapter

@@ -24,6 +24,8 @@ import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.here.android.mpa.mapping.Map
 import com.here.android.mpa.mapping.MapRoute
 import com.here.android.mpa.routing.*
+import getDouble
+import putDouble
 import java.lang.ref.WeakReference
 
 
@@ -84,7 +86,6 @@ class MapFragmentView(
                         }
                     }
                     initializeViewModel.run()
-//                    createRoute()
                 } else {
                     Toast.makeText(m_activity, "Cannot init map", Toast.LENGTH_LONG).show()
                 }
@@ -92,7 +93,11 @@ class MapFragmentView(
         }
     }
 
-    private fun createRoute(latitude: Double, longitude: Double) {
+    fun navigate(srcGeoCoordinate: GeoCoordinate, destGeoCoordinate: GeoCoordinate){
+        createRoute(srcGeoCoordinate, destGeoCoordinate)
+    }
+
+    private fun createRoute(srcGeoCoordinate: GeoCoordinate, destGeoCoordinate: GeoCoordinate) {
         /* Initialize a CoreRouter */
         val coreRouter = CoreRouter()
 
@@ -114,9 +119,9 @@ class MapFragmentView(
 
         /* Define waypoints for the route */
         /* START: 4350 Still Creek Dr */
-        val startPoint = RouteWaypoint(GeoCoordinate(49.259149, -123.008555))
+        val startPoint = RouteWaypoint(srcGeoCoordinate)
         /* END: Langley BC */
-        val destination = RouteWaypoint(GeoCoordinate(49.073640, -122.559549))
+        val destination = RouteWaypoint(destGeoCoordinate)
 
         /* Add both waypoints to the route plan */routePlan.addWaypoint(startPoint)
         routePlan.addWaypoint(destination)
@@ -151,11 +156,11 @@ class MapFragmentView(
                                      * We may also want to make sure the map view is orientated properly
                                      * so the entire route can be easily seen.
                                      */m_geoBoundingBox = routeResults[0].route.boundingBox
-//                                m_map!!.zoomTo(
-//                                    m_geoBoundingBox!!, Map.Animation.NONE,
-//                                    Map.MOVE_PRESERVE_ORIENTATION
-//                                )
-//                                startNavigation()
+                                m_map!!.zoomTo(
+                                    m_geoBoundingBox!!, Map.Animation.NONE,
+                                    Map.MOVE_PRESERVE_ORIENTATION
+                                )
+                                startNavigation()
                             } else {
                                 Toast.makeText(
                                     m_activity,
@@ -203,7 +208,8 @@ class MapFragmentView(
     }
 
     private fun startNavigation() {
-        /* Configure Navigation manager to launch navigation on current map */m_navigationManager!!.setMap(m_map)
+        /* Configure Navigation manager to launch navigation on current map */
+        m_navigationManager!!.setMap(m_map)
         // show position indicator
         // note, it is also possible to change icon for the position indicator
         m_mapFragment!!.positionIndicator!!.isVisible = true
@@ -216,21 +222,21 @@ class MapFragmentView(
          */
 
         /* Choose navigation modes between real time navigation and simulation */
-        val alertDialogBuilder = AlertDialog.Builder(m_activity)
+        val alertDialogBuilder = AlertDialog.Builder(m_activity, R.style.AlertDialogTheme)
         alertDialogBuilder.setTitle("Navigation")
         alertDialogBuilder.setMessage("Choose Mode")
         alertDialogBuilder.setNegativeButton(
             "Navigation"
         ) { dialoginterface, i ->
             m_navigationManager!!.startNavigation(m_route!!)
-            m_map!!.tilt = 60f
+            m_map!!.tilt = 0f
             startForegroundService()
         }
         alertDialogBuilder.setPositiveButton(
             "Simulation"
         ) { dialoginterface, i ->
             m_navigationManager!!.simulate(m_route!!, 60) //Simualtion speed is set to 60 m/s
-            m_map!!.tilt = 60f
+            m_map!!.tilt = 0f
             startForegroundService()
         }
         val alertDialog = alertDialogBuilder.create()
@@ -264,6 +270,16 @@ class MapFragmentView(
         /* Register a PositionListener to monitor the position updates */m_navigationManager!!.addPositionListener(
             WeakReference(m_positionListener)
         )
+
+        m_navigationManager!!.addManeuverEventListener(
+            WeakReference(m_maneuverListener)
+        )
+    }
+
+    private val m_maneuverListener: NavigationManager.ManeuverEventListener = object: NavigationManager.ManeuverEventListener(){
+        override fun onManeuverEvent() {
+            Toast.makeText(m_activity, m_navigationManager?.nextManeuver?.angle.toString(), Toast.LENGTH_SHORT).show()
+        }
     }
 
     private val m_positionListener: NavigationManager.PositionListener = object : NavigationManager.PositionListener() {
@@ -274,27 +290,30 @@ class MapFragmentView(
     private val m_navigationManagerEventListener: NavigationManagerEventListener =
         object : NavigationManagerEventListener() {
             override fun onRunningStateChanged() {
-                Toast.makeText(m_activity, "Running state changed", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(m_activity, "Running state changed", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNavigationModeChanged() {
-                Toast.makeText(m_activity, "Navigation mode changed", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(m_activity, "Navigation mode changed", Toast.LENGTH_SHORT).show()
             }
 
             override fun onEnded(navigationMode: NavigationManager.NavigationMode) {
-                Toast.makeText(m_activity, "$navigationMode was ended", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(m_activity, "$navigationMode was ended", Toast.LENGTH_SHORT).show()
+                m_map?.removeAllMapObjects()
+                m_map?.positionIndicator?.isVisible = true
+                m_map?.setOrientation(0.0f, Map.Animation.BOW)
                 stopForegroundService()
             }
 
             override fun onMapUpdateModeChanged(mapUpdateMode: MapUpdateMode) {
-                Toast.makeText(
-                    m_activity, "Map update mode is changed to $mapUpdateMode",
-                    Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    m_activity, "Map update mode is changed to $mapUpdateMode",
+//                    Toast.LENGTH_SHORT
+//                ).show()
             }
 
             override fun onRouteUpdated(route: Route) {
-                Toast.makeText(m_activity, "Route updated", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(m_activity, "Route updated", Toast.LENGTH_SHORT).show()
             }
 
             override fun onCountryInfo(s: String, s1: String) {
@@ -322,12 +341,6 @@ class MapFragmentView(
         prefs.edit().putDouble("lastFocusLongitude", m_map?.center?.longitude!!).apply()
         prefs.edit().putDouble("lastZoomLevel", m_map?.zoomLevel!!).apply()
     }
-
-    fun Editor.putDouble(key: String, double: Double) =
-        putLong(key, java.lang.Double.doubleToRawLongBits(double))
-
-    fun SharedPreferences.getDouble(key: String, default: Double) =
-        java.lang.Double.longBitsToDouble(getLong(key, java.lang.Double.doubleToRawLongBits(default)))
 
     init {
         mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as AndroidXMapFragment
