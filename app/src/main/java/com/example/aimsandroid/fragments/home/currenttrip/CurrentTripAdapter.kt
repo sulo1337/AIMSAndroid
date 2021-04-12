@@ -53,7 +53,8 @@ class CurrentTripAdapter(val clickListener: CurrentTripClickListener): ListAdapt
         }
     }
 
-    class CurrentTripClickListener(val clickListener: (wayPoint: WayPoint) -> Unit) {
-        fun onClick(wayPoint: WayPoint) = clickListener(wayPoint)
+    class CurrentTripClickListener(val detailsClickListener: (wayPoint: WayPoint) -> Unit, val navigateClickListener: (wayPoint: WayPoint) -> Unit) {
+        fun onClickDetails(wayPoint: WayPoint) = detailsClickListener(wayPoint)
+        fun onClickNavigate(wayPoint: WayPoint) = navigateClickListener(wayPoint)
     }
 }

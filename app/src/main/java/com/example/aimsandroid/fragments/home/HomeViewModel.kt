@@ -2,6 +2,7 @@ package com.example.aimsandroid.fragments.home
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
@@ -39,5 +40,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         val prefs =application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         _currentTripId = prefs.getLong("currentTripId", -1L)
         currentTrip =  tripRepository.getTripWithWaypointsByTripId(_currentTripId)
+
+        //TODO
+        latitude.observeForever {
+            map?.positionIndicator?.isVisible = true;
+        }
+
+        //TODO
+        longitude.observeForever {
+            map?.positionIndicator?.isVisible = true;
+        }
     }
 }

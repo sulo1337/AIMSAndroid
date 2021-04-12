@@ -116,7 +116,7 @@
             android:textColor="?attr/colorPrimary"
             app:layout_constraintStart_toStartOf="@+id/fuelType"
             app:layout_constraintTop_toBottomOf="@+id/fuelQuantity"
-            android:onClick="@{() -> clickListener.onClick(wayPoint)}"
+            android:onClick="@{() -> clickListener.onClickDetails(wayPoint)}"
         />
 
 
@@ -135,6 +135,7 @@
                                                            app:icon="@drawable/ic_navigate"
                                                            app:iconTint="@color/secondaryLightColor"
                                                            app:layout_constraintStart_toEndOf="@+id/detailsButton" app:layout_constraintTop_toBottomOf="@+id/fuelQuantity"
+            android:onClick="@{() -> clickListener.onClickNavigate(wayPoint)}"
                                                            tools:text="Navigate"/>
         <View android:layout_width="match_parent" android:layout_height="10dip"
               app:layout_constraintTop_toBottomOf="@id/detailsButton"

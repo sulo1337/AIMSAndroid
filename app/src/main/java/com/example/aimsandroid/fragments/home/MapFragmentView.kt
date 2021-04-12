@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.content.res.Configuration
+import android.graphics.Color
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
@@ -56,7 +57,6 @@ class MapFragmentView(
         /* Locate the mapFragment UI element */
         m_mapFragment = mapFragment
         if (m_mapFragment != null) {
-            Log.i("here", "here2")
             /* Initialize the AndroidXMapFragment, results will be given via the called back. */
             m_mapFragment!!.init { error ->
                 if (error == OnEngineInitListener.Error.NONE) {
@@ -67,19 +67,10 @@ class MapFragmentView(
                             Map.Animation.NONE
                         )
                         it.setZoomLevel(zoomLevel)
+                        it.positionIndicator.isVisible = true
                         val mode = m_activity.applicationContext?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
                         it.addTransformListener(MapTransformListener())
                         m_navigationManager = NavigationManager.getInstance()
-                        m_positioningManager = PositioningManager.getInstance()
-                        m_hereLocation = LocationDataSourceHERE.getInstance()
-                        m_positioningManager!!.setDataSource(m_hereLocation)
-                        m_positioningManager!!.addListener(WeakReference<PositioningManager.OnPositionChangedListener>(
-                            MapPositionChangedListener()
-                        ))
-                        if(m_positioningManager!!.start(PositioningManager.LocationMethod.GPS_NETWORK_INDOOR)) {
-                            Log.i("insideIf", "here")
-                            it.positionIndicator.setVisible(true)
-                        }
                         when (mode) {
                             Configuration.UI_MODE_NIGHT_YES -> {
                                 it.mapScheme = Map.Scheme.NORMAL_NIGHT
@@ -101,7 +92,7 @@ class MapFragmentView(
         }
     }
 
-    private fun createRoute() {
+    private fun createRoute(latitude: Double, longitude: Double) {
         /* Initialize a CoreRouter */
         val coreRouter = CoreRouter()
 

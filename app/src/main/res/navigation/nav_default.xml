@@ -23,7 +23,9 @@
         android:id="@+id/homeFragment"
         android:name="com.example.aimsandroid.fragments.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home">
+        <argument android:name="tripStarted" app:argType="boolean" android:defaultValue="false"/>
+    </fragment>
 
 
 </navigation>

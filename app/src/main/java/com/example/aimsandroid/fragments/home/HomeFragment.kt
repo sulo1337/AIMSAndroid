@@ -1,8 +1,6 @@
 package com.example.aimsandroid.fragments.home
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.WaypointDetailDialog
-import com.example.aimsandroid.fragments.trips.detaildialog.TripsDetailAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
@@ -35,6 +32,12 @@ class HomeFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        return binding.root;
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         //initialize map fragment
         mapFragmentView = MapFragmentView(requireActivity(), childFragmentManager, Runnable {
             mapFragmentView?.let {
@@ -51,7 +54,7 @@ class HomeFragment : Fragment() {
         sheetBehavior.isFitToContents = false
         sheetBehavior.isHideable = false
         sheetBehavior.isDraggable = false
-        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
         backdropHeader.setOnClickListener { it ->
             if(viewModel.currentTrip.value != null) {
                 toggleFilters()
@@ -65,27 +68,37 @@ class HomeFragment : Fragment() {
                 binding.bottomSheetTitle.text = "You have not started any trips"
             } else {
                 binding.currentTripRecyclerView.visibility = View.VISIBLE
-                binding.bottomSheetTitle.text = "Tap here to see your current trip"
-                sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                binding.bottomSheetTitle.text = "Current Trip"
                 binding.currentTripTitle.text = "Trip #"+it.trip.tripId
-                val adapter = CurrentTripAdapter(CurrentTripAdapter.CurrentTripClickListener {
-                    val dialog: WaypointDetailDialog = WaypointDetailDialog.newInstance(it)
-                    dialog.show(requireActivity().supportFragmentManager, "wayPointDetailDialogCurrentTrip")
-                })
+                val clickListeners = CurrentTripAdapter.CurrentTripClickListener(
+                    detailsClickListener = {
+                        val dialog: WaypointDetailDialog = WaypointDetailDialog.newInstance(it)
+                        dialog.show(requireActivity().supportFragmentManager, "wayPointDetailDialogCurrentTrip")
+                    },
+                    navigateClickListener = {
+                        Toast.makeText(requireContext(), it.address1, Toast.LENGTH_LONG).show()
+                    })
+                val adapter = CurrentTripAdapter(clickListeners)
                 adapter.submitList(it.waypoints)
                 binding.currentTripRecyclerView.adapter = adapter
             }
         })
 
-        return binding.root;
+        //check if args is passed to expand or collapse drawer layout
+        arguments?.let {
+            val fromStartTrip = HomeFragmentArgs.fromBundle(it).tripStarted
+            if(fromStartTrip){
+                sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            } else {
+                sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
     }
 
     private fun toggleFilters() {
         if(sheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED){
-            binding.bottomSheetTitle.text = "Tap here to see your current trip"
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {
-            binding.bottomSheetTitle.text = "Current Trip"
             sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }

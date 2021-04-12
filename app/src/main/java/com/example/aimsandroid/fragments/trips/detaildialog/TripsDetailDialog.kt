@@ -40,7 +40,7 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
         binding.startTrip.setOnClickListener {
             val prefs = requireActivity().getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
             prefs.edit().putLong("currentTripId", tripWithWaypoints.trip.tripId).apply()
-            this.findNavController().navigate(TripsFragmentDirections.actionTripsFragmentToHomeFragment())
+            this.findNavController().navigate(TripsFragmentDirections.actionTripsFragmentToHomeFragment(true))
             dismiss()
         }
         return binding.root

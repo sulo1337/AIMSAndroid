@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AIMS Android (alpha)</string>
+    <string name="app_name">AIMS Android (beta)</string>
     <string name="gpsTitle">Your Current GPS Location</string>
     <string name="homeFragmentToolbarTitle">AIMS Android (alpha)</string>
     <string name="describe_this_location">Describe this location...</string>

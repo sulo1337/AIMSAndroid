@@ -27,8 +27,4 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
             _refreshing.value = false
         }
     }
-
-    init {
-        refreshTrips()
-    }
 }
