@@ -22,6 +22,7 @@
                   app:layout_constraintTop_toBottomOf="@id/fragmentTitle"
                   android:text="Pull down to fetch data!"
                   android:id="@+id/instruction"
+                  style="@style/san_francisco_bold_20"
                   app:layout_constraintStart_toStartOf="@id/fragmentTitle"/>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

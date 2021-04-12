@@ -1,28 +1,30 @@
 package com.example.aimsandroid.fragments.home
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.WaypointDetailDialog
-import com.example.aimsandroid.utils.TextToSpeechUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoCoordinate
+import com.here.android.mpa.mapping.Map
+import putDouble
 
 
 class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var binding: FragmentHomeBinding
-    lateinit var textToSpeechUtil: TextToSpeechUtil
     private var mapFragmentView: MapFragmentView? = null
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,21 +36,14 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        textToSpeechUtil = TextToSpeechUtil(requireContext())
+        prefs = requireActivity().applicationContext.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         return binding.root;
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         //initialize map fragment
-        mapFragmentView = MapFragmentView(this, Runnable {
-            mapFragmentView?.let {
-                val viewModel = binding.viewModel
-                //TODO remove map from view model as map is ui
-                viewModel?.map = it.getMap()
-            }
-        })
+//        mapFragmentView = MapFragmentView(this, binding.viewModel!!)
 
         //drawer layout
         val backdropHeader = binding.backdropHeader
@@ -80,10 +75,13 @@ class HomeFragment : Fragment() {
                         dialog.show(requireActivity().supportFragmentManager, "wayPointDetailDialogCurrentTrip")
                     },
                     navigateClickListener = {
-                        val source = GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!)
+                        val startPoint = GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!)
                         val destination = GeoCoordinate(it.latitude, it.longitude)
+                        startNavigationMode()
+                        prefs.edit().putDouble("lastNavigatedLatitude", it.latitude).apply()
+                        prefs.edit().putDouble("lastNavigatedLongitude", it.longitude).apply()
                         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                        mapFragmentView?.navigate(source, destination)
+                        mapFragmentView?.navigate(startPoint, destination)
                     })
 
                 val adapter = CurrentTripAdapter(clickListeners)
@@ -111,21 +109,31 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun removeAllMapObjects() {
-        mapFragmentView?.removeAllMapObjects()
+    fun onNavigationEnded() {
+        mapFragmentView?.onNavigationEnded()
     }
 
-    fun speakText(textToSpeak: String, mode: Int) {
-        textToSpeechUtil.speakText(textToSpeak, mode)
+    fun onDestinationReached() {
+        stopNavigationMode()
+        mapFragmentView?.onNavigationEnded()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mapFragmentView?.onDestroy()
+    fun startNavigationMode() {
+        prefs.edit().putBoolean("navigating", true).apply()
+    }
+
+    fun stopNavigationMode() {
+        prefs.edit().putBoolean("navigating", false).apply()
     }
 
     override fun onPause() {
         super.onPause()
         mapFragmentView?.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapFragmentView = MapFragmentView(this, binding.viewModel!!)
+
     }
 }

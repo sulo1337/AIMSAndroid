@@ -1,50 +1,28 @@
 package com.example.aimsandroid.fragments.home
 
-import android.app.Activity
-import android.content.Intent
-import android.speech.tts.TextToSpeech
-import android.util.Log
+import android.graphics.PointF
 import android.widget.Toast
-import com.example.aimsandroid.MainActivity
-import com.example.aimsandroid.service.ForegroundService
-import com.example.aimsandroid.utils.TextToSpeechUtil
 import com.here.android.mpa.common.GeoPosition
+import com.here.android.mpa.common.ViewObject
 import com.here.android.mpa.guidance.NavigationManager
-import com.here.android.mpa.mapping.AndroidXMapFragment
-import com.here.android.mpa.mapping.Map
+import com.here.android.mpa.mapping.MapGesture
+import com.here.android.mpa.mapping.MapRoute
 import com.here.android.mpa.routing.Route
 
-class MapEventListeners(private val homeFragment: HomeFragment) {
+
+class MapEventListeners(private val homeFragment: HomeFragment, private val mapFragmentView: MapFragmentView) {
 
     private var m_navigationManager: NavigationManager = NavigationManager.getInstance()
 
     val m_maneuverListener: NavigationManager.ManeuverEventListener = object: NavigationManager.ManeuverEventListener(){
         override fun onManeuverEvent() {
-            Toast.makeText(homeFragment.requireActivity(), m_navigationManager.nextManeuver?.angle.toString(), Toast.LENGTH_SHORT).show()
-            val nextManeuver = m_navigationManager.nextManeuver
-            val nextManeuverDistance = m_navigationManager.nextManeuverDistance
-            val angle = nextManeuver?.angle
-            Log.i("navigation", nextManeuver?.action.toString())
-            val nextStreet = nextManeuver?.nextRoadName
-            val speech = StringBuilder("In ")
-            if(nextManeuverDistance < 1200) {
-                speech.append(nextManeuverDistance.toString())
-                speech.append(" feet")
-            } else if(nextManeuverDistance < 2400){
-                speech.append("quarter of a mile")
-            } else if(nextManeuverDistance < 3000){
-                speech.append("half a mile")
-            } else if(nextManeuverDistance < 5280){
-                speech.append("three quarters of a mile")
-            } else {
-                val mile = Math.floor(nextManeuverDistance/5280.0)
-                speech.append(mile)
-                speech.append(" miles")
-            }
-            speech.append(", turn")
-            speech.append(" into")
-            speech.append(nextStreet)
-            homeFragment.speakText(speech.toString(), TextToSpeech.QUEUE_FLUSH)
+
+        }
+    }
+
+    val m_instructionListener: NavigationManager.NewInstructionEventListener = object : NavigationManager.NewInstructionEventListener() {
+        override fun onNewInstructionEvent() {
+            m_navigationManager.nextManeuver
         }
     }
 
@@ -56,7 +34,7 @@ class MapEventListeners(private val homeFragment: HomeFragment) {
     val m_navigationManagerEventListener: NavigationManager.NavigationManagerEventListener =
         object : NavigationManager.NavigationManagerEventListener() {
             override fun onRunningStateChanged() {
-//                Toast.makeText(m_activity, "Running state changed", Toast.LENGTH_SHORT).show()
+
             }
 
             override fun onNavigationModeChanged() {
@@ -64,8 +42,12 @@ class MapEventListeners(private val homeFragment: HomeFragment) {
             }
 
             override fun onEnded(navigationMode: NavigationManager.NavigationMode) {
-//                Toast.makeText(m_activity, "$navigationMode was ended", Toast.LENGTH_SHORT).show()
-                homeFragment.removeAllMapObjects()
+                homeFragment.onNavigationEnded()
+            }
+
+            override fun onDestinationReached() {
+                Toast.makeText(homeFragment.requireContext(), "Arrived", Toast.LENGTH_SHORT).show()
+                homeFragment.onDestinationReached()
             }
 
             override fun onMapUpdateModeChanged(mapUpdateMode: NavigationManager.MapUpdateMode) {
@@ -76,7 +58,10 @@ class MapEventListeners(private val homeFragment: HomeFragment) {
             }
 
             override fun onRouteUpdated(route: Route) {
-//                Toast.makeText(m_activity, "Route updated", Toast.LENGTH_SHORT).show()
+                //replace old route with new one
+                mapFragmentView.m_map?.removeMapObject(mapFragmentView.m_currentRoute!!)
+                mapFragmentView.m_currentRoute = MapRoute(route)
+                mapFragmentView.m_map?.addMapObject(mapFragmentView.m_currentRoute!!)
             }
 
             override fun onCountryInfo(s: String, s1: String) {
@@ -86,4 +71,79 @@ class MapEventListeners(private val homeFragment: HomeFragment) {
                 ).show()
             }
         }
+
+    val gestureListener: MapGesture.OnGestureListener = object: MapGesture.OnGestureListener{
+        override fun onPanStart() {
+            pauseRoadView()
+        }
+
+        override fun onPanEnd() {
+            pauseRoadView()
+        }
+
+        override fun onMultiFingerManipulationStart() {
+            pauseRoadView()
+        }
+
+        override fun onMultiFingerManipulationEnd() {
+            pauseRoadView()
+        }
+
+        override fun onMapObjectsSelected(p0: MutableList<ViewObject>): Boolean {
+            pauseRoadView()
+            return false
+        }
+
+        override fun onTapEvent(p0: PointF): Boolean {
+            return false
+        }
+
+        override fun onDoubleTapEvent(p0: PointF): Boolean {
+            resumeRoadView()
+            return false
+        }
+
+        override fun onPinchLocked() {
+            pauseRoadView()
+        }
+
+        override fun onPinchZoomEvent(p0: Float, p1: PointF): Boolean {
+            pauseRoadView()
+            return false
+        }
+
+        override fun onRotateLocked() {
+            pauseRoadView()
+        }
+
+        override fun onRotateEvent(p0: Float): Boolean {
+            pauseRoadView()
+            return false
+        }
+
+        override fun onTiltEvent(p0: Float): Boolean {
+            return false
+        }
+
+        override fun onLongPressEvent(p0: PointF): Boolean {
+            return false
+        }
+
+        override fun onLongPressRelease() {
+
+        }
+
+        override fun onTwoFingerTapEvent(p0: PointF): Boolean {
+            return false
+        }
+
+    }
+
+    fun pauseRoadView(){
+        mapFragmentView.pauseRoadView()
+    }
+
+    fun resumeRoadView() {
+        mapFragmentView.resumeRoadView()
+    }
 }
