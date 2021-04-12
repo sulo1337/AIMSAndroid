@@ -42,8 +42,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //initialize map fragment
-//        mapFragmentView = MapFragmentView(this, binding.viewModel!!)
+        hideNavFab()
+        hideGpsFab()
+        binding.navFab.setOnClickListener {
+            resumeRoadView()
+        }
 
         //drawer layout
         val backdropHeader = binding.backdropHeader
@@ -120,10 +123,13 @@ class HomeFragment : Fragment() {
 
     fun startNavigationMode() {
         prefs.edit().putBoolean("navigating", true).apply()
+        hideGpsFab()
     }
 
     fun stopNavigationMode() {
         prefs.edit().putBoolean("navigating", false).apply()
+        viewGpsFab()
+        hideNavFab()
     }
 
     override fun onPause() {
@@ -135,5 +141,35 @@ class HomeFragment : Fragment() {
         super.onResume()
         mapFragmentView = MapFragmentView(this, binding.viewModel!!)
 
+    }
+
+    fun viewNavFab() {
+        binding.navFab.visibility = View.VISIBLE
+    }
+
+    fun viewGpsFab() {
+        binding.gpsFab.visibility = View.VISIBLE
+    }
+
+    fun hideNavFab() {
+        binding.navFab.visibility = View.GONE
+    }
+
+    fun hideGpsFab() {
+        binding.gpsFab.visibility = View.GONE
+    }
+
+    fun pauseRoadView(){
+        if(prefs.getBoolean("navigating", false)){
+            mapFragmentView?.pauseRoadView()
+            viewNavFab()
+        }
+    }
+
+    fun resumeRoadView() {
+        if(prefs.getBoolean("navigating", false)){
+            mapFragmentView?.resumeRoadView()
+            hideNavFab()
+        }
     }
 }

@@ -140,10 +140,10 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
     }
 
     fun pauseRoadView(){
-        mapFragmentView.pauseRoadView()
+        homeFragment.pauseRoadView()
     }
 
     fun resumeRoadView() {
-        mapFragmentView.resumeRoadView()
+        homeFragment.resumeRoadView()
     }
 }

@@ -95,6 +95,8 @@ class MapFragmentView(
                         val lastNavigatedLongitude = prefs.getDouble("lastNavigatedLongitude", -92.0796938)
                         val destination = GeoCoordinate(lastNavigatedLatitude, lastNavigatedLongitude)
                         navigate(startPoint, destination)
+                    } else {
+                        parentFragment.viewGpsFab()
                     }
                 } else {
                     Toast.makeText(m_activity, "Cannot init map", Toast.LENGTH_LONG).show()
@@ -108,6 +110,7 @@ class MapFragmentView(
     }
 
     private fun createRoute(srcGeoCoordinate: GeoCoordinate, destGeoCoordinate: GeoCoordinate) {
+        //clear previous navigation data (if any)
         onNavigationEnded()
         /* Initialize a CoreRouter */
         val coreRouter = CoreRouter()
@@ -204,9 +207,6 @@ class MapFragmentView(
         parentFragment.startNavigationMode()
         /* Configure Navigation manager to launch navigation on current map */
         m_navigationManager!!.setMap(m_map)
-        // show position indicator
-        // note, it is also possible to change icon for the position indicator
-        m_mapFragment!!.positionIndicator!!.isVisible = true
 
         /*
          * Start the turn-by-turn navigation.Please note if the transport mode of the passed-in
@@ -215,7 +215,7 @@ class MapFragmentView(
          * by calling either simulate() or startTracking()
          */
 
-        /* Choose navigation modes between real time navigation and simulation */
+//        /* Choose navigation modes between real time navigation and simulation */
         val alertDialogBuilder = AlertDialog.Builder(m_activity, R.style.AlertDialogTheme)
         alertDialogBuilder.setTitle("Navigation")
         alertDialogBuilder.setMessage("Choose Mode")
@@ -238,6 +238,8 @@ class MapFragmentView(
         wmlp.gravity = Gravity.TOP or Gravity.LEFT
         wmlp.verticalMargin = 0.6f
         alertDialog.show()
+//        m_navigationManager!!.simulate(m_route!!, 60)
+//        m_map!!.tilt = 0f
 
         /*
          * Set the map update mode to ROADVIEW.This will enable the automatic map movement based on
