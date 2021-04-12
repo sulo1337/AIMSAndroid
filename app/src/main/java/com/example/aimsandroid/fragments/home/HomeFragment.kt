@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.WaypointDetailDialog
+import com.example.aimsandroid.utils.TextToSpeechUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoCoordinate
 
@@ -20,6 +21,7 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var binding: FragmentHomeBinding
+    lateinit var textToSpeechUtil: TextToSpeechUtil
     private var mapFragmentView: MapFragmentView? = null
 
     override fun onCreateView(
@@ -32,7 +34,7 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-
+        textToSpeechUtil = TextToSpeechUtil(requireContext())
         return binding.root;
     }
 
@@ -40,7 +42,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //initialize map fragment
-        mapFragmentView = MapFragmentView(requireActivity(), childFragmentManager, Runnable {
+        mapFragmentView = MapFragmentView(this, Runnable {
             mapFragmentView?.let {
                 val viewModel = binding.viewModel
                 //TODO remove map from view model as map is ui
@@ -107,6 +109,14 @@ class HomeFragment : Fragment() {
         } else {
             sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+    }
+
+    fun removeAllMapObjects() {
+        mapFragmentView?.removeAllMapObjects()
+    }
+
+    fun speakText(textToSpeak: String, mode: Int) {
+        textToSpeechUtil.speakText(textToSpeak, mode)
     }
 
     override fun onDestroy() {

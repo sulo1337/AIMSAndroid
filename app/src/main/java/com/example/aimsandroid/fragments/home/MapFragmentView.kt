@@ -2,24 +2,16 @@ package com.example.aimsandroid.fragments.home
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import android.content.SharedPreferences.Editor
 import android.content.res.Configuration
-import android.graphics.Color
-import android.util.Log
+import android.view.Gravity
+import android.view.Window
 import android.widget.Button
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import com.example.aimsandroid.R
-import com.example.aimsandroid.service.ForegroundService
-import com.example.aimsandroid.utils.MapPositionChangedListener
 import com.example.aimsandroid.utils.MapTransformListener
 import com.here.android.mpa.common.*
 import com.here.android.mpa.guidance.NavigationManager
 import com.here.android.mpa.guidance.NavigationManager.MapUpdateMode
-import com.here.android.mpa.guidance.NavigationManager.NavigationManagerEventListener
 import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.here.android.mpa.mapping.Map
 import com.here.android.mpa.mapping.MapRoute
@@ -36,10 +28,10 @@ import java.lang.ref.WeakReference
  * the usage.
  */
 class MapFragmentView(
-    private val m_activity: FragmentActivity,
-    childFragmentManager: FragmentManager,
+    private val parentFragment: HomeFragment,
     private val initializeViewModel: Runnable
 ) {
+    private val m_activity = parentFragment.requireActivity()
     private var m_mapFragment: AndroidXMapFragment? = null
     private var m_naviControlButton: Button? = null
     var m_map: Map? = null
@@ -157,7 +149,7 @@ class MapFragmentView(
                                      * so the entire route can be easily seen.
                                      */m_geoBoundingBox = routeResults[0].route.boundingBox
                                 m_map!!.zoomTo(
-                                    m_geoBoundingBox!!, Map.Animation.NONE,
+                                    m_geoBoundingBox!!, Map.Animation.BOW,
                                     Map.MOVE_PRESERVE_ORIENTATION
                                 )
                                 startNavigation()
@@ -189,23 +181,6 @@ class MapFragmentView(
      * In order to retrieve location updates more frequently start a foreground service.
      * See https://developer.android.com/guide/components/services.html#Foreground
      */
-    private fun startForegroundService() {
-        if (!m_foregroundServiceStarted) {
-            m_foregroundServiceStarted = true
-            val startIntent = Intent(m_activity, ForegroundService::class.java)
-            startIntent.action = ForegroundService.START_ACTION
-            m_activity.applicationContext.startService(startIntent)
-        }
-    }
-
-    private fun stopForegroundService() {
-        if (m_foregroundServiceStarted) {
-            m_foregroundServiceStarted = false
-            val stopIntent = Intent(m_activity, ForegroundService::class.java)
-            stopIntent.action = ForegroundService.STOP_ACTION
-            m_activity.applicationContext.startService(stopIntent)
-        }
-    }
 
     private fun startNavigation() {
         /* Configure Navigation manager to launch navigation on current map */
@@ -230,17 +205,21 @@ class MapFragmentView(
         ) { dialoginterface, i ->
             m_navigationManager!!.startNavigation(m_route!!)
             m_map!!.tilt = 0f
-            startForegroundService()
+//            startForegroundService()
         }
         alertDialogBuilder.setPositiveButton(
             "Simulation"
         ) { dialoginterface, i ->
             m_navigationManager!!.simulate(m_route!!, 60) //Simualtion speed is set to 60 m/s
             m_map!!.tilt = 0f
-            startForegroundService()
         }
         val alertDialog = alertDialogBuilder.create()
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val wmlp = alertDialog.window!!.attributes
+        wmlp.gravity = Gravity.TOP or Gravity.LEFT
+        wmlp.verticalMargin = 0.6f
         alertDialog.show()
+
         /*
          * Set the map update mode to ROADVIEW.This will enable the automatic map movement based on
          * the current location.If user gestures are expected during the navigation, it's
@@ -257,78 +236,26 @@ class MapFragmentView(
 
     private fun addNavigationListeners() {
 
-        /*
-         * Register a NavigationManagerEventListener to monitor the status change on
-         * NavigationManager
-         */
+        val mapEventListeners = MapEventListeners(parentFragment)
+
         m_navigationManager!!.addNavigationManagerEventListener(
-            WeakReference(
-                m_navigationManagerEventListener
-            )
+            WeakReference(mapEventListeners.m_navigationManagerEventListener)
         )
 
-        /* Register a PositionListener to monitor the position updates */m_navigationManager!!.addPositionListener(
-            WeakReference(m_positionListener)
+        m_navigationManager!!.addPositionListener(
+            WeakReference(mapEventListeners.m_positionListener)
         )
 
         m_navigationManager!!.addManeuverEventListener(
-            WeakReference(m_maneuverListener)
+            WeakReference(mapEventListeners.m_maneuverListener)
         )
     }
-
-    private val m_maneuverListener: NavigationManager.ManeuverEventListener = object: NavigationManager.ManeuverEventListener(){
-        override fun onManeuverEvent() {
-            Toast.makeText(m_activity, m_navigationManager?.nextManeuver?.angle.toString(), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private val m_positionListener: NavigationManager.PositionListener = object : NavigationManager.PositionListener() {
-        override fun onPositionUpdated(geoPosition: GeoPosition) {
-            /* Current position information can be retrieved in this callback */
-        }
-    }
-    private val m_navigationManagerEventListener: NavigationManagerEventListener =
-        object : NavigationManagerEventListener() {
-            override fun onRunningStateChanged() {
-//                Toast.makeText(m_activity, "Running state changed", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onNavigationModeChanged() {
-//                Toast.makeText(m_activity, "Navigation mode changed", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onEnded(navigationMode: NavigationManager.NavigationMode) {
-//                Toast.makeText(m_activity, "$navigationMode was ended", Toast.LENGTH_SHORT).show()
-                m_map?.removeAllMapObjects()
-                m_map?.positionIndicator?.isVisible = true
-                m_map?.setOrientation(0.0f, Map.Animation.BOW)
-                stopForegroundService()
-            }
-
-            override fun onMapUpdateModeChanged(mapUpdateMode: MapUpdateMode) {
-//                Toast.makeText(
-//                    m_activity, "Map update mode is changed to $mapUpdateMode",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-            }
-
-            override fun onRouteUpdated(route: Route) {
-//                Toast.makeText(m_activity, "Route updated", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onCountryInfo(s: String, s1: String) {
-                Toast.makeText(
-                    m_activity, "Country info updated from $s to $s1",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
 
     fun onDestroy() {
         /* Stop the navigation when app is destroyed */
         if (m_navigationManager != null) {
-            stopForegroundService()
-//            m_navigationManager!!.stop()
+            m_navigationManager!!.stop()
+//            stopForegroundService()
         }
     }
 
@@ -342,8 +269,14 @@ class MapFragmentView(
         prefs.edit().putDouble("lastZoomLevel", m_map?.zoomLevel!!).apply()
     }
 
+    fun removeAllMapObjects(){
+        m_map?.removeAllMapObjects()
+        m_map?.positionIndicator?.isVisible = true
+        m_map?.setOrientation(0.0f, Map.Animation.BOW)
+    }
+
     init {
-        mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as AndroidXMapFragment
+        mapFragment = parentFragment.childFragmentManager.findFragmentById(R.id.mapView) as AndroidXMapFragment
         val prefs = m_activity.applicationContext.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         var latitude = prefs.getDouble("lastFocusLatitude", 39.8097)
         var longitude = prefs.getDouble("lastFocusLongitude", -98.5556)
