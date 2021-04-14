@@ -185,7 +185,7 @@ class MapFragmentView(
                                     m_geoBoundingBox!!, Map.Animation.BOW,
                                     Map.MOVE_PRESERVE_ORIENTATION
                                 )
-                                startNavigation()
+                                parentFragment.afterRouteDisplayed()
                             } else {
                                 Toast.makeText(
                                     m_activity,
@@ -215,8 +215,7 @@ class MapFragmentView(
      * See https://developer.android.com/guide/components/services.html#Foreground
      */
 
-    private fun startNavigation() {
-        parentFragment.startNavigationMode()
+     fun startNavigation() {
         /* Configure Navigation manager to launch navigation on current map */
         m_navigationManager!!.setMap(m_map)
         setUpVoiceNavigation()

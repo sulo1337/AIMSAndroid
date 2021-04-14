@@ -1,21 +1,23 @@
 package com.example.aimsandroid.fragments.home
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.WaypointDetailDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoCoordinate
 import com.here.android.mpa.mapping.Map
+import com.here.android.mpa.routing.Maneuver
 import putDouble
 
 
@@ -42,10 +44,42 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        hideNavFab()
+        resetButtons()
         hideGpsFab()
         binding.navFab.setOnClickListener {
             resumeRoadView()
+        }
+
+        binding.startNavFab.setOnClickListener {
+            AlertDialog.Builder(requireActivity(), R.style.AlertDialogTheme)
+            .setTitle("Are you sure?")
+            .setMessage("Do you want to start navigation?")
+            .setNegativeButton(
+                "No"
+            ) { dialog, which ->
+                dialog.cancel()
+            }
+            .setPositiveButton(
+                "Yes"
+            ) { dialog, which ->
+                startNavigationMode()
+            }.create().show()
+        }
+
+        binding.stopNavFab.setOnClickListener {
+            AlertDialog.Builder(requireActivity(), R.style.AlertDialogTheme)
+                .setTitle("Are you sure?")
+                .setMessage("Do you want to stop navigation?")
+                .setNegativeButton(
+                    "No"
+                ) { dialog, which ->
+                    dialog.cancel()
+                }
+                .setPositiveButton(
+                    "Yes"
+                ) { dialog, which ->
+                    stopNavigationMode()
+                }.create().show()
         }
 
         //drawer layout
@@ -80,7 +114,7 @@ class HomeFragment : Fragment() {
                     navigateClickListener = {
                         val startPoint = GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!)
                         val destination = GeoCoordinate(it.latitude, it.longitude)
-                        startNavigationMode()
+                        stopNavigationMode()
                         prefs.edit().putDouble("lastNavigatedLatitude", it.latitude).apply()
                         prefs.edit().putDouble("lastNavigatedLongitude", it.longitude).apply()
                         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -112,24 +146,49 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun onNavigationEnded() {
+    fun afterRouteDisplayed() {
+        if(prefs.getBoolean("navigating", false)){
+            continueNavigationMode()
+        } else {
+            viewStartNavFab()
+            hideStopNavFab()
+            hideGpsFab()
+            hideNavFab()
+        }
+    }
+
+    fun endNavigationOnly() {
         mapFragmentView?.onNavigationEnded()
     }
 
     fun onDestinationReached() {
         stopNavigationMode()
-        mapFragmentView?.onNavigationEnded()
     }
 
     fun startNavigationMode() {
         prefs.edit().putBoolean("navigating", true).apply()
+        mapFragmentView?.startNavigation()
+        viewStopNavFab()
+        hideStartNavFab()
         hideGpsFab()
+        hideNavFab()
+    }
+
+    fun continueNavigationMode() {
+        hideStartNavFab()
+        hideGpsFab()
+        hideNavFab()
+        viewStopNavFab()
+        mapFragmentView?.startNavigation()
     }
 
     fun stopNavigationMode() {
         prefs.edit().putBoolean("navigating", false).apply()
+        mapFragmentView?.onNavigationEnded()
         viewGpsFab()
         hideNavFab()
+        hideStartNavFab()
+        hideStopNavFab()
     }
 
     override fun onPause() {
@@ -157,12 +216,35 @@ class HomeFragment : Fragment() {
         binding.gpsFab.visibility = View.VISIBLE
     }
 
+    fun viewStartNavFab() {
+        binding.startNavFab.visibility = View.VISIBLE
+    }
+
+    fun viewStopNavFab() {
+        binding.stopNavFab.visibility = View.VISIBLE
+    }
+
     fun hideNavFab() {
         binding.navFab.visibility = View.GONE
     }
 
     fun hideGpsFab() {
         binding.gpsFab.visibility = View.GONE
+    }
+
+    fun hideStartNavFab() {
+        binding.startNavFab.visibility = View.GONE
+    }
+
+    fun hideStopNavFab() {
+        binding.stopNavFab.visibility = View.GONE
+    }
+
+    fun resetButtons() {
+        viewGpsFab()
+        hideNavFab()
+        hideStartNavFab()
+        hideStopNavFab()
     }
 
     fun pauseRoadView(){

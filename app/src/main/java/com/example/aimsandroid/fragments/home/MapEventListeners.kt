@@ -3,6 +3,7 @@ package com.example.aimsandroid.fragments.home
 import android.graphics.PointF
 import android.util.Log
 import android.widget.Toast
+import com.example.aimsandroid.utils.changeNextManeuverIcon
 import com.here.android.mpa.common.GeoPosition
 import com.here.android.mpa.common.ViewObject
 import com.here.android.mpa.guidance.AudioPlayerDelegate
@@ -24,7 +25,8 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
 
     val m_instructionListener: NavigationManager.NewInstructionEventListener = object : NavigationManager.NewInstructionEventListener() {
         override fun onNewInstructionEvent() {
-            Log.i("aimsDebug", m_navigationManager.nextManeuver?.turn.toString())
+            val iconPlaceholder = homeFragment.
+            changeNextManeuverIcon(m_navigationManager.nextManeuver?.icon)
         }
     }
 
@@ -44,7 +46,7 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
             }
 
             override fun onEnded(navigationMode: NavigationManager.NavigationMode) {
-                homeFragment.onNavigationEnded()
+                homeFragment.endNavigationOnly()
             }
 
             override fun onDestinationReached() {
