@@ -137,14 +137,20 @@ class HomeFragment : Fragment() {
         mapFragmentView?.onPause()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mapFragmentView?.onDestroy()
+    }
+
     override fun onResume() {
         super.onResume()
         mapFragmentView = MapFragmentView(this, binding.viewModel!!)
-
     }
 
     fun viewNavFab() {
-        binding.navFab.visibility = View.VISIBLE
+        requireActivity().runOnUiThread {
+            binding.navFab.visibility = View.VISIBLE
+        }
     }
 
     fun viewGpsFab() {

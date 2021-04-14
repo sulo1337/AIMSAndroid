@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.speech.tts.Voice
 import android.util.Log
 import android.view.Gravity
 import android.view.Window
@@ -14,13 +15,18 @@ import com.example.aimsandroid.utils.MapTransformListener
 import com.here.android.mpa.common.*
 import com.here.android.mpa.guidance.NavigationManager
 import com.here.android.mpa.guidance.NavigationManager.MapUpdateMode
+import com.here.android.mpa.guidance.VoiceCatalog
+import com.here.android.mpa.guidance.VoiceGuidanceOptions
+import com.here.android.mpa.guidance.VoicePackage
 import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.here.android.mpa.mapping.Map
 import com.here.android.mpa.mapping.MapRoute
+import com.here.android.mpa.prefetcher.MapDataPrefetcher
 import com.here.android.mpa.routing.*
 import getDouble
 import putDouble
 import java.lang.ref.WeakReference
+import java.util.*
 
 class MapFragmentView(
     private val parentFragment: HomeFragment,
@@ -75,6 +81,8 @@ class MapFragmentView(
                         val mode = m_activity.applicationContext?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
                         it.addTransformListener(MapTransformListener())
                         m_navigationManager = NavigationManager.getInstance()
+                        m_navigationManager!!.distanceUnit = NavigationManager.UnitSystem.IMPERIAL_US
+                        m_navigationManager!!.audioPlayer.setDelegate(mapEventListeners!!.m_audioPlayerDelegate)
                         when (mode) {
                             Configuration.UI_MODE_NIGHT_YES -> {
                                 it.mapScheme = Map.Scheme.NORMAL_NIGHT
@@ -125,9 +133,10 @@ class MapFragmentView(
          */
         val routeOptions = RouteOptions()
         /* Other transport modes are also available e.g Pedestrian */routeOptions.transportMode =
-            RouteOptions.TransportMode.CAR
-        /* Disable highway in this route. */routeOptions.setHighwaysAllowed(false)
-        /* Calculate the shortest route available. */routeOptions.routeType = RouteOptions.Type.SHORTEST
+            RouteOptions.TransportMode.TRUCK
+        /* Disable highway in this route. */routeOptions.setHighwaysAllowed(true)
+
+        /* Calculate the shortest route available. */routeOptions.routeType = RouteOptions.Type.FASTEST
         /* Calculate 1 route. */routeOptions.routeCount = 1
         /* Finally set the route option */routePlan.routeOptions = routeOptions
 
@@ -155,6 +164,9 @@ class MapFragmentView(
                     routeResults?.let {
                         if (routingError == RoutingError.NONE) {
                             if (routeResults[0].route != null) {
+                                //TODO implement map data prefetcher
+//                                val mapDataPrefetcher = MapDataPrefetcher.getInstance()
+//                                mapDataPrefetcher.fetchMapData(m_route!!, 2000)
                                 m_route = routeResults[0].route
                                 /* Create a MapRoute so that it can be placed on the map */
                                 m_currentRoute = MapRoute(
@@ -207,7 +219,7 @@ class MapFragmentView(
         parentFragment.startNavigationMode()
         /* Configure Navigation manager to launch navigation on current map */
         m_navigationManager!!.setMap(m_map)
-
+        setUpVoiceNavigation()
         /*
          * Start the turn-by-turn navigation.Please note if the transport mode of the passed-in
          * route is pedestrian, the NavigationManager automatically triggers the guidance which is
@@ -269,6 +281,9 @@ class MapFragmentView(
             WeakReference(mapEventListeners!!.m_maneuverListener)
         )
 
+        m_navigationManager!!.addNewInstructionEventListener(
+            WeakReference(mapEventListeners!!.m_instructionListener)
+        )
     }
 
     fun onPause(){
@@ -279,6 +294,10 @@ class MapFragmentView(
         prefs.edit().putDouble("lastFocusLatitude", m_map?.center?.latitude!!).apply()
         prefs.edit().putDouble("lastFocusLongitude", m_map?.center?.longitude!!).apply()
         prefs.edit().putDouble("lastZoomLevel", m_map?.zoomLevel!!).apply()
+        //onNavigationEnded()
+    }
+
+    fun onDestroy(){
         onNavigationEnded()
     }
 
@@ -306,5 +325,39 @@ class MapFragmentView(
         }
     }
 
+    private fun setUpVoiceNavigation() {
+        val voiceCatalog = VoiceCatalog.getInstance()
+        voiceCatalog.downloadCatalog { error ->
+            if(error == VoiceCatalog.Error.NONE){
+                searchVoiceCatalog(voiceCatalog)
+            }
+        }
+    }
 
+    private fun searchVoiceCatalog(voiceCatalog: VoiceCatalog){
+
+        val voicePackages = voiceCatalog.catalogList
+        for(vPackage in voicePackages){
+            if(vPackage.marcCode.compareTo("eng", ignoreCase = true) == 0 ){
+                if(checkVoice(vPackage, voiceCatalog)) break
+            }
+        }
+    }
+
+    private fun checkVoice(voicePackage: VoicePackage, voiceCatalog: VoiceCatalog): Boolean{
+        if(voicePackage.isTts){
+            Log.i("aimsDebug", "checkVoice")
+            val voiceId = voicePackage.id
+            Log.i("aimsDebug", voiceId.toString())
+            voiceCatalog.downloadVoice(voiceId){error ->
+                if(error == VoiceCatalog.Error.NONE){
+                    val voiceGuidanceOptions = m_navigationManager!!.voiceGuidanceOptions
+                    voiceGuidanceOptions.setVoiceSkin(voiceCatalog.getLocalVoiceSkin(voiceId)!!)
+                    m_navigationManager!!.naturalGuidanceMode = EnumSet.allOf(NavigationManager.NaturalGuidanceMode::class.java)
+                }
+            }
+            return true
+        }
+        return false
+    }
 }

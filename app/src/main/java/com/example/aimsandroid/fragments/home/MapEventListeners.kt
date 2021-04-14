@@ -1,9 +1,11 @@
 package com.example.aimsandroid.fragments.home
 
 import android.graphics.PointF
+import android.util.Log
 import android.widget.Toast
 import com.here.android.mpa.common.GeoPosition
 import com.here.android.mpa.common.ViewObject
+import com.here.android.mpa.guidance.AudioPlayerDelegate
 import com.here.android.mpa.guidance.NavigationManager
 import com.here.android.mpa.mapping.MapGesture
 import com.here.android.mpa.mapping.MapRoute
@@ -16,13 +18,13 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
 
     val m_maneuverListener: NavigationManager.ManeuverEventListener = object: NavigationManager.ManeuverEventListener(){
         override fun onManeuverEvent() {
-
+            m_navigationManager.nextManeuver!!
         }
     }
 
     val m_instructionListener: NavigationManager.NewInstructionEventListener = object : NavigationManager.NewInstructionEventListener() {
         override fun onNewInstructionEvent() {
-            m_navigationManager.nextManeuver
+            Log.i("aimsDebug", m_navigationManager.nextManeuver?.turn.toString())
         }
     }
 
@@ -65,10 +67,7 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
             }
 
             override fun onCountryInfo(s: String, s1: String) {
-                Toast.makeText(
-                    homeFragment.requireActivity(), "Country info updated from $s to $s1",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(homeFragment.requireContext(), "Country info changed", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -136,7 +135,17 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
         override fun onTwoFingerTapEvent(p0: PointF): Boolean {
             return false
         }
+    }
 
+     val m_audioPlayerDelegate: AudioPlayerDelegate = object : AudioPlayerDelegate {
+        override fun playText(s: String): Boolean {
+            Log.i("aimsDebug", s)
+            return false
+        }
+
+        override fun playFiles(strings: Array<String>): Boolean {
+            return false
+        }
     }
 
     fun pauseRoadView(){
