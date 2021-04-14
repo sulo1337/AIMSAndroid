@@ -1,13 +1,9 @@
 package com.example.aimsandroid.fragments.home
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.speech.tts.Voice
 import android.util.Log
-import android.view.Gravity
-import android.view.Window
 import android.widget.Button
 import android.widget.Toast
 import com.example.aimsandroid.R
@@ -16,12 +12,10 @@ import com.here.android.mpa.common.*
 import com.here.android.mpa.guidance.NavigationManager
 import com.here.android.mpa.guidance.NavigationManager.MapUpdateMode
 import com.here.android.mpa.guidance.VoiceCatalog
-import com.here.android.mpa.guidance.VoiceGuidanceOptions
 import com.here.android.mpa.guidance.VoicePackage
 import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.here.android.mpa.mapping.Map
 import com.here.android.mpa.mapping.MapRoute
-import com.here.android.mpa.prefetcher.MapDataPrefetcher
 import com.here.android.mpa.routing.*
 import getDouble
 import putDouble
@@ -181,11 +175,7 @@ class MapFragmentView(
                                      * We may also want to make sure the map view is orientated properly
                                      * so the entire route can be easily seen.
                                      */m_geoBoundingBox = routeResults[0].route.boundingBox
-                                m_map!!.zoomTo(
-                                    m_geoBoundingBox!!, Map.Animation.BOW,
-                                    Map.MOVE_PRESERVE_ORIENTATION
-                                )
-                                parentFragment.afterRouteDisplayed()
+                                parentFragment.afterRouteCalculated(m_geoBoundingBox)
                             } else {
                                 Toast.makeText(
                                     m_activity,
@@ -226,31 +216,31 @@ class MapFragmentView(
          * by calling either simulate() or startTracking()
          */
 
-//        /* Choose navigation modes between real time navigation and simulation */
-        val alertDialogBuilder = AlertDialog.Builder(m_activity, R.style.AlertDialogTheme)
-        alertDialogBuilder.setTitle("Navigation")
-        alertDialogBuilder.setMessage("Choose Mode")
-        alertDialogBuilder.setNegativeButton(
-            "Navigation"
-        ) { dialoginterface, i ->
-            m_navigationManager!!.startNavigation(m_route!!)
-            m_map!!.tilt = 0f
-//            startForegroundService()
-        }
-        alertDialogBuilder.setPositiveButton(
-            "Simulation"
-        ) { dialoginterface, i ->
-            m_navigationManager!!.simulate(m_route!!, 120) //Simualtion speed is set to 60 m/s
-            m_map!!.tilt = 0f
-        }
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        val wmlp = alertDialog.window!!.attributes
-        wmlp.gravity = Gravity.TOP or Gravity.LEFT
-        wmlp.verticalMargin = 0.6f
-        alertDialog.show()
-//        m_navigationManager!!.simulate(m_route!!, 60)
-//        m_map!!.tilt = 0f
+////        /* Choose navigation modes between real time navigation and simulation */
+//        val alertDialogBuilder = AlertDialog.Builder(m_activity, R.style.AlertDialogTheme)
+//        alertDialogBuilder.setTitle("Navigation")
+//        alertDialogBuilder.setMessage("Choose Mode")
+//        alertDialogBuilder.setNegativeButton(
+//            "Navigation"
+//        ) { dialoginterface, i ->
+//            m_navigationManager!!.startNavigation(m_route!!)
+//            m_map!!.tilt = 0f
+////            startForegroundService()
+//        }
+//        alertDialogBuilder.setPositiveButton(
+//            "Simulation"
+//        ) { dialoginterface, i ->
+//            m_navigationManager!!.simulate(m_route!!, 120) //Simualtion speed is set to 60 m/s
+//            m_map!!.tilt = 0f
+//        }
+//        val alertDialog = alertDialogBuilder.create()
+//        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+//        val wmlp = alertDialog.window!!.attributes
+//        wmlp.gravity = Gravity.TOP or Gravity.LEFT
+//        wmlp.verticalMargin = 0.6f
+//        alertDialog.show()
+        m_navigationManager!!.startNavigation(m_route!!)
+        m_map!!.tilt = 0f
 
         /*
          * Set the map update mode to ROADVIEW.This will enable the automatic map movement based on
@@ -358,5 +348,14 @@ class MapFragmentView(
             return true
         }
         return false
+    }
+
+    fun zoomTo(boundingBox: GeoBoundingBox?) {
+        if (boundingBox != null) {
+            m_map?.zoomTo(
+                boundingBox, Map.Animation.BOW,
+                Map.MOVE_PRESERVE_ORIENTATION
+            )
+        }
     }
 }

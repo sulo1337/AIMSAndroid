@@ -118,15 +118,15 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/navigateButton"
             android:onClick="@{() -> clickListener.onClickNavigate(wayPoint)}"
-            android:text="@string/navigate"
+            android:text="Directions"
             android:textColor="@color/secondaryLightColor"
             app:backgroundTint="?attr/colorPrimary"
             app:cornerRadius="20dp"
-            app:icon="@drawable/ic_navigate"
+            app:icon="@drawable/ic_directions"
             app:iconTint="@color/secondaryLightColor"
             app:layout_constraintStart_toEndOf="@+id/detailsButton"
             app:layout_constraintTop_toBottomOf="@+id/fuelQuantity"
-            tools:text="Navigate" style="@style/pillButton"/>
+            tools:text="Directions" style="@style/pillButton"/>
         <View android:layout_width="match_parent" android:layout_height="10dip"
               app:layout_constraintTop_toBottomOf="@id/detailsButton"
               app:layout_constraintStart_toStartOf="parent"

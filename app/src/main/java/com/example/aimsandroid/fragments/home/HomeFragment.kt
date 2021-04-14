@@ -15,6 +15,7 @@ import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.WaypointDetailDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.here.android.mpa.common.GeoBoundingBox
 import com.here.android.mpa.common.GeoCoordinate
 import com.here.android.mpa.mapping.Map
 import com.here.android.mpa.routing.Maneuver
@@ -146,10 +147,11 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun afterRouteDisplayed() {
+    fun afterRouteCalculated(boundingBox: GeoBoundingBox?) {
         if(prefs.getBoolean("navigating", false)){
             continueNavigationMode()
         } else {
+            mapFragmentView?.zoomTo(boundingBox)
             viewStartNavFab()
             hideStopNavFab()
             hideGpsFab()
