@@ -27,6 +27,11 @@ class HomeFragment : Fragment() {
     private var mapFragmentView: MapFragmentView? = null
     private lateinit var prefs: SharedPreferences
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -107,7 +112,7 @@ class HomeFragment : Fragment() {
 
                 val clickListeners = CurrentTripAdapter.CurrentTripClickListener(
                     detailsClickListener = {
-                        val dialog: WaypointDetailDialog = WaypointDetailDialog.newInstance(it)
+                        val dialog = WaypointDetailDialog.newInstance(it)
                         dialog.show(childFragmentManager, "wayPointDetailDialogCurrentTrip")
                     },
                     navigateClickListener = {

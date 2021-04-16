@@ -2,6 +2,7 @@ package com.example.aimsandroid.database
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
+import java.io.Serializable
 import java.util.*
 
 @Entity(tableName = "review_table")
@@ -82,7 +83,8 @@ data class BillOfLading(
     val comments: String?,
     val billOfLadingNumber: Long?,
     val loadingStarted: String?,
-    val loadingEnded: String?
+    val loadingEnded: String?,
+    val arrivedAt: String?
 )
 
 data class WaypointWithBillOfLading(

@@ -1,7 +1,8 @@
 package com.example.aimsandroid.fragments.home.currenttrip.detaildialog
 
-import android.content.DialogInterface
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +32,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
         setStyle(STYLE_NORMAL, R.style.FullscreenDialogTheme)
     }
 
@@ -73,29 +75,48 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
             val billOfLading: LiveData<BillOfLading> = tripRepository.getBillOfLading(waypoint.seqNum, waypoint.owningTripId)
             billOfLading.observe(viewLifecycleOwner, Observer {
                 if (it == null) {
-                    binding.startLoading.isEnabled = true
-                    binding.stopLoading.isEnabled = false
-                    binding.startLoading.alpha = 1.0f
-                    binding.stopLoading.alpha = 0.5f
-                    binding.billOfLadingDescription.text = "Not available!"
+                    notArrived()
+                    binding.billOfLadingDescription.text = "not available"
                 } else if (it.complete!!){
-                    binding.startLoading.visibility = View.GONE
-                    binding.stopLoading.visibility = View.GONE
+                    waypointCaptured()
                     binding.billOfLadingDescription.text = it.toString()
                 }
                 else {
-                    binding.startLoading.isEnabled = false
-                    binding.stopLoading.isEnabled = true
-                    binding.startLoading.alpha = 0.5f
-                    binding.stopLoading.alpha = 1.0f
-                    binding.billOfLadingDescription.text = it.toString()
+                    if(it.loadingStarted == null){
+                        loadingNotStarted()
+                        binding.billOfLadingDescription.text = it.toString()
+                    } else if (it.loadingEnded == null) {
+                        loadingNotEnded()
+                        binding.billOfLadingDescription.text = it.toString()
+                    } else {
+                        loadingEnded()
+                        binding.billOfLadingDescription.text = it.toString()
+                    }
                 }
             })
 
-        binding.directions.setOnClickListener {
+        binding.directionsButton.setOnClickListener {
             val parentFragment = parentFragment as HomeFragment
             parentFragment.showDirections(GeoCoordinate(waypoint.latitude, waypoint.longitude))
             dismiss()
+        }
+
+        binding.arrivedButton.setOnClickListener {
+            val billOfLading = BillOfLading(
+                waypoint.seqNum,
+                waypoint.owningTripId,
+                false,
+                null,
+                null,
+                null,
+                "",
+                "",
+                null,
+                null,
+                null,
+                getCurrentDateTimeString()
+            )
+            updateBillOfLading(billOfLading)
         }
 
         binding.startLoading.setOnClickListener {
@@ -109,23 +130,24 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                 val fuelStickReading = alertStartBolBinding.fuelStickReading
                 if(!fuelStickReading.text.toString().equals("")){
                     dialog.dismiss()
-                    val sdf = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z")
-                    val currentDateandTime: String = sdf.format(Date())
-                    val billOfLading = BillOfLading(
-                        waypoint.seqNum,
-                        waypoint.owningTripId,
-                        false,
-                        null,
-                        java.lang.Double.parseDouble(fuelStickReading.text.toString()),
-                        null,
-                        "",
-                        "",
-                        null,
-                        currentDateandTime,
-                        ""
-                    )
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        tripRepository.insertBillOfLading(billOfLading)
+                    billOfLading.value.let{
+                        it?.let{
+                            val billOfLading = BillOfLading(
+                                it.wayPointSeqNum,
+                                it.tripIdFk,
+                                it.complete,
+                                it.deliveryTicketNumber,
+                                java.lang.Double.parseDouble(fuelStickReading.text.toString()),
+                                it.finalMeterReading,
+                                it.pickedUpBy,
+                                it.comments,
+                                it.billOfLadingNumber,
+                                getCurrentDateTimeString(),
+                                null,
+                                it.arrivedAt
+                            )
+                            updateBillOfLading(billOfLading)
+                        }
                     }
                 }
             }
@@ -133,48 +155,90 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
 
         binding.stopLoading.setOnClickListener {
-            val alertStartBolBinding = AlertStartBolBinding.inflate(requireActivity().layoutInflater)
-            val dialog = AlertDialog.Builder(ContextThemeWrapper(requireActivity(), R.style.AlertDialogTheme))
-                .setTitle("Fuel Stick Reading")
-                .setView(alertStartBolBinding.root)
-                .create()
-            val fuelStickReadingBtn = alertStartBolBinding.fuelStickReadingBtn
-            fuelStickReadingBtn.setOnClickListener {
-                val fuelStickReading = alertStartBolBinding.fuelStickReading
-                if(!fuelStickReading.text.toString().equals("")){
-                    dialog.dismiss()
-                    val sdf = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z")
-                    val currentDateandTime: String = sdf.format(Date())
-                    billOfLading.value.let{
-                        it?.let{
-                            val billOfLading = BillOfLading(
-                                it.wayPointSeqNum,
-                                it.tripIdFk,
-                                true,
-                                it.deliveryTicketNumber,
-                                it.initialMeterReading,
-                                java.lang.Double.parseDouble(fuelStickReading.text.toString()),
-                                it.pickedUpBy,
-                                it.comments,
-                                it.billOfLadingNumber,
-                                it.loadingStarted,
-                                currentDateandTime
-                            )
-                            viewLifecycleOwner.lifecycleScope.launch {
-                                tripRepository.insertBillOfLading(billOfLading)
-                            }
-                        }
-                    }
-
+            billOfLading.value.let{
+                it?.let{
+                    val billOfLading = BillOfLading(
+                        it.wayPointSeqNum,
+                        it.tripIdFk,
+                        false,
+                        it.deliveryTicketNumber,
+                        it.initialMeterReading,
+                        it.finalMeterReading,
+                        it.pickedUpBy,
+                        it.comments,
+                        it.billOfLadingNumber,
+                        it.loadingStarted,
+                        getCurrentDateTimeString(),
+                        it.arrivedAt
+                    )
+                    updateBillOfLading(billOfLading)
                 }
             }
-            dialog.show()
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        dismiss()
+    @SuppressLint("SimpleDateFormat")
+    private fun getCurrentDateTimeString(): String{
+        val sdf = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z")
+        val currentDateandTime: String = sdf.format(Date())
+        return currentDateandTime
+    }
+
+    private fun updateBillOfLading(billOfLading: BillOfLading){
+        viewLifecycleOwner.lifecycleScope.launch {
+            tripRepository.insertBillOfLading(billOfLading)
+        }
+    }
+
+    private fun notArrived() {
+        binding.arrivedButton.visibility = View.VISIBLE
+        binding.startLoading.visibility = View.GONE
+        binding.stopLoading.visibility = View.GONE
+        binding.captureButton.visibility = View.GONE
+    }
+
+    private fun waypointCaptured() {
+        binding.arrivedButton.visibility = View.GONE
+        binding.startLoading.visibility = View.GONE
+        binding.stopLoading.visibility = View.GONE
+        binding.captureButton.visibility = View.GONE
+    }
+
+    private fun loadingNotStarted() {
+        binding.arrivedButton.visibility = View.GONE
+        binding.captureButton.visibility = View.GONE
+        binding.startLoading.visibility = View.VISIBLE
+        binding.stopLoading.visibility = View.VISIBLE
+        binding.stopLoading.isEnabled = false
+        binding.startLoading.isEnabled = true
+        binding.startLoading.alpha = 1.0f
+        binding.stopLoading.alpha = 0.5f
+    }
+
+    private fun loadingNotEnded() {
+        binding.arrivedButton.visibility = View.GONE
+        binding.captureButton.visibility = View.GONE
+        binding.startLoading.visibility = View.VISIBLE
+        binding.stopLoading.visibility = View.VISIBLE
+        binding.stopLoading.isEnabled = true
+        binding.startLoading.isEnabled = false
+        binding.startLoading.alpha = 0.5f
+        binding.stopLoading.alpha = 1.0f
+    }
+
+    private fun loadingEnded() {
+        binding.captureButton.visibility = View.VISIBLE
+        binding.arrivedButton.visibility = View.GONE
+        binding.startLoading.visibility = View.GONE
+        binding.stopLoading.visibility = View.GONE
+
+    }
+
+    override fun onDestroyView() {
+        if(dialog != null && retainInstance) {
+            dialog!!.setDismissMessage(null)
+        }
+        super.onDestroyView()
     }
 
     companion object {
