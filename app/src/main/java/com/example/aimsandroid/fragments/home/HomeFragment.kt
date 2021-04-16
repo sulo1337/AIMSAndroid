@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
@@ -195,17 +196,26 @@ class HomeFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        Log.i("aimsDebug", "onPause called")
         mapFragmentView?.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.i("aimsDebug", "saveInstanceState called")
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.i("aimsDebug", "onDestroy called")
         mapFragmentView?.onDestroy()
     }
 
     override fun onResume() {
         super.onResume()
-        mapFragmentView = MapFragmentView(this, binding.viewModel!!)
+        Log.i("aimsDebug", "onResumeCalled")
+        mapFragmentView = MapFragmentView.getInstance(this, binding.viewModel!!)
+        mapFragmentView!!.initMapFragment()
     }
 
     fun viewNavFab() {

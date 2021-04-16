@@ -25,9 +25,9 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.INTERNET,
         Manifest.permission.ACCESS_WIFI_STATE,
-        Manifest.permission.ACCESS_NETWORK_STATE
+        Manifest.permission.ACCESS_NETWORK_STATE,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION
     )
-    var map: Map? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

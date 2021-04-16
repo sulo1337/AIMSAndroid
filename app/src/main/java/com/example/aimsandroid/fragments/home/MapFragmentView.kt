@@ -15,6 +15,7 @@ import com.here.android.mpa.guidance.VoiceCatalog
 import com.here.android.mpa.guidance.VoicePackage
 import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.here.android.mpa.mapping.Map
+import com.here.android.mpa.mapping.MapObject
 import com.here.android.mpa.mapping.MapRoute
 import com.here.android.mpa.routing.*
 import getDouble
@@ -22,14 +23,13 @@ import putDouble
 import java.lang.ref.WeakReference
 import java.util.*
 
-class MapFragmentView(
-    private val parentFragment: HomeFragment,
-    private val viewModel: HomeViewModel
+open class MapFragmentView(
+    private var parentFragment: HomeFragment,
+    private var viewModel: HomeViewModel
 ) {
     private lateinit var prefs: SharedPreferences
     private val m_activity = parentFragment.requireActivity()
     private var m_mapFragment: AndroidXMapFragment? = null
-    private var m_naviControlButton: Button? = null
     var m_map: Map? = null
     private var m_navigationManager: NavigationManager? = null
     private var m_positioningManager: PositioningManager? = null
@@ -40,22 +40,35 @@ class MapFragmentView(
     private var m_foregroundServiceStarted = false
     private var mapEventListeners: MapEventListeners? = null
     private lateinit var mapFragment: AndroidXMapFragment
-
     fun getMap(): Map? {
         return m_map
     }
 
     init {
-        Log.i("onPause", "onPauseCalled")
+        initMapFragment()
+    }
+
+    companion object Singleton{
+        private var instance: MapFragmentView? = null
+        fun getInstance(parentFragment: HomeFragment,
+                        viewModel: HomeViewModel): MapFragmentView {
+            if(instance == null) {
+                instance = MapFragmentView(parentFragment, viewModel)
+            } else {
+                instance!!.parentFragment = parentFragment
+                instance!!.viewModel = viewModel
+            }
+            return instance as MapFragmentView
+        }
+    }
+
+    fun initMapFragment() {
         mapFragment = parentFragment.childFragmentManager.findFragmentById(R.id.mapView) as AndroidXMapFragment
         prefs = m_activity.applicationContext.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         val latitude = prefs.getDouble("lastFocusLatitude", 39.8097)
         val longitude = prefs.getDouble("lastFocusLongitude", -98.5556)
         val zoomLevel = prefs.getDouble("lastZoomLevel", 15.0)
-        initMapFragment(latitude, longitude, zoomLevel)
-    }
-
-    private fun initMapFragment(latitude: Double, longitude: Double, zoomLevel: Double) {
+        val orientation = prefs.getFloat("lastOrientation", 0.0f)
         /* Locate the mapFragment UI element */
         m_mapFragment = mapFragment
         if (m_mapFragment != null) {
@@ -71,12 +84,12 @@ class MapFragmentView(
                             Map.Animation.NONE
                         )
                         it.zoomLevel = zoomLevel
+                        it.orientation = orientation
                         it.positionIndicator.isVisible = true
                         val mode = m_activity.applicationContext?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
                         it.addTransformListener(MapTransformListener())
                         m_navigationManager = NavigationManager.getInstance()
                         m_navigationManager!!.distanceUnit = NavigationManager.UnitSystem.IMPERIAL_US
-                        m_navigationManager!!.audioPlayer.setDelegate(mapEventListeners!!.m_audioPlayerDelegate)
                         when (mode) {
                             Configuration.UI_MODE_NIGHT_YES -> {
                                 it.mapScheme = Map.Scheme.NORMAL_NIGHT
@@ -108,7 +121,16 @@ class MapFragmentView(
     }
 
     fun navigate(srcGeoCoordinate: GeoCoordinate, destGeoCoordinate: GeoCoordinate){
-        createRoute(srcGeoCoordinate, destGeoCoordinate)
+        Log.i("aimsDebug", "here")
+        Log.i("aimsDebug", m_navigationManager?.navigationMode?.toString()!!)
+        if(m_navigationManager?.navigationMode?.toString().equals("NONE")!!){
+            createRoute(srcGeoCoordinate, destGeoCoordinate)
+        } else {
+            m_map?.removeAllMapObjects()
+            m_map?.addMapObject(m_currentRoute!!)
+            parentFragment.viewStopNavFab()
+            startNavigation()
+        }
     }
 
     private fun createRoute(srcGeoCoordinate: GeoCoordinate, destGeoCoordinate: GeoCoordinate) {
@@ -273,6 +295,8 @@ class MapFragmentView(
         m_navigationManager!!.addNewInstructionEventListener(
             WeakReference(mapEventListeners!!.m_instructionListener)
         )
+
+        m_navigationManager!!.audioPlayer.setDelegate(mapEventListeners!!.m_audioPlayerDelegate)
     }
 
     fun onPause(){
@@ -282,12 +306,13 @@ class MapFragmentView(
         val prefs = m_activity.applicationContext.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         prefs.edit().putDouble("lastFocusLatitude", m_map?.center?.latitude!!).apply()
         prefs.edit().putDouble("lastFocusLongitude", m_map?.center?.longitude!!).apply()
+        prefs.edit().putFloat("lastOrientation", m_map?.orientation!!).apply()
         prefs.edit().putDouble("lastZoomLevel", m_map?.zoomLevel!!).apply()
         //onNavigationEnded()
     }
 
     fun onDestroy(){
-        onNavigationEnded()
+//        onNavigationEnded()
     }
 
     fun onNavigationEnded() {
@@ -296,6 +321,7 @@ class MapFragmentView(
             m_navigationManager!!.removeNavigationManagerEventListener(mapEventListeners!!.m_navigationManagerEventListener)
             m_navigationManager!!.removePositionListener(mapEventListeners!!.m_positionListener)
             m_navigationManager!!.removeManeuverEventListener(mapEventListeners!!.m_maneuverListener)
+            m_navigationManager!!.removeNewInstructionEventListener(mapEventListeners!!.m_instructionListener)
         }
         m_map?.removeAllMapObjects()
         m_map?.positionIndicator?.isVisible = true
