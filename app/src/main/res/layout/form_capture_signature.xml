@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+    >
+
+        <com.github.gcacace.signaturepad.views.SignaturePad
+            android:id="@+id/signaturePad"
+            android:layout_width="256dp"
+            android:layout_height="0dp"
+            android:backgroundTint="@color/gray"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/ltgray"
+            app:penColor="@color/black"/>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      app:layout_constraintStart_toStartOf="parent"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintEnd_toStartOf="@id/signaturePad"
+                      android:id="@+id/buttonContainer"
+                      android:rotation="90"
+        >
+            <com.google.android.material.button.MaterialButton android:layout_width="wrap_content"
+                                                               android:layout_height="wrap_content"
+                                                               android:layout_margin="5dp"
+                                                               android:layout_weight="1"
+                                                               android:layout_gravity="center"
+                                                               style="@style/pillButton"
+                                                               android:text="Save Signature"
+                                                               android:textColor="?attr/colorPrimary"
+                                                               app:backgroundTint="@color/secondaryLightColor"
+
+            />
+
+            <com.google.android.material.button.MaterialButton android:layout_width="wrap_content"
+                                                               android:layout_height="wrap_content"
+                                                               android:layout_margin="5dp"
+                                                               android:layout_gravity="center"
+                                                               android:layout_weight="2"
+                                                               style="@style/pillButton"
+                                                               android:text="Clear Pad"
+                                                               android:textColor="@color/secondaryLightColor"
+                                                               app:backgroundTint="?attr/colorPrimary"
+
+            />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

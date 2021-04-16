@@ -1,5 +1,7 @@
 package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 
+import android.content.DialogInterface
+import android.content.pm.ActivityInfo
 import android.os.Binder
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -58,7 +60,16 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
                 binding.deliveryForm.deliveryStarted.setText(it.loadingStarted)
                 binding.deliveryForm.deliveryEnded.setText(it.loadingEnded)
             })
+            binding.deliveryForm.captureSignatureButton.setOnClickListener {
+                val captureSignatureDialog = CaptureSignatureDialog.newInstance()
+                captureSignatureDialog.show(childFragmentManager, "captureSignatureDialog")
+            }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.clear()
     }
 
     override fun onDestroyView() {

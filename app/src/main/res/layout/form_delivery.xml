@@ -331,6 +331,12 @@
             app:layout_constraintStart_toStartOf="@id/pickedUpByLayout"
         />
 
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                   app:layout_constraintStart_toStartOf="@id/pickedUpByLayout"
+                   app:layout_constraintEnd_toEndOf="@id/pickedUpByLayout"
+                   app:layout_constraintTop_toBottomOf="@id/captureSignatureButton"
+                   android:id="@+id/signatureView"/>
+
         <ImageView android:id="@+id/commentIcon" android:layout_width="32dp"
                    android:layout_height="32dp"
                    android:layout_marginStart="16dp"
@@ -351,9 +357,9 @@
             app:endIconDrawable="@drawable/ic_close"
             app:endIconMode="clear_text"
             app:hintTextColor="@color/secondaryLightColor"
-            app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            app:layout_constraintEnd_toEndOf="@id/pickedUpByLayout"
             app:layout_constraintStart_toEndOf="@id/commentIcon"
-            app:layout_constraintTop_toBottomOf="@+id/captureSignatureButton"
+            app:layout_constraintTop_toBottomOf="@+id/signatureView"
             app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/comment"
                                                                      android:layout_width="match_parent"

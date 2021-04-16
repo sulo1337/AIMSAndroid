@@ -27,11 +27,6 @@ class HomeFragment : Fragment() {
     private var mapFragmentView: MapFragmentView? = null
     private lateinit var prefs: SharedPreferences
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -206,11 +201,6 @@ class HomeFragment : Fragment() {
         mapFragmentView?.onPause()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Log.i("aimsDebug", "saveInstanceState called")
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         Log.i("aimsDebug", "onDestroy called")
@@ -278,4 +268,6 @@ class HomeFragment : Fragment() {
             hideNavFab()
         }
     }
+
+
 }

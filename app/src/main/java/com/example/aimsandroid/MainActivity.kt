@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,9 +15,9 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.gu.toolargetool.TooLargeTool
 import com.here.android.mpa.mapping.Map
 import com.jakewharton.processphoenix.ProcessPhoenix
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,8 +39,8 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_bar)
         bottomNavigationView.setupWithNavController(navController)
         bottomNavigationView.setOnNavigationItemReselectedListener {  }
-
         handlePermissions()
+        TooLargeTool.startLogging(this.application)
 //        //if we do not have location permission
 //        if(ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //            requestLocationPermission()
@@ -105,7 +106,13 @@ class MainActivity : AppCompatActivity() {
         ProcessPhoenix.triggerRebirth(applicationContext)
     }
 
-//    private fun requestLocationPermission() {
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outPersistentState.clear()
+        outState.clear()
+    }
+
+    //    private fun requestLocationPermission() {
 //        //if requesting location permission second time
 //        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
 //            AlertDialog.Builder(ContextThemeWrapper(this, R.style.dialog))
