@@ -1,8 +1,7 @@
-package com.example.aimsandroid.fragments.home.currenttrip.detaildialog
+package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
@@ -174,6 +173,10 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                     updateBillOfLading(billOfLading)
                 }
             }
+        }
+
+        binding.captureButton.setOnClickListener {
+            CaptureBolDialog.newInstance(waypoint).show(childFragmentManager, "captureBolFormDialog")
         }
     }
 

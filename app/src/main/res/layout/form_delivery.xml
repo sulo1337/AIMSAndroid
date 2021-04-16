@@ -14,104 +14,371 @@
         android:theme="@style/Theme.AIMSAndroid"
         android:background="?attr/colorPrimary">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/billOfLadingDialogToolbar"
-            android:layout_width="match_parent"
+        <ImageView android:id="@+id/fuelMeterIcon" android:layout_width="32dp"
+                   android:layout_height="32dp"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginTop="16dp"
+                   android:src="@drawable/ic_fuel_meter"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toTopOf="parent" app:tint="@color/secondaryLightColor"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/initialFuelStickReadingLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary">
-
-            <TextView
-                android:id="@+id/textView26"
-                style="@style/san_francisco_bold_32"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="Capture Bill"
-                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.52"/>
-
-            <View
-                android:id="@+id/divider4"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="8dp"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/closeButton" />
-
-<!--            <ImageView-->
-<!--                android:layout_width="32dp"-->
-<!--                android:layout_height="32dp"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toStartOf="@id/saveText"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:srcCompat="?attr/cameraIcon" />-->
-
-            <TextView
-                android:id="@+id/saveText"
-                style="@style/san_francisco_bold_20"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="Save"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/billOfLadingDialogToolbar"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="32dp"
+            android:hint="Initial Fuel Meter Reading"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
+            app:hintTextColor="@color/secondaryLightColor"
+            app:layout_constraintBottom_toBottomOf="@id/fuelMeterIcon"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toEndOf="@id/fuelMeterIcon"
+            app:layout_constraintTop_toTopOf="@id/fuelMeterIcon"
+            app:placeholderTextColor="@color/secondaryLightColor">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/initialFuelStickReading"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="numberDecimal"
+                                                                     android:textCursorDrawable="@null"
+                                                                     android:textColor="?attr/colorOnPrimary"
+            />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-            >
 
-                <TextView
-                    style="@style/san_francisco_bold_32"
-                    android:id="@+id/destInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Chevron"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <TextView
-                    android:id="@+id/addrInfo"
-                    style="@style/san_francisco_bold_16"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="453 Forest Lane, Chicago, IL 54012"
-                    app:layout_constraintStart_toStartOf="@id/destInfo"
-                    app:layout_constraintTop_toBottomOf="@id/destInfo" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/finalFuelStickLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Final Fuel Meter Reading"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
+            app:hintTextColor="@color/secondaryLightColor"
+            app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            app:layout_constraintStart_toStartOf="@id/initialFuelStickReadingLayout"
+            app:layout_constraintTop_toBottomOf="@id/initialFuelStickReadingLayout"
+            app:placeholderTextColor="@color/secondaryLightColor">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/finalFuelStickReading"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="numberDecimal"
+                                                                     android:textCursorDrawable="@null"/>
 
-<!--                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"-->
-<!--                                                                       android:layout_height="wrap_content"-->
-<!--                                                                       app:layout_constraintTop_toBottomOf="@id/addrInfo"-->
-<!--                                                                       android:hint="Hello">-->
-<!--                    <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"-->
-<!--                                                                             android:layout_height="wrap_content"-->
 
-<!--                </com.google.android.material.textfield.TextInputLayout>-->
+        </com.google.android.material.textfield.TextInputLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView android:id="@+id/productIcon" android:layout_width="32dp"
+                   android:layout_height="32dp"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginTop="32dp"
+                   android:src="@drawable/ic_category"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toBottomOf="@id/finalFuelStickLayout"
+                   app:tint="@color/secondaryLightColor"/>
 
-        </ScrollView>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/productDeliveredLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:hint="Product Dropped"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
+            app:hintTextColor="@color/secondaryLightColor"
+            app:layout_constraintBottom_toBottomOf="@id/productIcon"
+            app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            app:layout_constraintStart_toEndOf="@id/productIcon"
+            app:layout_constraintTop_toTopOf="@id/productIcon"
+            app:placeholderTextColor="@color/secondaryLightColor">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/productDropped"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:textCursorDrawable="@null"
+                                                                     android:maxLines="1"
+                                                                     android:inputType="text"
+            />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView android:id="@+id/timeIcon" android:layout_width="32dp"
+                   android:layout_height="32dp"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginTop="32dp"
+                   android:src="@drawable/ic_clock"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toBottomOf="@id/productDeliveredLayout"
+                   app:tint="@color/secondaryLightColor"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/deliveryStartedLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:hint="Delivery Started"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:hintTextColor="@color/secondaryLightColor"
+            app:layout_constraintBottom_toBottomOf="@id/timeIcon"
+            app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            app:layout_constraintStart_toEndOf="@id/timeIcon"
+            app:layout_constraintTop_toTopOf="@id/timeIcon"
+            app:placeholderTextColor="@color/secondaryLightColor"
+        >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/deliveryStarted"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:textCursorDrawable="@null"
+                                                                     android:maxLines="1"
+                                                                     android:inputType="text"
+                                                                     android:focusable="false"
+                                                                     android:textColor="@color/dkgray"
+            />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/deliveryEndedLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Delivery Ended"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:hintTextColor="@color/secondaryLightColor"
+            app:layout_constraintEnd_toEndOf="@id/deliveryStartedLayout"
+            app:layout_constraintStart_toStartOf="@id/deliveryStartedLayout"
+            app:layout_constraintTop_toBottomOf="@id/deliveryStartedLayout"
+            app:placeholderTextColor="@color/secondaryLightColor">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/deliveryEnded"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="text"
+                                                                     android:maxLines="1"
+                                                                     android:textCursorDrawable="@null"
+                                                                     android:focusable="false"
+                                                                     android:textColor="@color/dkgray"
+            />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView android:id="@+id/quantityIcon" android:layout_width="32dp"
+                   android:layout_height="32dp"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginTop="32dp"
+                   android:src="@drawable/ic_water_drop"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toBottomOf="@id/deliveryEndedLayout"
+                   app:tint="@color/secondaryLightColor"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/grossQuantityLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:hint="Gross Quantity"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
+            app:hintTextColor="@color/secondaryLightColor"
+            app:layout_constraintBottom_toBottomOf="@id/quantityIcon"
+            app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            app:layout_constraintStart_toEndOf="@id/quantityIcon"
+            app:layout_constraintTop_toTopOf="@id/quantityIcon"
+            app:placeholderTextColor="@color/secondaryLightColor">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/grossQuantity"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="numberDecimal"
+                                                                     android:maxLines="1"
+                                                                     android:textCursorDrawable="@null"
+            />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/netQuantityLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Net Quantity"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
+            app:hintTextColor="@color/secondaryLightColor"
+            app:layout_constraintEnd_toEndOf="@id/grossQuantityLayout"
+            app:layout_constraintStart_toStartOf="@id/grossQuantityLayout"
+            app:layout_constraintTop_toBottomOf="@id/grossQuantityLayout"
+            app:placeholderTextColor="@color/secondaryLightColor">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/netQuantity"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="text"
+                                                                     android:maxLines="1"
+                                                                     android:textCursorDrawable="@null"
+            />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <ImageView android:id="@+id/ticketIcon" android:layout_width="32dp"
+                   android:layout_height="32dp"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginTop="32dp"
+                   android:src="@drawable/ic_ticket"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toBottomOf="@id/netQuantityLayout"
+                   app:tint="@color/secondaryLightColor"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/deliveryTicketLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:hint="Delivery Ticket Number"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
+            app:hintTextColor="@color/secondaryLightColor"
+            app:layout_constraintBottom_toBottomOf="@+id/ticketIcon"
+            app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            app:layout_constraintStart_toEndOf="@id/ticketIcon" app:layout_constraintTop_toTopOf="@+id/ticketIcon"
+            app:placeholderTextColor="@color/secondaryLightColor">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/deliveryTicketNumber"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="text"
+                                                                     android:maxLines="1"
+                                                                     android:textCursorDrawable="@null"
+            />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/scanBOL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/pillButton"
+            android:text="Scan Bill Of Lading"
+            app:icon="@drawable/ic_camera"
+            app:iconTint="?attr/colorPrimary"
+            app:backgroundTint="@color/secondaryLightColor"
+            android:textColor="?attr/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/deliveryTicketLayout"
+            app:layout_constraintStart_toStartOf="@id/deliveryTicketLayout"
+        />
+
+        <ImageView android:id="@+id/personIcon" android:layout_width="32dp"
+                   android:layout_height="32dp"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginTop="32dp"
+                   android:src="@drawable/ic_person"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toBottomOf="@id/scanBOL"
+                   app:tint="@color/secondaryLightColor"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/pickedUpByLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:hint="Received By"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
+            app:hintTextColor="@color/secondaryLightColor"
+            app:layout_constraintBottom_toBottomOf="@+id/personIcon"
+            app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            app:layout_constraintStart_toEndOf="@id/personIcon" app:layout_constraintTop_toTopOf="@+id/personIcon"
+            app:placeholderTextColor="@color/secondaryLightColor">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/pickedUpBy"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="text"
+                                                                     android:maxLines="1"
+                                                                     android:textCursorDrawable="@null"
+            />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/captureSignatureButton"
+            android:layout_width="wrap_content"
+                                                           android:layout_height="wrap_content"
+                                                           style="@style/pillButton"
+                                                           android:text="Capture Signature"
+                                                           app:icon="@drawable/ic_edit"
+                                                           app:iconTint="?attr/colorPrimary"
+                                                           app:backgroundTint="@color/secondaryLightColor"
+                                                           android:textColor="?attr/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/pickedUpByLayout"
+            app:layout_constraintStart_toStartOf="@id/pickedUpByLayout"
+        />
+
+        <ImageView android:id="@+id/commentIcon" android:layout_width="32dp"
+                   android:layout_height="32dp"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginTop="8dp"
+                   android:src="@drawable/ic_comment"
+                   app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="@+id/commentLayout"
+                   app:tint="@color/secondaryLightColor"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/commentLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:hint="Comments"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
+            app:hintTextColor="@color/secondaryLightColor"
+            app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            app:layout_constraintStart_toEndOf="@id/commentIcon"
+            app:layout_constraintTop_toBottomOf="@+id/captureSignatureButton"
+            app:placeholderTextColor="@color/secondaryLightColor">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/comment"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="textMultiLine|textCapSentences"
+                                                                     android:maxLines="10"
+                                                                     android:minLines="5"
+                                                                     android:textCursorDrawable="@null"
+            />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/pillButton"
+            android:text="Save"
+            app:icon="@drawable/ic_save"
+            app:iconTint="?attr/colorPrimary"
+            app:backgroundTint="@color/secondaryLightColor"
+            android:textColor="?attr/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/commentLayout"
+            app:layout_constraintStart_toStartOf="@id/commentLayout"
+        />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

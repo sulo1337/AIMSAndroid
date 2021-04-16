@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
-import com.example.aimsandroid.fragments.home.currenttrip.detaildialog.WaypointDetailDialog
+import com.example.aimsandroid.fragments.home.currenttrip.dialogs.WaypointDetailDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoBoundingBox
 import com.here.android.mpa.common.GeoCoordinate

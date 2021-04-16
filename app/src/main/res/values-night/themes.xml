@@ -10,6 +10,7 @@
         <item name="colorSecondary">@color/primaryDarkColorDM</item>
         <item name="colorSecondaryVariant">@color/primaryLightColorDM</item>
         <item name="colorOnSecondary">@color/primaryTextColorDM</item>
+        <item name="android:colorControlActivated">@color/secondaryLightColor</item>
         <!-- Customize your theme here. -->
 
     </style>
