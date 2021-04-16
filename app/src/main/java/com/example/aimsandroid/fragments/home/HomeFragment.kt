@@ -2,7 +2,6 @@ package com.example.aimsandroid.fragments.home
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -14,12 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
-import com.example.aimsandroid.fragments.home.currenttrip.WaypointDetailDialog
+import com.example.aimsandroid.fragments.home.currenttrip.detaildialog.WaypointDetailDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoBoundingBox
 import com.here.android.mpa.common.GeoCoordinate
-import com.here.android.mpa.mapping.Map
-import com.here.android.mpa.routing.Maneuver
 import putDouble
 
 
@@ -111,16 +108,11 @@ class HomeFragment : Fragment() {
                 val clickListeners = CurrentTripAdapter.CurrentTripClickListener(
                     detailsClickListener = {
                         val dialog: WaypointDetailDialog = WaypointDetailDialog.newInstance(it)
-                        dialog.show(requireActivity().supportFragmentManager, "wayPointDetailDialogCurrentTrip")
+                        dialog.show(childFragmentManager, "wayPointDetailDialogCurrentTrip")
                     },
                     navigateClickListener = {
-                        val startPoint = GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!)
                         val destination = GeoCoordinate(it.latitude, it.longitude)
-                        stopNavigationMode()
-                        prefs.edit().putDouble("lastNavigatedLatitude", it.latitude).apply()
-                        prefs.edit().putDouble("lastNavigatedLongitude", it.longitude).apply()
-                        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                        mapFragmentView?.navigate(startPoint, destination)
+                        showDirections(destination)
                     })
 
                 val adapter = CurrentTripAdapter(clickListeners)
@@ -138,6 +130,15 @@ class HomeFragment : Fragment() {
                 sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
+    }
+
+    fun showDirections(destination: GeoCoordinate) {
+        val startPoint = GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!)
+        stopNavigationMode()
+        prefs.edit().putDouble("lastNavigatedLatitude", destination.latitude).apply()
+        prefs.edit().putDouble("lastNavigatedLongitude", destination.longitude).apply()
+        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        mapFragmentView?.showDirections(startPoint, destination)
     }
 
     private fun toggleFilters() {

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.util.Log
-import android.widget.Button
 import android.widget.Toast
 import com.example.aimsandroid.R
 import com.example.aimsandroid.utils.MapTransformListener
@@ -15,7 +14,6 @@ import com.here.android.mpa.guidance.VoiceCatalog
 import com.here.android.mpa.guidance.VoicePackage
 import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.here.android.mpa.mapping.Map
-import com.here.android.mpa.mapping.MapObject
 import com.here.android.mpa.mapping.MapRoute
 import com.here.android.mpa.routing.*
 import getDouble
@@ -109,7 +107,7 @@ open class MapFragmentView(
                         val lastNavigatedLatitude = prefs.getDouble("lastNavigatedLatitude", 32.5301225)
                         val lastNavigatedLongitude = prefs.getDouble("lastNavigatedLongitude", -92.0796938)
                         val destination = GeoCoordinate(lastNavigatedLatitude, lastNavigatedLongitude)
-                        navigate(startPoint, destination)
+                        showDirections(startPoint, destination)
                     } else {
                         parentFragment.viewGpsFab()
                     }
@@ -120,7 +118,7 @@ open class MapFragmentView(
         }
     }
 
-    fun navigate(srcGeoCoordinate: GeoCoordinate, destGeoCoordinate: GeoCoordinate){
+    fun showDirections(srcGeoCoordinate: GeoCoordinate, destGeoCoordinate: GeoCoordinate){
         Log.i("aimsDebug", "here")
         Log.i("aimsDebug", m_navigationManager?.navigationMode?.toString()!!)
         if(m_navigationManager?.navigationMode?.toString().equals("NONE")!!){

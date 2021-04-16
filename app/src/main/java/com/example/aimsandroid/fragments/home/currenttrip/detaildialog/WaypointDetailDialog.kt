@@ -1,5 +1,6 @@
-package com.example.aimsandroid.fragments.home.currenttrip
+package com.example.aimsandroid.fragments.home.currenttrip.detaildialog
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
@@ -16,7 +17,9 @@ import com.example.aimsandroid.database.WayPoint
 import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.databinding.AlertStartBolBinding
 import com.example.aimsandroid.databinding.DialogWaypointDetailsBinding
+import com.example.aimsandroid.fragments.home.HomeFragment
 import com.example.aimsandroid.repository.TripRepository
+import com.here.android.mpa.common.GeoCoordinate
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -88,6 +91,13 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                     binding.billOfLadingDescription.text = it.toString()
                 }
             })
+
+        binding.directions.setOnClickListener {
+            val parentFragment = parentFragment as HomeFragment
+            parentFragment.showDirections(GeoCoordinate(waypoint.latitude, waypoint.longitude))
+            dismiss()
+        }
+
         binding.startLoading.setOnClickListener {
             val alertStartBolBinding = AlertStartBolBinding.inflate(requireActivity().layoutInflater)
             val dialog = AlertDialog.Builder(ContextThemeWrapper(requireActivity(), R.style.AlertDialogTheme))
@@ -168,7 +178,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     companion object {
-        fun newInstance(waypoint: WayPoint): WaypointDetailDialog{
+        fun newInstance(waypoint: WayPoint): WaypointDetailDialog {
             return WaypointDetailDialog(waypoint)
         }
     }
