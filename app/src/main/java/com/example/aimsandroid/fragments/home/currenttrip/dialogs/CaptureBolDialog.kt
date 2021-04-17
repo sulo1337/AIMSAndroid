@@ -1,7 +1,9 @@
 package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 
 import RotateBitmap
+import android.app.Activity
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.os.Binder
@@ -19,6 +21,7 @@ import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.databinding.FormContainerBinding
 import com.example.aimsandroid.databinding.FormDeliveryBinding
 import com.example.aimsandroid.repository.TripRepository
+import kotlinx.android.synthetic.main.form_capture_signature.*
 import kotlinx.android.synthetic.main.form_container.view.*
 import kotlinx.android.synthetic.main.form_delivery.view.*
 
@@ -56,7 +59,6 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
             binding.deliveryFormLayout.visibility = View.GONE
         } else {
             binding.pickUpFormLayout.visibility = View.GONE
-            binding.deliveryForm.signatureView.visibility = View.GONE
             billOfLading.observe(viewLifecycleOwner, Observer {
                 binding.deliveryForm.initialFuelStickReading.setText(it.initialMeterReading.toString())
                 binding.deliveryForm.productDropped.setText(waypoint.productDesc)
@@ -67,6 +69,19 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
                 val captureSignatureDialog = CaptureSignatureDialog.newInstance()
                 captureSignatureDialog.show(childFragmentManager, "captureSignatureDialog")
             }
+            binding.deliveryForm.scanBOL.setOnClickListener {
+                val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                startActivityForResult(cameraIntent, 1888)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 1888 && resultCode == Activity.RESULT_OK) {
+            val bolBitmap = data?.extras?.get("data") as Bitmap
+            binding.deliveryForm.bolView.visibility = View.VISIBLE
+            binding.deliveryForm.bolView.setImageBitmap(bolBitmap)
         }
     }
 
@@ -81,7 +96,7 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
         }
         super.onDestroyView()
     }
-    
+
     fun saveSignature(signatureBitmap: Bitmap) {
         binding.deliveryForm.signatureView.visibility = View.VISIBLE
         binding.deliveryForm.signatureView.setImageBitmap(RotateBitmap(signatureBitmap, 270.0f))

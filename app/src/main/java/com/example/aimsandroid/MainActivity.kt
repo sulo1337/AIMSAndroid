@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.INTERNET,
         Manifest.permission.ACCESS_WIFI_STATE,
         Manifest.permission.ACCESS_NETWORK_STATE,
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+        Manifest.permission.CAMERA
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

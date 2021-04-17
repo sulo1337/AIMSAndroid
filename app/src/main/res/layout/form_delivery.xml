@@ -282,13 +282,21 @@
             app:layout_constraintStart_toStartOf="@id/deliveryTicketLayout"
         />
 
+        <ImageView android:layout_width="0dp" android:layout_height="500dp"
+                   app:layout_constraintTop_toBottomOf="@id/scanBOL"
+                   app:layout_constraintStart_toStartOf="@id/deliveryTicketLayout"
+                   app:layout_constraintEnd_toEndOf="@id/deliveryTicketLayout"
+                   android:id="@+id/bolView"
+                    android:visibility="gone"
+        />
+
         <ImageView android:id="@+id/personIcon" android:layout_width="32dp"
                    android:layout_height="32dp"
                    android:layout_marginStart="16dp"
                    android:layout_marginTop="32dp"
                    android:src="@drawable/ic_person"
                    app:layout_constraintStart_toStartOf="parent"
-                   app:layout_constraintTop_toBottomOf="@id/scanBOL"
+                   app:layout_constraintTop_toBottomOf="@id/bolView"
                    app:tint="@color/secondaryLightColor"/>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -335,7 +343,9 @@
                    app:layout_constraintStart_toStartOf="@id/pickedUpByLayout"
                    app:layout_constraintEnd_toEndOf="@id/pickedUpByLayout"
                    app:layout_constraintTop_toBottomOf="@id/captureSignatureButton"
-                   android:id="@+id/signatureView"/>
+                   android:id="@+id/signatureView"
+                    android:visibility="gone"
+        />
 
         <ImageView android:id="@+id/commentIcon" android:layout_width="32dp"
                    android:layout_height="32dp"
