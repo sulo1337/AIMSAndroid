@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
@@ -17,6 +18,7 @@ import com.example.aimsandroid.fragments.home.currenttrip.dialogs.WaypointDetail
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoBoundingBox
 import com.here.android.mpa.common.GeoCoordinate
+import kotlinx.coroutines.launch
 import putDouble
 
 
@@ -101,23 +103,25 @@ class HomeFragment : Fragment() {
                 binding.currentTripTitle.text = "You have not started any trips"
                 binding.bottomSheetTitle.text = "You have not started any trips"
             } else {
-                binding.currentTripRecyclerView.visibility = View.VISIBLE
-                binding.bottomSheetTitle.text = "Current Trip"
-                binding.currentTripTitle.text = "Trip #"+it.trip.tripId
+                lifecycleScope.launch {
+                    viewModel.resolveNextWaypoint(it)
+                    binding.currentTripRecyclerView.visibility = View.VISIBLE
+                    binding.bottomSheetTitle.text = "Current Trip"
+                    binding.currentTripTitle.text = "Trip #"+it.trip.tripId
 
-                val clickListeners = CurrentTripAdapter.CurrentTripClickListener(
-                    detailsClickListener = {
-                        val dialog = WaypointDetailDialog.newInstance(it)
-                        dialog.show(childFragmentManager, "wayPointDetailDialogCurrentTrip")
-                    },
-                    navigateClickListener = {
-                        val destination = GeoCoordinate(it.latitude, it.longitude)
-                        showDirections(destination)
-                    })
-
-                val adapter = CurrentTripAdapter(clickListeners)
-                adapter.submitList(it.waypoints)
-                binding.currentTripRecyclerView.adapter = adapter
+                    val clickListeners = CurrentTripAdapter.CurrentTripClickListener(
+                        detailsClickListener = {
+                            val dialog = WaypointDetailDialog.newInstance(it)
+                            dialog.show(childFragmentManager, "wayPointDetailDialogCurrentTrip")
+                        },
+                        navigateClickListener = {
+                            val destination = GeoCoordinate(it.latitude, it.longitude)
+                            showDirections(destination)
+                        })
+                    val adapter = CurrentTripAdapter(clickListeners, prefs)
+                    adapter.submitList(it.waypoints)
+                    binding.currentTripRecyclerView.adapter = adapter
+                }
             }
         })
 

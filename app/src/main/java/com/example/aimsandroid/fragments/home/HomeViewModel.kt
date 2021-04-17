@@ -2,6 +2,7 @@ package com.example.aimsandroid.fragments.home
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.util.Log
 import android.view.View
@@ -21,7 +22,7 @@ import kotlinx.coroutines.withContext
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var map: Map? = null
     private var _currentTripId: Long = -1L
-
+    private lateinit var prefs: SharedPreferences
     private val locationRepository = LocationRepository(application)
     private val database = getDatabase(application)
     private val tripRepository = TripRepository(database)
@@ -36,8 +37,24 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    suspend fun resolveNextWaypoint(tripWithWaypoints: TripWithWaypoints) {
+        val waypoints = tripWithWaypoints.waypoints
+        var nextWaypointId = -1L
+        for(waypoint in waypoints){
+            val waypointWithBillOfLading = tripRepository.getWaypointWithBillOfLading(waypoint.seqNum, waypoint.owningTripId)
+            if(waypointWithBillOfLading.billOfLading == null){
+                nextWaypointId = waypoint.seqNum
+                break
+            } else if(waypointWithBillOfLading.billOfLading.complete == false) {
+                nextWaypointId = waypoint.seqNum
+                break
+            }
+        }
+        prefs.edit().putLong("nextWaypointSeqNumber", nextWaypointId).apply()
+    }
+
     init {
-        val prefs =application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
+        prefs =application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         _currentTripId = prefs.getLong("currentTripId", -1L)
         currentTrip =  tripRepository.getTripWithWaypointsByTripId(_currentTripId)
 
