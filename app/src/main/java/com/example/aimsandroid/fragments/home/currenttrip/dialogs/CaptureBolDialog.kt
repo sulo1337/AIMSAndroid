@@ -1,7 +1,9 @@
 package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 
+import RotateBitmap
 import android.content.DialogInterface
 import android.content.pm.ActivityInfo
+import android.graphics.Bitmap
 import android.os.Binder
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -54,6 +56,7 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
             binding.deliveryFormLayout.visibility = View.GONE
         } else {
             binding.pickUpFormLayout.visibility = View.GONE
+            binding.deliveryForm.signatureView.visibility = View.GONE
             billOfLading.observe(viewLifecycleOwner, Observer {
                 binding.deliveryForm.initialFuelStickReading.setText(it.initialMeterReading.toString())
                 binding.deliveryForm.productDropped.setText(waypoint.productDesc)
@@ -77,5 +80,10 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
             dialog!!.setDismissMessage(null)
         }
         super.onDestroyView()
+    }
+    
+    fun saveSignature(signatureBitmap: Bitmap) {
+        binding.deliveryForm.signatureView.visibility = View.VISIBLE
+        binding.deliveryForm.signatureView.setImageBitmap(RotateBitmap(signatureBitmap, 270.0f))
     }
 }

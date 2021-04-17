@@ -29,6 +29,7 @@
                       android:rotation="90"
         >
             <com.google.android.material.button.MaterialButton android:layout_width="wrap_content"
+                                                               android:id="@+id/captureSignature"
                                                                android:layout_height="wrap_content"
                                                                android:layout_margin="5dp"
                                                                android:layout_weight="1"
@@ -41,6 +42,7 @@
             />
 
             <com.google.android.material.button.MaterialButton android:layout_width="wrap_content"
+                                                               android:id="@+id/clearSignature"
                                                                android:layout_height="wrap_content"
                                                                android:layout_margin="5dp"
                                                                android:layout_gravity="center"
