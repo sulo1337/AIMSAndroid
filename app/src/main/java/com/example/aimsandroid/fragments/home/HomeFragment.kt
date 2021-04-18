@@ -3,6 +3,7 @@ package com.example.aimsandroid.fragments.home
 import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.aimsandroid.R
+import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.dialogs.WaypointDetailDialog
@@ -100,6 +102,7 @@ class HomeFragment : Fragment() {
         viewModel.currentTrip.observe(viewLifecycleOwner, Observer {
             if(it == null) {
                 binding.currentTripRecyclerView.visibility = View.GONE
+                sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 binding.currentTripTitle.text = "You have not started any trips"
                 binding.bottomSheetTitle.text = "You have not started any trips"
             } else {
@@ -271,6 +274,10 @@ class HomeFragment : Fragment() {
             mapFragmentView?.resumeRoadView()
             hideNavFab()
         }
+    }
+
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap) {
+        viewModel.saveForm(billOfLading, bolBitmap, signatureBitmap)
     }
 
 

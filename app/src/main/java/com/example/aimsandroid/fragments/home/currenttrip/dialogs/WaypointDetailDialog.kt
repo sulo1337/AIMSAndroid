@@ -1,11 +1,13 @@
 package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
@@ -113,6 +115,8 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                 null,
                 null,
                 null,
+                null,
+                null,
                 getCurrentDateTimeString()
             )
             updateBillOfLading(billOfLading)
@@ -143,6 +147,8 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                                 it.billOfLadingNumber,
                                 getCurrentDateTimeString(),
                                 null,
+                                null,
+                                null,
                                 it.arrivedAt
                             )
                             updateBillOfLading(billOfLading)
@@ -168,6 +174,8 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                         it.billOfLadingNumber,
                         it.loadingStarted,
                         getCurrentDateTimeString(),
+                        null,
+                        null,
                         it.arrivedAt
                     )
                     updateBillOfLading(billOfLading)
@@ -242,6 +250,10 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
             dialog!!.setDismissMessage(null)
         }
         super.onDestroyView()
+    }
+
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap) {
+        (parentFragment as HomeFragment).saveForm(billOfLading, bolBitmap, signatureBitmap)
     }
 
     companion object {

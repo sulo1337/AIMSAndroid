@@ -3,10 +3,12 @@ package com.example.aimsandroid.fragments.home
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
+import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.repository.LocationRepository
@@ -22,7 +24,7 @@ import kotlinx.coroutines.withContext
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var map: Map? = null
     private var _currentTripId: Long = -1L
-    private lateinit var prefs: SharedPreferences
+    private var prefs: SharedPreferences
     private val locationRepository = LocationRepository(application)
     private val database = getDatabase(application)
     private val tripRepository = TripRepository(database)
@@ -51,6 +53,41 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         prefs.edit().putLong("nextWaypointSeqNumber", nextWaypointId).apply()
+    }
+
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap) {
+        viewModelScope.launch {
+            tripRepository.insertBillOfLading(billOfLading)
+            saveBitmaps(bolBitmap, signatureBitmap)
+            tripCompleteCheck()
+        }
+    }
+
+    private fun tripCompleteCheck() {
+        viewModelScope.launch {
+            val waypoints = currentTrip.value?.waypoints
+            if(waypoints!=null){
+                var complete = true
+                for(waypoint in waypoints){
+                    val waypointWithBillOfLading = tripRepository.getWaypointWithBillOfLading(waypoint.seqNum, waypoint.owningTripId)
+                    if(waypointWithBillOfLading.billOfLading == null) {
+                        complete = false
+                        break
+                    } else if(waypointWithBillOfLading.billOfLading.complete == false) {
+                        complete = false
+                        break
+                    }
+                }
+                if(complete) {
+                    prefs.edit().putLong("currentTripId", -1L).apply()
+                    currentTrip = tripRepository.getTripWithWaypointsByTripId(-1L)
+                }
+            }
+        }
+    }
+
+    private fun saveBitmaps(bolBitmap: Bitmap, signatureBitmap: Bitmap) {
+
     }
 
     init {
