@@ -84,6 +84,8 @@ data class BillOfLading(
     val billOfLadingNumber: Long?,
     val loadingStarted: String?,
     val loadingEnded: String?,
+    val grossQuantity: Double?,
+    val netQuantity: Double?,
     val arrivedAt: String?
 )
 
