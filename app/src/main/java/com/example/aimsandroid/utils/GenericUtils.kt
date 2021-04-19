@@ -19,3 +19,7 @@ fun RotateBitmap(source: Bitmap, angle: Float): Bitmap? {
 fun getFullAddress(waypoint: WayPoint): String {
     return waypoint.address1.trim() + ", " + waypoint.city.trim() + ", "+waypoint.state.trim()+ " "+waypoint.postalCode.toString();
 }
+
+fun sortWaypointBySeqNum(waypoints: List<WayPoint>): List<WayPoint> {
+    return waypoints.sortedWith(compareBy({it.owningTripId},{it.seqNum}))
+}

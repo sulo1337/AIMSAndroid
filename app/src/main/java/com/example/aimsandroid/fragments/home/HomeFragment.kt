@@ -25,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import putDouble
+import sortWaypointBySeqNum
 
 
 class HomeFragment : Fragment() {
@@ -123,7 +124,7 @@ class HomeFragment : Fragment() {
                             showDirections(destination)
                         })
                     val adapter = CurrentTripAdapter(clickListeners, prefs)
-                    adapter.submitList(it.waypoints)
+                    adapter.submitList(sortWaypointBySeqNum(it.waypoints))
                     binding.currentTripRecyclerView.adapter = adapter
                 }
             }

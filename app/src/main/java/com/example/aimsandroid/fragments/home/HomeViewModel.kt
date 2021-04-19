@@ -16,6 +16,7 @@ import com.here.android.mpa.mapping.Map
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import sortWaypointBySeqNum
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var map: Map? = null
@@ -39,8 +40,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     suspend fun resolveNextWaypoint() {
-        val waypoints = currentTrip.value?.waypoints
+        var waypoints = currentTrip.value?.waypoints
         if(waypoints != null) {
+            waypoints = sortWaypointBySeqNum(waypoints)
             var nextWaypointId = -1L
             for(waypoint in waypoints){
                 val waypointWithBillOfLading = tripRepository.getWaypointWithBillOfLading(waypoint.seqNum, waypoint.owningTripId)
@@ -73,8 +75,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private suspend fun checkCurrentTripIsCompleted(): Boolean {
-        val waypoints = currentTrip.value?.waypoints
+        var waypoints = currentTrip.value?.waypoints
         if(waypoints!=null){
+            waypoints = sortWaypointBySeqNum(waypoints)
             var complete = true
             for(waypoint in waypoints){
                 Log.i("aimsDebug", waypoint.toString())

@@ -12,6 +12,7 @@ import com.example.aimsandroid.R
 import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.databinding.DialogTripDetailsBinding
 import com.example.aimsandroid.fragments.trips.TripsFragmentDirections
+import sortWaypointBySeqNum
 
 class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): DialogFragment(){
 
@@ -34,7 +35,7 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
             val dialog: WaypointDetailDialog = WaypointDetailDialog.newInstance(it)
             dialog.show(requireActivity().supportFragmentManager, "wayPointDetailDialog")
         })
-        adapter.submitList(tripWithWaypoints.waypoints)
+        adapter.submitList(sortWaypointBySeqNum(tripWithWaypoints.waypoints))
         binding.tripDetailRecyclerView.adapter = adapter
 
         binding.startTrip.setOnClickListener {
