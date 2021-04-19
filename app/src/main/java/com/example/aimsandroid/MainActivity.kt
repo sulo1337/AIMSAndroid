@@ -3,6 +3,8 @@ package com.example.aimsandroid
 import android.Manifest
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -40,12 +42,29 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_bar)
         bottomNavigationView.setupWithNavController(navController)
         bottomNavigationView.setOnNavigationItemReselectedListener {  }
+        checkLogin()
         handlePermissions()
+
         TooLargeTool.startLogging(this.application)
 //        //if we do not have location permission
 //        if(ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //            requestLocationPermission()
 //        }
+    }
+
+    private fun checkLogin() {
+        val prefs: SharedPreferences = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
+        val driverId = prefs.getString("driverId", null)
+        val driverKey = prefs.getString("driverKey", null)
+        if(driverId == null || driverKey == null) {
+            startLoginActivity()
+            finish()
+        }
+    }
+
+    private fun startLoginActivity() {
+        val loginIntent = Intent(this, LoginActivity::class.java)
+        startActivity(loginIntent)
     }
 
     private fun handlePermissions() {
