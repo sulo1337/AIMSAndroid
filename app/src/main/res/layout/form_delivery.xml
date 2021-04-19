@@ -38,7 +38,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/fuelMeterIcon"
             app:layout_constraintTop_toTopOf="@id/fuelMeterIcon"
-            app:placeholderTextColor="@color/secondaryLightColor">
+            app:placeholderTextColor="@color/secondaryLightColor"
+            android:textColorHint="@color/gray"
+        >
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/initialFuelStickReading"
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
@@ -63,11 +65,13 @@
             app:hintTextColor="@color/secondaryLightColor"
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toStartOf="@id/initialFuelStickReadingLayout"
+            android:textColorHint="@color/gray"
             app:layout_constraintTop_toBottomOf="@id/initialFuelStickReadingLayout" app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/finalFuelStickReading"
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
+                                                                     android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"/>
 
 
@@ -97,12 +101,14 @@
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toEndOf="@id/productIcon"
             app:layout_constraintTop_toTopOf="@id/productIcon"
+            android:textColorHint="@color/gray"
             app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/productDropped"
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
                                                                      android:textCursorDrawable="@null"
                                                                      android:maxLines="1"
+                                                                     android:textColor="?attr/colorOnPrimary"
                                                                      android:inputType="text"
             />
 
@@ -131,6 +137,7 @@
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toEndOf="@id/timeIcon"
             app:layout_constraintTop_toTopOf="@id/timeIcon"
+            android:textColorHint="@color/gray"
             app:placeholderTextColor="@color/secondaryLightColor"
         >
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/deliveryStarted"
@@ -157,6 +164,7 @@
             app:hintTextColor="@color/secondaryLightColor"
             app:layout_constraintEnd_toEndOf="@id/deliveryStartedLayout"
             app:layout_constraintStart_toStartOf="@id/deliveryStartedLayout"
+            android:textColorHint="@color/gray"
             app:layout_constraintTop_toBottomOf="@id/deliveryStartedLayout" app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/deliveryEnded"
                                                                      android:layout_width="match_parent"
@@ -195,12 +203,14 @@
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toEndOf="@id/quantityIcon"
             app:layout_constraintTop_toTopOf="@id/quantityIcon"
+            android:textColorHint="@color/gray"
             app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/grossQuantity"
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
+                                                                     android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
 
@@ -220,12 +230,14 @@
             app:hintTextColor="@color/secondaryLightColor"
             app:layout_constraintEnd_toEndOf="@id/grossQuantityLayout"
             app:layout_constraintStart_toStartOf="@id/grossQuantityLayout"
+            android:textColorHint="@color/gray"
             app:layout_constraintTop_toBottomOf="@id/grossQuantityLayout" app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/netQuantity"
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
+                                                                     android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
 
@@ -255,6 +267,7 @@
             app:hintTextColor="@color/secondaryLightColor"
             app:layout_constraintBottom_toBottomOf="@+id/ticketIcon"
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            android:textColorHint="@color/gray"
             app:layout_constraintStart_toEndOf="@id/ticketIcon" app:layout_constraintTop_toTopOf="@+id/ticketIcon"
             app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/deliveryTicketNumber"
@@ -262,6 +275,7 @@
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
+                                                                     android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
 
@@ -279,6 +293,7 @@
             app:endIconMode="clear_text"
             app:hintTextColor="@color/secondaryLightColor"
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            android:textColorHint="@color/gray"
             app:layout_constraintStart_toStartOf="@id/deliveryTicketLayout" app:layout_constraintTop_toBottomOf="@id/deliveryTicketLayout"
             app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/billOfLadingNumber"
@@ -286,6 +301,7 @@
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
+                                                                     android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
 
@@ -336,6 +352,7 @@
             app:hintTextColor="@color/secondaryLightColor"
             app:layout_constraintBottom_toBottomOf="@+id/personIcon"
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
+            android:textColorHint="@color/gray"
             app:layout_constraintStart_toEndOf="@id/personIcon" app:layout_constraintTop_toTopOf="@+id/personIcon"
             app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/pickedUpBy"
@@ -343,6 +360,7 @@
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="text"
                                                                      android:maxLines="1"
+                                                                     android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
 
@@ -389,18 +407,21 @@
             android:hint="Comments"
             app:boxStrokeColor="@color/secondaryLightColor"
             app:endIconDrawable="@drawable/ic_close"
+            android:textColorHint="@color/gray"
             app:endIconMode="clear_text"
             app:hintTextColor="@color/secondaryLightColor"
+            app:placeholderTextColor="@color/secondaryLightColor"
             app:layout_constraintEnd_toEndOf="@id/pickedUpByLayout"
             app:layout_constraintStart_toEndOf="@id/commentIcon"
             app:layout_constraintTop_toBottomOf="@+id/signatureView"
-            app:placeholderTextColor="@color/secondaryLightColor">
+            >
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/comment"
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="textMultiLine|textCapSentences"
                                                                      android:maxLines="10"
                                                                      android:minLines="5"
+                                                                     android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
 

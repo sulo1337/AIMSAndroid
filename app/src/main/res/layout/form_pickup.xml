@@ -36,6 +36,7 @@
             app:hintTextColor="@color/secondaryLightColor"
             app:layout_constraintBottom_toBottomOf="@id/fuelMeterIcon"
             app:layout_constraintEnd_toEndOf="parent"
+            android:textColorHint="@color/gray"
             app:layout_constraintStart_toEndOf="@id/fuelMeterIcon"
             app:layout_constraintTop_toTopOf="@id/fuelMeterIcon"
             app:placeholderTextColor="@color/secondaryLightColor">
@@ -61,6 +62,7 @@
             app:endIconDrawable="@drawable/ic_close"
             app:endIconMode="clear_text"
             app:hintTextColor="@color/secondaryLightColor"
+            android:textColorHint="@color/gray"
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toStartOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintTop_toBottomOf="@id/initialFuelStickReadingLayout" app:placeholderTextColor="@color/secondaryLightColor">
@@ -96,6 +98,7 @@
             app:layout_constraintBottom_toBottomOf="@id/productIcon"
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toEndOf="@id/productIcon"
+            android:textColorHint="@color/gray"
             app:layout_constraintTop_toTopOf="@id/productIcon"
             app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/productPickedUp"
@@ -130,6 +133,7 @@
             app:layout_constraintBottom_toBottomOf="@id/timeIcon"
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toEndOf="@id/timeIcon"
+            android:textColorHint="@color/gray"
             app:layout_constraintTop_toTopOf="@id/timeIcon"
             app:placeholderTextColor="@color/secondaryLightColor"
         >
@@ -156,6 +160,7 @@
             app:boxStrokeColor="@color/secondaryLightColor"
             app:hintTextColor="@color/secondaryLightColor"
             app:layout_constraintEnd_toEndOf="@id/pickupStartedLayout"
+            android:textColorHint="@color/gray"
             app:layout_constraintStart_toStartOf="@id/pickupStartedLayout"
             app:layout_constraintTop_toBottomOf="@id/pickupStartedLayout" app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/pickupEnded"
@@ -195,6 +200,7 @@
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toEndOf="@id/quantityIcon"
             app:layout_constraintTop_toTopOf="@id/quantityIcon"
+            android:textColorHint="@color/gray"
             app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/grossQuantity"
                                                                      android:layout_width="match_parent"
@@ -219,6 +225,7 @@
             app:endIconMode="clear_text"
             app:hintTextColor="@color/secondaryLightColor"
             app:layout_constraintEnd_toEndOf="@id/grossQuantityLayout"
+            android:textColorHint="@color/gray"
             app:layout_constraintStart_toStartOf="@id/grossQuantityLayout"
             app:layout_constraintTop_toBottomOf="@id/grossQuantityLayout" app:placeholderTextColor="@color/secondaryLightColor">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/netQuantity"
@@ -254,6 +261,7 @@
             app:endIconMode="clear_text"
             app:hintTextColor="@color/secondaryLightColor"
             app:layout_constraintBottom_toBottomOf="@+id/ticketIcon"
+            android:textColorHint="@color/gray"
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toEndOf="@id/ticketIcon" app:layout_constraintTop_toTopOf="@+id/ticketIcon"
             app:placeholderTextColor="@color/secondaryLightColor">
@@ -278,6 +286,7 @@
             app:endIconDrawable="@drawable/ic_close"
             app:endIconMode="clear_text"
             app:hintTextColor="@color/secondaryLightColor"
+            android:textColorHint="@color/gray"
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toStartOf="@id/deliveryTicketLayout" app:layout_constraintTop_toBottomOf="@id/deliveryTicketLayout"
             app:placeholderTextColor="@color/secondaryLightColor">
@@ -334,6 +343,7 @@
             app:endIconDrawable="@drawable/ic_close"
             app:endIconMode="clear_text"
             app:hintTextColor="@color/secondaryLightColor"
+            android:textColorHint="@color/gray"
             app:layout_constraintBottom_toBottomOf="@+id/personIcon"
             app:layout_constraintEnd_toEndOf="@id/initialFuelStickReadingLayout"
             app:layout_constraintStart_toEndOf="@id/personIcon" app:layout_constraintTop_toTopOf="@+id/personIcon"
@@ -388,6 +398,7 @@
             android:layout_marginTop="8dp"
             android:hint="Comments"
             app:boxStrokeColor="@color/secondaryLightColor"
+            android:textColorHint="@color/gray"
             app:endIconDrawable="@drawable/ic_close"
             app:endIconMode="clear_text"
             app:hintTextColor="@color/secondaryLightColor"
