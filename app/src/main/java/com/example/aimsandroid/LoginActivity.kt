@@ -35,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
             prefs.edit().putString("driverId", binding.driverId.text.toString()).apply()
             prefs.edit().putString("driverKey",binding.driverKey.text.toString()).apply()
             startMainActivity()
+            finish()
         }
     }
 

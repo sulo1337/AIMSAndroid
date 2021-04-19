@@ -3,10 +3,7 @@ package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -21,6 +18,7 @@ import com.example.aimsandroid.databinding.AlertStartBolBinding
 import com.example.aimsandroid.databinding.DialogWaypointDetailsBinding
 import com.example.aimsandroid.fragments.home.HomeFragment
 import com.example.aimsandroid.repository.TripRepository
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.here.android.mpa.common.GeoCoordinate
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -103,23 +101,35 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
 
         binding.arrivedButton.setOnClickListener {
-            val billOfLading = BillOfLading(
-                waypoint.seqNum,
-                waypoint.owningTripId,
-                false,
-                null,
-                null,
-                null,
-                "",
-                "",
-                null,
-                null,
-                null,
-                null,
-                null,
-                getCurrentDateTimeString()
-            )
-            updateBillOfLading(billOfLading)
+            AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+            .setTitle("Confirm?")
+            .setMessage("Have you arrived at ${waypoint.destinationName}?")
+            .setNegativeButton(
+                "No"
+            ) { dialoginterface, i ->
+               dialoginterface.dismiss()
+            }
+            .setPositiveButton(
+                "Yes"
+            ) { dialoginterface, i ->
+                val billOfLading = BillOfLading(
+                    waypoint.seqNum,
+                    waypoint.owningTripId,
+                    false,
+                    null,
+                    null,
+                    null,
+                    "",
+                    "",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    getCurrentDateTimeString()
+                )
+                updateBillOfLading(billOfLading)
+            }.create().show()
         }
 
         binding.startLoading.setOnClickListener {
@@ -160,27 +170,38 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
 
         binding.stopLoading.setOnClickListener {
-            billOfLading.value.let{
-                it?.let{
-                    val billOfLading = BillOfLading(
-                        it.wayPointSeqNum,
-                        it.tripIdFk,
-                        false,
-                        it.deliveryTicketNumber,
-                        it.initialMeterReading,
-                        it.finalMeterReading,
-                        it.pickedUpBy,
-                        it.comments,
-                        it.billOfLadingNumber,
-                        it.loadingStarted,
-                        getCurrentDateTimeString(),
-                        null,
-                        null,
-                        it.arrivedAt
-                    )
-                    updateBillOfLading(billOfLading)
+            AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+                .setTitle("Confirm?")
+                .setNegativeButton(
+                    "No"
+                ) { dialoginterface, i ->
+                    dialoginterface.dismiss()
                 }
-            }
+                .setPositiveButton(
+                    "Yes"
+                ) { dialoginterface, i ->
+                    billOfLading.value.let{
+                        it?.let{
+                            val billOfLading = BillOfLading(
+                                it.wayPointSeqNum,
+                                it.tripIdFk,
+                                false,
+                                it.deliveryTicketNumber,
+                                it.initialMeterReading,
+                                it.finalMeterReading,
+                                it.pickedUpBy,
+                                it.comments,
+                                it.billOfLadingNumber,
+                                it.loadingStarted,
+                                getCurrentDateTimeString(),
+                                null,
+                                null,
+                                it.arrivedAt
+                            )
+                            updateBillOfLading(billOfLading)
+                        }
+                    }
+                }.create().show()
         }
 
         binding.captureButton.setOnClickListener {

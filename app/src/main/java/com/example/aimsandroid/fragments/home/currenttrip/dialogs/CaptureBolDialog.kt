@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -302,7 +303,19 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
         }
 
         if(valid) {
-            savePickupForm()
+            AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+                .setTitle("Confirm?")
+                .setMessage("Do you want to save this form?")
+                .setNegativeButton(
+                    "No"
+                ) { dialoginterface, i ->
+                    dialoginterface.dismiss()
+                }
+                .setPositiveButton(
+                    "Yes"
+                ) { dialoginterface, i ->
+                    savePickupForm()
+                }.create().show()
         }
     }
 }
