@@ -1,6 +1,7 @@
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import com.example.aimsandroid.database.WayPoint
 
 
 fun SharedPreferences.Editor.putDouble(key: String, double: Double) =
@@ -13,4 +14,8 @@ fun RotateBitmap(source: Bitmap, angle: Float): Bitmap? {
     val matrix = Matrix()
     matrix.postRotate(angle)
     return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+}
+
+fun getFullAddress(waypoint: WayPoint): String {
+    return waypoint.address1.trim() + ", " + waypoint.city.trim() + ", "+waypoint.state.trim()+ " "+waypoint.postalCode.toString();
 }

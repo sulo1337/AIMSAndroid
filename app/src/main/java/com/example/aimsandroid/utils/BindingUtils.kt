@@ -1,46 +1,55 @@
 package com.example.aimsandroid.utils
 
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.example.aimsandroid.database.Review
 import com.example.aimsandroid.database.TripWithWaypoints
-import com.example.aimsandroid.fragments.trips.TripsAdapter
+import com.example.aimsandroid.database.WayPoint
+import getFullAddress
 
 @BindingAdapter("bindSourceTitle")
 fun bindSourceTitle(textView: TextView, data: TripWithWaypoints){
-    //TODO implement this
-    textView.text = data.waypoints[0].destinationName
+    var firstSource = findFirst(data.waypoints, "Source")
+    if(firstSource != null) {
+        textView.text = firstSource.destinationName.trim()
+    } else {
+        textView.text = "No source information"
+    }
 }
 
 @BindingAdapter("bindSiteTitle")
 fun bindSiteTitle(textView: TextView, data: TripWithWaypoints){
-    //TODO implement this
-    textView.text = data.waypoints[1].destinationName
+    val firstSite = findFirst(data.waypoints, "Site Container")
+    if(firstSite != null) {
+        textView.text = firstSite.destinationName.trim()
+    } else {
+        textView.text = "No source information"
+    }
 }
 
 @BindingAdapter("bindSourceTitleAddress")
 fun bindSourceTitleAddress(textView: TextView, data: TripWithWaypoints){
-    //TODO implement this
-    textView.text = data.waypoints[0].address1.trim() + ", " + data.waypoints[0].city.trim() + ", "+data.waypoints[0].state.trim()+ " "+data.waypoints[0].postalCode.toString();
+    val firstSource = findFirst(data.waypoints, "Source")
+    if(firstSource != null) {
+        textView.text = getFullAddress(firstSource)
+    } else {
+        textView.text = "No address information"
+    }
 }
 
 @BindingAdapter("bindSiteTitleAddress")
 fun bindSiteTitleAddress(textView: TextView, data: TripWithWaypoints){
-    //TODO implement this
-    textView.text = data.waypoints[1].address1.trim() + ", " + data.waypoints[1].city.trim() + ", "+data.waypoints[1].state.trim()+ " "+data.waypoints[1].postalCode.toString();
+    val firstSite = findFirst(data.waypoints, "Site Container")
+    if(firstSite!=null) {
+        textView.text = getFullAddress(firstSite)
+    } else {
+        textView.text = "No address information"
+    }
 }
 
 @BindingAdapter("bindSourceNumber")
 fun bindSourceNumber(textView: TextView, data: TripWithWaypoints){
-    var numSource = 0;
-    for(waypoint in data.waypoints){
-        if(waypoint.waypointTypeDescription.equals("Source")){
-            numSource +=1
-        }
-    }
+    val numSource = numTypes(data.waypoints, "Source")
     if(numSource == 1){
         textView.visibility = View.GONE
     } else {
@@ -50,15 +59,31 @@ fun bindSourceNumber(textView: TextView, data: TripWithWaypoints){
 
 @BindingAdapter("bindSiteNumber")
 fun bindSiteNumber(textView: TextView, data: TripWithWaypoints){
-    var numSite = 0;
-    for(waypoint in data.waypoints){
-        if(waypoint.waypointTypeDescription.equals("Site Container")){
-            numSite +=1
-        }
-    }
+    val numSite = numTypes(data.waypoints, "Site Container")
     if(numSite == 1){
         textView.visibility = View.GONE
     } else {
         textView.text = "+"+(numSite-1).toString()+" destinations"
     }
+}
+
+fun findFirst(waypoints: List<WayPoint>, type: String): WayPoint?{
+    var first: WayPoint? = null
+    for(waypoint in waypoints) {
+        if(waypoint.waypointTypeDescription.trim().equals(type)) {
+            first = waypoint
+            break
+        }
+    }
+    return first
+}
+
+fun numTypes(waypoints: List<WayPoint>, type: String): Int {
+    var numType = 0;
+    for(waypoint in waypoints){
+        if(waypoint.waypointTypeDescription.trim().equals(type)){
+            numType +=1
+        }
+    }
+    return numType
 }
