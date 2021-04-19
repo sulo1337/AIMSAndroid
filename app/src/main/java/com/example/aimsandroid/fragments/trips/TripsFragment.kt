@@ -46,23 +46,28 @@ class TripsFragment : Fragment() {
         viewModel.refreshing.observe(viewLifecycleOwner, Observer {
             binding.swipeRefreshContainer.isRefreshing = it
         })
+        binding.swipeRefreshContainer.setOnRefreshListener {
+            viewModel.refreshTrips(object : FetchApiEventListener{
+                override fun onSuccess() {
+                    Snackbar.make(requireView(), "Trips Up-to-date", Snackbar.LENGTH_SHORT).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).setBackgroundTint(
+                        Color.rgb(75,181,67)
+                    ).show()
+                }
+
+                override fun onError(error: String) {
+                    Snackbar.make(requireView(), "No internet connection", Snackbar.LENGTH_SHORT).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).setBackgroundTint(
+                        Color.rgb(220,20,60)).show()
+                }
+            })
+        }
         return binding.root;
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val fetchApiEventListener = object : FetchApiEventListener{
-            override fun onSuccess() {
-
-            }
-            override fun onError(error: String) {
-                Snackbar.make(requireView(), "No internet connection", Snackbar.LENGTH_SHORT).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).setBackgroundTint(
-                    Color.rgb(220,20,60)).show()
-            }
-        }
-        binding.swipeRefreshContainer.setOnRefreshListener {
-            viewModel.refreshTrips(fetchApiEventListener)
-        }
-        viewModel.refreshTrips(fetchApiEventListener)
+        viewModel.refreshTrips(object : FetchApiEventListener{
+            override fun onSuccess() {}
+            override fun onError(error: String) {}
+        })
     }
 }
