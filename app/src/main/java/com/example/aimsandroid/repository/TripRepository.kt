@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import com.example.aimsandroid.database.*
 import com.example.aimsandroid.network.Network
 import com.example.aimsandroid.network.TripSection
+import com.example.aimsandroid.utils.FetchApiEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
+import kotlin.reflect.typeOf
 
 class TripRepository(private val database: TripDatabase) {
     val trips = database.tripDao.getTripsWithWaypoints()
@@ -20,7 +22,7 @@ class TripRepository(private val database: TripDatabase) {
     suspend fun insertAllTrips(trips: List<Trip>) = database.tripDao.insertAllTrips(trips)
     suspend fun insertAllWaypoints(waypoints:List<WayPoint>) = database.tripDao.insertAllWaypoints(waypoints)
     @Throws(Exception::class)
-    suspend fun refreshTrips() {
+    suspend fun refreshTrips(fetchApiEventListener: FetchApiEventListener) {
         withContext(Dispatchers.IO){
             try {
                 val tripData = Network.dispatcher.getTripsAsync("D1", "f20f8b25-b149-481c-9d2c-41aeb76246ef").await()
@@ -38,10 +40,9 @@ class TripRepository(private val database: TripDatabase) {
                 }
                 insertAllTrips(trips)
                 insertAllWaypoints(waypoints)
-                val test = getWaypointWithBillOfLading(2, 159)
-                Log.i("aims_debug_repository", java.lang.String.valueOf(test))
+                fetchApiEventListener.onSuccess()
             } catch (e: Exception){
-                Log.i("aims_debug_repository", e.message!!)
+                fetchApiEventListener.onError(e.toString())
             }
         }
     }

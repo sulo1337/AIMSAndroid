@@ -1,5 +1,6 @@
 package com.example.aimsandroid.fragments.trips
 
+import android.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -16,12 +17,10 @@ import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentTripsBinding
 import com.example.aimsandroid.databinding.TripItemBinding
 import com.example.aimsandroid.fragments.trips.detaildialog.TripsDetailDialog
+import com.example.aimsandroid.utils.FetchApiEventListener
+import com.google.android.material.snackbar.Snackbar
 
 class TripsFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = TripsFragment()
-    }
 
     private lateinit var viewModel: TripsViewModel
     private lateinit var binding: FragmentTripsBinding
@@ -47,9 +46,23 @@ class TripsFragment : Fragment() {
         viewModel.refreshing.observe(viewLifecycleOwner, Observer {
             binding.swipeRefreshContainer.isRefreshing = it
         })
-        binding.swipeRefreshContainer.setOnRefreshListener {
-            viewModel.refreshTrips()
-        }
         return binding.root;
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val fetchApiEventListener = object : FetchApiEventListener{
+            override fun onSuccess() {
+
+            }
+            override fun onError(error: String) {
+                Snackbar.make(requireView(), "No internet connection", Snackbar.LENGTH_SHORT).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).setBackgroundTint(
+                    Color.rgb(220,20,60)).show()
+            }
+        }
+        binding.swipeRefreshContainer.setOnRefreshListener {
+            viewModel.refreshTrips(fetchApiEventListener)
+        }
+        viewModel.refreshTrips(fetchApiEventListener)
     }
 }
