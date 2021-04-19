@@ -254,6 +254,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
 
     fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap) {
         (parentFragment as HomeFragment).saveForm(billOfLading, bolBitmap, signatureBitmap)
+        dismiss()
     }
 
     companion object {

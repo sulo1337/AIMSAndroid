@@ -98,7 +98,7 @@
             app:layout_constraintStart_toEndOf="@id/productIcon"
             app:layout_constraintTop_toTopOf="@id/productIcon"
             app:placeholderTextColor="@color/secondaryLightColor">
-            <com.google.android.material.textfield.TextInputEditText android:id="@+id/productDropped"
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/productPickedUp"
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
                                                                      android:textCursorDrawable="@null"

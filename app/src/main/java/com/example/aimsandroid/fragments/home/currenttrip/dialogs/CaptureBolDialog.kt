@@ -2,16 +2,12 @@ package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 
 import RotateBitmap
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
-import android.os.Binder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -20,12 +16,8 @@ import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.WayPoint
 import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.databinding.FormContainerBinding
-import com.example.aimsandroid.databinding.FormDeliveryBinding
 import com.example.aimsandroid.repository.TripRepository
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.form_capture_signature.*
-import kotlinx.android.synthetic.main.form_container.view.*
-import kotlinx.android.synthetic.main.form_delivery.view.*
 import java.lang.Long.parseLong
 
 class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
@@ -62,6 +54,22 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
         binding.addrInfo.text = waypoint.address1.trim() + ", " + waypoint.city.trim() + ", " + waypoint.state.trim() + " " + waypoint.postalCode
         if(waypoint.waypointTypeDescription.equals("Source")){
             binding.deliveryFormLayout.visibility = View.GONE
+            billOfLading.observe(viewLifecycleOwner, Observer {
+                binding.pickUpForm.initialFuelStickReading.setText(it.initialMeterReading.toString())
+                binding.pickUpForm.productPickedUp.setText(waypoint.productDesc)
+                binding.pickUpForm.pickupStarted.setText(it.loadingStarted)
+                binding.pickUpForm.pickupEnded.setText(it.loadingEnded)
+            })
+            binding.pickUpForm.captureSignatureButton.setOnClickListener {
+                val captureSignatureDialog = CaptureSignatureDialog.newInstance()
+                captureSignatureDialog.show(childFragmentManager, "captureSignatureDialog")
+            }
+            binding.pickUpForm.scanBOL.setOnClickListener {
+                startCameraActivity()
+            }
+            binding.pickUpForm.saveButton.setOnClickListener {
+                validatePickupForm()
+            }
         } else {
             binding.pickUpFormLayout.visibility = View.GONE
             billOfLading.observe(viewLifecycleOwner, Observer {
@@ -75,13 +83,17 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
                 captureSignatureDialog.show(childFragmentManager, "captureSignatureDialog")
             }
             binding.deliveryForm.scanBOL.setOnClickListener {
-                val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(cameraIntent, 1888)
+                startCameraActivity()
             }
             binding.deliveryForm.saveButton.setOnClickListener {
                 validateDeliveryForm()
             }
         }
+    }
+
+    private fun startCameraActivity() {
+        val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(cameraIntent, 1888)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -90,6 +102,8 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
             val bolBitmap = data?.extras?.get("data") as Bitmap
             binding.deliveryForm.bolView.visibility = View.VISIBLE
             binding.deliveryForm.bolView.setImageBitmap(bolBitmap)
+            binding.pickUpForm.bolView.visibility = View.VISIBLE
+            binding.pickUpForm.bolView.setImageBitmap(bolBitmap)
             this.bolBitmap = bolBitmap
         }
     }
@@ -109,10 +123,12 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
     fun saveSignature(signatureBitmap: Bitmap) {
         binding.deliveryForm.signatureView.visibility = View.VISIBLE
         binding.deliveryForm.signatureView.setImageBitmap(RotateBitmap(signatureBitmap, 270.0f))
+        binding.pickUpForm.signatureView.visibility = View.VISIBLE
+        binding.pickUpForm.signatureView.setImageBitmap(RotateBitmap(signatureBitmap, 270.0f))
         this.signatureBitmap = signatureBitmap
     }
 
-    fun saveForm() {
+    fun saveDeliveryForm() {
         val billOfLading = BillOfLading(
             waypoint.seqNum,
             waypoint.owningTripId,
@@ -127,6 +143,27 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
             binding.deliveryForm.deliveryEnded.text.toString(),
             java.lang.Double.parseDouble(binding.deliveryForm.grossQuantity.text.toString()),
             java.lang.Double.parseDouble(binding.deliveryForm.netQuantity.text.toString()),
+            this.billOfLading.value!!.arrivedAt
+        )
+        (parentFragment as WaypointDetailDialog).saveForm(billOfLading, bolBitmap!!, signatureBitmap!!)
+        dismiss()
+    }
+
+    fun savePickupForm() {
+        val billOfLading = BillOfLading(
+            waypoint.seqNum,
+            waypoint.owningTripId,
+            true,
+            parseLong(binding.pickUpForm.pickupTicketNumber.text.toString()),
+            java.lang.Double.parseDouble(binding.pickUpForm.initialFuelStickReading.text.toString()),
+            java.lang.Double.parseDouble(binding.pickUpForm.finalFuelStickReading.text.toString()),
+            binding.pickUpForm.pickedUpBy.text.toString(),
+            binding.pickUpForm.comment.text.toString(),
+            parseLong(binding.pickUpForm.billOfLadingNumber.text.toString()),
+            binding.pickUpForm.pickupStarted.text.toString(),
+            binding.pickUpForm.pickupEnded.text.toString(),
+            java.lang.Double.parseDouble(binding.pickUpForm.grossQuantity.text.toString()),
+            java.lang.Double.parseDouble(binding.pickUpForm.netQuantity.text.toString()),
             this.billOfLading.value!!.arrivedAt
         )
         (parentFragment as WaypointDetailDialog).saveForm(billOfLading, bolBitmap!!, signatureBitmap!!)
@@ -197,7 +234,75 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
         }
 
         if(valid) {
-            saveForm()
+            saveDeliveryForm()
+        }
+    }
+
+    fun validatePickupForm() {
+        var valid = true
+
+        if(binding.pickUpForm.initialFuelStickReading.text.toString().isEmpty()){
+            valid = false
+            binding.pickUpForm.initialFuelStickReading.error = "Required"
+        }
+
+        if(binding.pickUpForm.finalFuelStickReading.text.toString().isEmpty()){
+            valid = false
+            binding.pickUpForm.finalFuelStickReading.error = "Required"
+        }
+
+        if(binding.pickUpForm.productPickedUp.text.toString().isEmpty()){
+            valid = false
+            binding.pickUpForm.productPickedUp.error = "Required"
+        }
+
+        if(binding.pickUpForm.pickupStarted.text.toString().isEmpty()){
+            valid = false
+            binding.pickUpForm.pickupStarted.error = "Required"
+        }
+
+        if(binding.pickUpForm.pickupEnded.text.toString().isEmpty()){
+            valid = false
+            binding.pickUpForm.pickupEnded.error = "Required"
+        }
+
+        if(binding.pickUpForm.grossQuantity.text.toString().isEmpty()){
+            valid = false
+            binding.pickUpForm.grossQuantity.error = "Required"
+        }
+
+        if(binding.pickUpForm.netQuantity.text.toString().isEmpty()){
+            valid = false
+            binding.pickUpForm.netQuantity.error = "Required"
+        }
+
+        if(binding.pickUpForm.pickupTicketNumber.text.toString().isEmpty()){
+            valid = false
+            binding.pickUpForm.pickupTicketNumber.error = "Required"
+        }
+
+        if(binding.pickUpForm.billOfLadingNumber.text.toString().isEmpty()){
+            valid = false
+            binding.pickUpForm.billOfLadingNumber.error = "Required"
+        }
+
+        if(binding.pickUpForm.pickedUpBy.text.toString().isEmpty()){
+            valid = false
+            binding.pickUpForm.pickedUpBy.error = "Required"
+        }
+
+        if(signatureBitmap == null) {
+            valid = false
+            Snackbar.make(requireView(), "Signature not captured", Snackbar.LENGTH_SHORT).show()
+        }
+
+        if(bolBitmap == null) {
+            valid = false
+            Snackbar.make(requireView(), "Bill of lading not scanned", Snackbar.LENGTH_SHORT).show()
+        }
+
+        if(valid) {
+            savePickupForm()
         }
     }
 }

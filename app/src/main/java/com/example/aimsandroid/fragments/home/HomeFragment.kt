@@ -14,13 +14,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.BillOfLading
+import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.dialogs.WaypointDetailDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoBoundingBox
 import com.here.android.mpa.common.GeoCoordinate
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import putDouble
 
 
@@ -28,6 +31,7 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var currentTripObserver: Observer<TripWithWaypoints>
     private var mapFragmentView: MapFragmentView? = null
     private lateinit var prefs: SharedPreferences
 
@@ -93,21 +97,18 @@ class HomeFragment : Fragment() {
         sheetBehavior.isHideable = false
         sheetBehavior.isDraggable = false
 
-        backdropHeader.setOnClickListener { it ->
+        backdropHeader.setOnClickListener {
             if(viewModel.currentTrip.value != null) {
                 toggleFilters()
             }
         }
 
-        viewModel.currentTrip.observe(viewLifecycleOwner, Observer {
+        currentTripObserver = Observer {
             if(it == null) {
-                binding.currentTripRecyclerView.visibility = View.GONE
-                sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                binding.currentTripTitle.text = "You have not started any trips"
-                binding.bottomSheetTitle.text = "You have not started any trips"
+                noCurrentTrip()
             } else {
                 lifecycleScope.launch {
-                    viewModel.resolveNextWaypoint(it)
+                    viewModel.resolveNextWaypoint()
                     binding.currentTripRecyclerView.visibility = View.VISIBLE
                     binding.bottomSheetTitle.text = "Current Trip"
                     binding.currentTripTitle.text = "Trip #"+it.trip.tripId
@@ -126,7 +127,7 @@ class HomeFragment : Fragment() {
                     binding.currentTripRecyclerView.adapter = adapter
                 }
             }
-        })
+        }
 
         //check if args is passed to expand or collapse drawer layout
         arguments?.let {
@@ -137,6 +138,19 @@ class HomeFragment : Fragment() {
                 sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
+
+        viewModel.currentTrip.observe(viewLifecycleOwner, currentTripObserver)
+        viewModel.currentTripCompleted.observe(viewLifecycleOwner, Observer {
+            if(it){
+                noCurrentTrip()
+            }
+        })
+    }
+
+    fun refreshRecyclerView() {
+        val adapter = binding.currentTripRecyclerView.adapter
+        binding.currentTripRecyclerView.adapter = adapter
+        adapter?.notifyDataSetChanged()
     }
 
     fun showDirections(destination: GeoCoordinate) {
@@ -150,9 +164,9 @@ class HomeFragment : Fragment() {
 
     private fun toggleFilters() {
         if(sheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED){
-            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            collapseSheet()
         } else {
-            sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            expandSheet()
         }
     }
 
@@ -277,8 +291,29 @@ class HomeFragment : Fragment() {
     }
 
     fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap) {
-        viewModel.saveForm(billOfLading, bolBitmap, signatureBitmap)
+        lifecycleScope.launch{
+            withContext(Dispatchers.IO){
+                viewModel.saveForm(billOfLading, bolBitmap, signatureBitmap)
+                withContext(Dispatchers.Main){
+                    refreshRecyclerView()
+                }
+            }
+        }
     }
 
+    fun noCurrentTrip() {
+        binding.currentTripRecyclerView.visibility = View.GONE
+        collapseSheet()
+        binding.currentTripTitle.text = "You have not started any trips"
+        binding.bottomSheetTitle.text = "You have not started any trips"
+    }
+
+    fun collapseSheet() {
+        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    fun expandSheet() {
+        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
 
 }
