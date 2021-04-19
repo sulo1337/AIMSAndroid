@@ -65,6 +65,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 saveBitmaps(bolBitmap, signatureBitmap)
                 resolveNextWaypoint()
                 if(checkCurrentTripIsCompleted()) {
+                    tripRepository.setCompleteTrip(currentTrip.value!!.trip.tripId)
                     removeCurrentTrip()
                     withContext(Dispatchers.Main) {
                         _currentTripCompleted.value = true

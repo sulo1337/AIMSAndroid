@@ -15,6 +15,7 @@ class TripRepository(private val database: TripDatabase) {
     val trips = database.tripDao.getTripsWithWaypoints()
     fun getTripWithWaypointsByTripId(tripId: Long) = database.tripDao.getTripWithWaypointsByTripId(tripId)
     suspend fun insertTrip(trip: Trip) = database.tripDao.insertTrip(trip)
+    suspend fun setCompleteTrip(tripId: Long) = database.tripDao.setCompleteTrip(tripId)
     suspend fun insertWaypoint(wayPoint: WayPoint) = database.tripDao.insertWaypoint(wayPoint)
     suspend fun insertBillOfLading(billOfLading: BillOfLading) = database.tripDao.insertBillOfLading(billOfLading)
     fun getBillOfLading(seqNum: Long, owningTripId: Long) = database.tripDao.getBillOfLading(seqNum, owningTripId)

@@ -15,6 +15,9 @@ interface TripDao {
     @Query("select * from trips_table where tripId = :tripId")
     fun getTripWithWaypointsByTripId(tripId: Long): LiveData<TripWithWaypoints>
 
+    @Query("update trips_table set complete = 1 where tripId = :tripId")
+    suspend fun setCompleteTrip(tripId: Long)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrip(trip: Trip): Long
 

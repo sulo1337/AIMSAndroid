@@ -65,7 +65,8 @@ data class TripSection(
             truckCode,
             truckId,
             driverName,
-            driverCode
+            driverCode,
+            false
         )
     }
     fun getWaypoint(): WayPoint{

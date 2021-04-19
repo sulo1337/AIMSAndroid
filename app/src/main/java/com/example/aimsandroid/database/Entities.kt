@@ -31,7 +31,8 @@ data class Trip(
     val truckCode: String,
     val truckId: Long,
     val driverName: String,
-    val driverCode: String
+    val driverCode: String,
+    val complete: Boolean
 )
 
 @Entity(tableName="waypoint_table", primaryKeys = ["owningTripId", "seqNum"])
