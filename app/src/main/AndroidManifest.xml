@@ -25,6 +25,7 @@
         android:supportsRtl="true"
         android:testOnly="false"
         android:debuggable="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AIMSAndroid.NoActionBar" tools:ignore="HardcodedDebugMode">
 <!--        <meta-data-->
 <!--            android:name="com.google.android.geo.API_KEY"-->

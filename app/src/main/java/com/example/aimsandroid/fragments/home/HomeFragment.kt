@@ -36,6 +36,11 @@ class HomeFragment : Fragment() {
     private var mapFragmentView: MapFragmentView? = null
     private lateinit var prefs: SharedPreferences
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -94,9 +99,9 @@ class HomeFragment : Fragment() {
         val backdropHeader = binding.backdropHeader
         val contentLayout = binding.contentLayout
         sheetBehavior = BottomSheetBehavior.from(contentLayout)
-        sheetBehavior.isFitToContents = false
+        sheetBehavior.isFitToContents = true
         sheetBehavior.isHideable = false
-        sheetBehavior.isDraggable = false
+        sheetBehavior.isDraggable = true
 
         backdropHeader.setOnClickListener {
             if(viewModel.currentTrip.value != null) {

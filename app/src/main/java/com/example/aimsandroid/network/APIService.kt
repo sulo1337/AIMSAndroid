@@ -35,6 +35,7 @@ object Network{
         val httpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
         retrofit= Retrofit.Builder()
             .baseUrl("https://api.appery.io/rest/1/apiexpress/api/DispatcherMobileApp/GetTripListDetailByDriver/")
+//            .baseUrl("http://edeb808c032b.ngrok.io")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(httpClient)
