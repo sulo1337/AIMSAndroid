@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sortWaypointBySeqNum
 
-class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints, private val completed: Boolean): DialogFragment(){
+class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): DialogFragment(){
 
     private lateinit var binding: DialogTripDetailsBinding
     private lateinit var prefs: SharedPreferences
@@ -56,10 +56,7 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints, privat
         adapter.submitList(sortWaypointBySeqNum(tripWithWaypoints.waypoints))
         binding.tripDetailRecyclerView.adapter = adapter
 
-        if(completed) {
-            binding.startTrip.visibility = View.GONE
-            binding.continueTrip.visibility = View.GONE
-        } else {
+        if (tripWithWaypoints.tripStatus == null){
             if(prefs.getLong("currentTripId", -1) == tripWithWaypoints.trip.tripId){
                 binding.startTrip.visibility = View.GONE
                 binding.continueTrip.visibility = View.VISIBLE
@@ -67,6 +64,9 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints, privat
                 binding.continueTrip.visibility  = View.GONE
                 binding.startTrip.visibility = View.VISIBLE
             }
+        } else if(tripWithWaypoints.tripStatus.complete) {
+            binding.startTrip.visibility = View.GONE
+            binding.continueTrip.visibility = View.GONE
         }
 
         binding.continueTrip.setOnClickListener {
@@ -102,8 +102,8 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints, privat
     }
 
     companion object {
-        fun newInstance(tripWithWaypoints: TripWithWaypoints, completed: Boolean): TripsDetailDialog {
-            return TripsDetailDialog(tripWithWaypoints, completed)
+        fun newInstance(tripWithWaypoints: TripWithWaypoints): TripsDetailDialog {
+            return TripsDetailDialog(tripWithWaypoints)
         }
     }
 }

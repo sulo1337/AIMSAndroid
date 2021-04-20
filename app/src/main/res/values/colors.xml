@@ -25,5 +25,7 @@
     <color name="gray">#aaaaaa</color>
     <color name="ltgray">#d2d2d2</color>
     <color name="dkgray">#484848</color>
+    <color name="blue">#2196f3</color>
+    <color name="green">#00ab66</color>
     <color name="mtrl_textinput_default_box_stroke_color">@color/gray</color>
 </resources>

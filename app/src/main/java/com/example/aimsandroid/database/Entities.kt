@@ -114,5 +114,10 @@ data class TripWithWaypoints(
         parentColumn = "tripId",
         entityColumn = "owningTripId"
     )
-    val waypoints: List<WayPoint>
+    val waypoints: List<WayPoint>,
+    @Relation(
+        parentColumn = "tripId",
+        entityColumn = "tripId"
+    )
+    val tripStatus: TripStatus?
 )
