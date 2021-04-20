@@ -1,21 +1,19 @@
 package com.example.aimsandroid.repository
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.example.aimsandroid.database.*
 import com.example.aimsandroid.network.Network
-import com.example.aimsandroid.network.TripSection
 import com.example.aimsandroid.utils.FetchApiEventListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
-import kotlin.reflect.typeOf
 
 class TripRepository(private val database: TripDatabase) {
     val trips = database.tripDao.getTripsWithWaypoints()
     fun getTripWithWaypointsByTripId(tripId: Long) = database.tripDao.getTripWithWaypointsByTripId(tripId)
     suspend fun insertTrip(trip: Trip) = database.tripDao.insertTrip(trip)
-    suspend fun setCompleteTrip(tripId: Long) = database.tripDao.setCompleteTrip(tripId)
+    suspend fun setTripStatus(tripStatus: TripStatus) = database.tripDao.setTripStatus(tripStatus)
+    suspend fun getTripStatus(tripId: Long) = database.tripDao.getTripStatus(tripId)
     suspend fun insertWaypoint(wayPoint: WayPoint) = database.tripDao.insertWaypoint(wayPoint)
     suspend fun insertBillOfLading(billOfLading: BillOfLading) = database.tripDao.insertBillOfLading(billOfLading)
     fun getBillOfLading(seqNum: Long, owningTripId: Long) = database.tripDao.getBillOfLading(seqNum, owningTripId)

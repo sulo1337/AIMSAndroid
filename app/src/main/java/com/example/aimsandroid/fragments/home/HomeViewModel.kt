@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.aimsandroid.database.BillOfLading
+import com.example.aimsandroid.database.TripStatus
 import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.repository.LocationRepository
@@ -65,10 +66,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 saveBitmaps(bolBitmap, signatureBitmap)
                 resolveNextWaypoint()
                 if(checkCurrentTripIsCompleted()) {
-                    tripRepository.setCompleteTrip(currentTrip.value!!.trip.tripId)
-                    removeCurrentTrip()
+                    val currentTripId = currentTrip.value?.trip?.tripId
+                    currentTripId?.let {
+                        tripRepository.setTripStatus(TripStatus(it, true))
+                    }
                     withContext(Dispatchers.Main) {
-                        _currentTripCompleted.value = true
+                        removeCurrentTrip()
                     }
                 }
             }
@@ -100,6 +103,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun removeCurrentTrip() {
         prefs.edit().putLong("currentTripId", -1L).apply()
         currentTrip = tripRepository.getTripWithWaypointsByTripId(-1L)
+        _currentTripCompleted.value = true
+    }
+
+    fun onCurrentTripRemoved() {
+        _currentTripCompleted.value = false
     }
 
     private fun saveBitmaps(bolBitmap: Bitmap, signatureBitmap: Bitmap) {

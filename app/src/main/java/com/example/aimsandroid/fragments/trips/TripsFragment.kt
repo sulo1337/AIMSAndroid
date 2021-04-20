@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentTripsBinding
@@ -19,6 +20,9 @@ import com.example.aimsandroid.databinding.TripItemBinding
 import com.example.aimsandroid.fragments.trips.detaildialog.TripsDetailDialog
 import com.example.aimsandroid.utils.FetchApiEventListener
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TripsFragment : Fragment() {
 
@@ -36,8 +40,21 @@ class TripsFragment : Fragment() {
         fragmentTitle.setText(getString(R.string.trips_toolbar_title));
         binding.lifecycleOwner = this
         binding.tripsRecyclerView.adapter = TripsAdapter(TripsAdapter.TripsClickListener{
-            val dialog: DialogFragment = TripsDetailDialog.newInstance(it)
-            dialog.show(requireActivity().supportFragmentManager, "tripsDetailDialog")
+            lifecycleScope.launch{
+                withContext(Dispatchers.IO){
+                    if(viewModel.checkTripCompleted(it.trip.tripId)) {
+                        withContext(Dispatchers.Main){
+                            val dialog: DialogFragment = TripsDetailDialog.newInstance(it, true)
+                            dialog.show(childFragmentManager, "tripsDetailDialog")
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            val dialog: DialogFragment = TripsDetailDialog.newInstance(it, false)
+                            dialog.show(childFragmentManager, "tripsDetailDialog")
+                        }
+                    }
+                }
+            }
         })
         viewModel.trips.observe(viewLifecycleOwner, Observer{
             val adapter = binding.tripsRecyclerView.adapter as TripsAdapter

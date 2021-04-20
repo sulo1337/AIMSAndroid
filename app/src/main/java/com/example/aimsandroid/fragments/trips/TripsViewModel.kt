@@ -21,6 +21,11 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
     val refreshing: LiveData<Boolean>
         get() = _refreshing
 
+    suspend fun checkTripCompleted(tripId: Long): Boolean {
+        Log.i("aimsDebug", "insideCheckTripCompleted")
+        return tripRepository.getTripStatus(tripId) != null
+    }
+
     fun refreshTrips(fetchApiEventListener: FetchApiEventListener){
         viewModelScope.launch {
             _refreshing.value = true

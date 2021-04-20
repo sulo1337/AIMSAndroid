@@ -32,6 +32,19 @@ data class Trip(
     val truckId: Long,
     val driverName: String,
     val driverCode: String,
+    var complete: Boolean
+)
+
+@Entity(tableName = "trips_status_table")
+data class TripStatus(
+    @ForeignKey(
+        entity = Trip::class,
+        parentColumns = ["tripId"],
+        childColumns = ["tripId"],
+        onDelete = CASCADE
+    )
+    @PrimaryKey
+    val tripId: Long,
     val complete: Boolean
 )
 

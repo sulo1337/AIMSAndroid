@@ -101,7 +101,7 @@ class HomeFragment : Fragment() {
         sheetBehavior = BottomSheetBehavior.from(contentLayout)
         sheetBehavior.isFitToContents = true
         sheetBehavior.isHideable = false
-        sheetBehavior.isDraggable = true
+        sheetBehavior.isDraggable = false
 
         backdropHeader.setOnClickListener {
             if(viewModel.currentTrip.value != null) {
@@ -116,6 +116,7 @@ class HomeFragment : Fragment() {
                 lifecycleScope.launch {
                     viewModel.resolveNextWaypoint()
                     binding.currentTripRecyclerView.visibility = View.VISIBLE
+                    sheetBehavior.isDraggable = true
                     binding.bottomSheetTitle.text = "Current Trip"
                     binding.currentTripTitle.text = "Trip #"+it.trip.tripId
 
@@ -149,6 +150,7 @@ class HomeFragment : Fragment() {
         viewModel.currentTripCompleted.observe(viewLifecycleOwner, Observer {
             if(it){
                 noCurrentTrip()
+                viewModel.onCurrentTripRemoved()
             }
         })
     }
@@ -309,6 +311,7 @@ class HomeFragment : Fragment() {
 
     fun noCurrentTrip() {
         binding.currentTripRecyclerView.visibility = View.GONE
+        sheetBehavior.isDraggable = false
         collapseSheet()
         binding.currentTripTitle.text = "You have not started any trips"
         binding.bottomSheetTitle.text = "You have not started any trips"

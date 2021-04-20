@@ -8,15 +8,26 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.databinding.DialogTripDetailsBinding
+import com.example.aimsandroid.fragments.trips.TripsFragment
 import com.example.aimsandroid.fragments.trips.TripsFragmentDirections
+import com.example.aimsandroid.fragments.trips.TripsViewModel
+import com.example.aimsandroid.fragments.trips.TripsViewModelFactory
+import com.example.aimsandroid.repository.TripRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import sortWaypointBySeqNum
 
-class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): DialogFragment(){
+class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints, private val completed: Boolean): DialogFragment(){
+
+    private lateinit var binding: DialogTripDetailsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +35,8 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = DialogTripDetailsBinding.inflate(inflater)
+        binding = DialogTripDetailsBinding.inflate(inflater)
+
         val closeButton = binding.closeButton
         binding.dialogTitle.text = "Trip #"+tripWithWaypoints.trip.tripId
         closeButton.setOnClickListener {
@@ -39,6 +51,10 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
         })
         adapter.submitList(sortWaypointBySeqNum(tripWithWaypoints.waypoints))
         binding.tripDetailRecyclerView.adapter = adapter
+
+        if(completed) {
+            binding.startTrip.visibility = View.GONE
+        }
 
         binding.startTrip.setOnClickListener {
             AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
@@ -67,8 +83,8 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
     }
 
     companion object {
-        fun newInstance(tripWithWaypoints: TripWithWaypoints): TripsDetailDialog {
-            return TripsDetailDialog(tripWithWaypoints)
+        fun newInstance(tripWithWaypoints: TripWithWaypoints, completed: Boolean): TripsDetailDialog {
+            return TripsDetailDialog(tripWithWaypoints, completed)
         }
     }
 }

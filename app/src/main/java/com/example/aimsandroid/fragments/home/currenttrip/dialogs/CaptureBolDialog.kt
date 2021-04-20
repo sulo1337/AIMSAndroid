@@ -235,7 +235,19 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
         }
 
         if(valid) {
-            saveDeliveryForm()
+            AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+                .setTitle("Confirm?")
+                .setMessage("Do you want to save this form?")
+                .setNegativeButton(
+                    "No"
+                ) { dialoginterface, i ->
+                    dialoginterface.dismiss()
+                }
+                .setPositiveButton(
+                    "Yes"
+                ) { dialoginterface, i ->
+                    saveDeliveryForm()
+                }.create().show()
         }
     }
 

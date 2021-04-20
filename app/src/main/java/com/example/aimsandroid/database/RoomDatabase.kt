@@ -15,11 +15,14 @@ interface TripDao {
     @Query("select * from trips_table where tripId = :tripId")
     fun getTripWithWaypointsByTripId(tripId: Long): LiveData<TripWithWaypoints>
 
-    @Query("update trips_table set complete = 1 where tripId = :tripId")
-    suspend fun setCompleteTrip(tripId: Long)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun setTripStatus(tripStatus: TripStatus)
+
+    @Query("select * from trips_status_table where tripId = :tripId")
+    suspend fun getTripStatus(tripId: Long): TripStatus?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTrip(trip: Trip): Long
+    suspend fun insertTrip(trip: Trip)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWaypoint(wayPoint: WayPoint): Long
@@ -42,7 +45,7 @@ interface TripDao {
     suspend fun insertBillOfLading(billOfLading: BillOfLading)
 }
 
-@Database(entities = [Trip::class, WayPoint::class, BillOfLading::class], version = 1)
+@Database(entities = [Trip::class, WayPoint::class, BillOfLading::class, TripStatus::class], version = 1)
 abstract class TripDatabase: RoomDatabase() {
     abstract val tripDao: TripDao
 }
