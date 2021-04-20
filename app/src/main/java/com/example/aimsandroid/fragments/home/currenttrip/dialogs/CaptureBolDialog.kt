@@ -1,6 +1,7 @@
 package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 
 import RotateBitmap
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
@@ -19,6 +21,8 @@ import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.databinding.FormContainerBinding
 import com.example.aimsandroid.repository.TripRepository
 import com.google.android.material.snackbar.Snackbar
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.TedPermission
 import java.lang.Long.parseLong
 
 class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
@@ -93,8 +97,23 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
     }
 
     private fun startCameraActivity() {
-        val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(cameraIntent, 1888)
+        TedPermission.with(requireContext())
+            .setPermissionListener(object : PermissionListener{
+                override fun onPermissionGranted() {
+                    val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                    startActivityForResult(cameraIntent, 1888)
+                }
+
+                override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                    Toast.makeText(requireContext(), "Camera Permission Denied", Toast.LENGTH_SHORT).show()
+                }
+            })
+            .setDeniedMessage("Please allow camera permission")
+            .setGotoSettingButtonText("Open App Settings")
+            .setPermissions(
+                Manifest.permission.CAMERA
+            )
+            .check()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
