@@ -50,7 +50,6 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
             }
 
             override fun onDestinationReached() {
-                Toast.makeText(homeFragment.requireContext(), "Arrived", Toast.LENGTH_SHORT).show()
                 homeFragment.onDestinationReached()
             }
 

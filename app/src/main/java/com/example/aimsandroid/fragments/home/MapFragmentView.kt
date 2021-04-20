@@ -231,7 +231,9 @@ open class MapFragmentView(
      fun startNavigation() {
         /* Configure Navigation manager to launch navigation on current map */
         m_navigationManager!!.setMap(m_map)
-        setUpVoiceNavigation()
+         if(m_navigationManager!!.countryCode == null) {
+             setUpVoiceNavigation()
+         }
         /*
          * Start the turn-by-turn navigation.Please note if the transport mode of the passed-in
          * route is pedestrian, the NavigationManager automatically triggers the guidance which is

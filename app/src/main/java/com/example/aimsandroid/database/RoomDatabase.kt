@@ -45,7 +45,7 @@ interface TripDao {
     suspend fun insertBillOfLading(billOfLading: BillOfLading)
 }
 
-@Database(entities = [Trip::class, WayPoint::class, BillOfLading::class, TripStatus::class], version = 1)
+@Database(entities = [Trip::class, WayPoint::class, BillOfLading::class, TripStatus::class], version = 2)
 abstract class TripDatabase: RoomDatabase() {
     abstract val tripDao: TripDao
 }
