@@ -25,6 +25,8 @@
             <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
+                                                                     android:textColor="?attr/colorOnPrimary"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:id="@+id/fuelStickReading"/>
 
 
