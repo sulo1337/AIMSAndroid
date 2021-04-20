@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/allTrips"
+          android:title="All Trips"/>
+
+    <item android:id="@+id/completedTrips"
+          android:title="Completed Trips"/>
+
+    <item android:id="@+id/pendingTrips"
+          android:title="Pending Trips"/>
+</menu>

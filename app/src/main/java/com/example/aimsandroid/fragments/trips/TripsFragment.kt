@@ -1,14 +1,13 @@
 package com.example.aimsandroid.fragments.trips
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +27,7 @@ class TripsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         binding = FragmentTripsBinding.inflate(inflater);
         val tripsViewModelFactory = TripsViewModelFactory(requireActivity().application)
         viewModel = ViewModelProvider(this, tripsViewModelFactory).get(TripsViewModel::class.java)
@@ -63,6 +63,44 @@ class TripsFragment : Fragment() {
             })
         }
         return binding.root;
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_filter, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.completedTrips -> submitCompletedTrips()
+            R.id.pendingTrips -> submitPendingTrips()
+            else -> submitAllTrips()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun submitCompletedTrips() {
+        val adapter = binding.tripsRecyclerView.adapter as TripsAdapter
+        val completedTrips = viewModel.trips.value?.filter{
+            it.tripStatus?.complete == true
+        }
+        adapter.submitList(completedTrips)
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun submitPendingTrips() {
+        val adapter = binding.tripsRecyclerView.adapter as TripsAdapter
+        val completedTrips = viewModel.trips.value?.filter{
+            it.tripStatus == null
+        }
+        adapter.submitList(completedTrips)
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun submitAllTrips() {
+        val adapter = binding.tripsRecyclerView.adapter as TripsAdapter
+        adapter.submitList(viewModel.trips.value)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
