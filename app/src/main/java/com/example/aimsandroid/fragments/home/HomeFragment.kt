@@ -1,7 +1,8 @@
 package com.example.aimsandroid.fragments.home
 
-import android.app.AlertDialog
+
 import android.content.Context
+import androidx.appcompat.app.AlertDialog
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Bundle

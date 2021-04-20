@@ -45,6 +45,7 @@
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:textCursorDrawable="@null"
                                                                      android:textColor="?attr/colorOnPrimary"
             />
@@ -71,6 +72,7 @@
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"/>
 
@@ -108,6 +110,7 @@
                                                                      android:layout_height="wrap_content"
                                                                      android:textCursorDrawable="@null"
                                                                      android:maxLines="1"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:textColor="?attr/colorOnPrimary"
                                                                      android:inputType="text"
             />
@@ -146,6 +149,7 @@
                                                                      android:textCursorDrawable="@null"
                                                                      android:maxLines="1"
                                                                      android:inputType="text"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:focusable="false"
                                                                      android:textColor="@color/dkgray"
             />
@@ -172,6 +176,7 @@
                                                                      android:focusable="false"
                                                                      android:inputType="text"
                                                                      android:maxLines="1"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:textColor="@color/dkgray"
                                                                      android:textCursorDrawable="@null"
             />
@@ -210,6 +215,7 @@
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
@@ -237,6 +243,7 @@
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
@@ -275,6 +282,7 @@
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
@@ -301,6 +309,7 @@
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
@@ -360,6 +369,7 @@
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="text"
                                                                      android:maxLines="1"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
@@ -421,6 +431,7 @@
                                                                      android:inputType="textMultiLine|textCapSentences"
                                                                      android:maxLines="10"
                                                                      android:minLines="5"
+                                                                     style="@style/Theme.AIMSAndroid"
                                                                      android:textColor="?attr/colorOnPrimary"
                                                                      android:textCursorDrawable="@null"
             />
