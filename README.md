@@ -3,7 +3,7 @@
 This is a native Android application for truckers at AIMS.
 
 # Current version
-> 1.0(alpha)
+> 1.0.3(gamma)
 
 ## Installation
 Clone this repository and import into **Android Studio**
