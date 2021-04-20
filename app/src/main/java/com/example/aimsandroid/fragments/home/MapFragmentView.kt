@@ -261,7 +261,9 @@ open class MapFragmentView(
         val wmlp = alertDialog.window!!.attributes
         wmlp.gravity = Gravity.TOP or Gravity.LEFT
         wmlp.verticalMargin = 0.6f
-        alertDialog.show()
+         if(m_navigationManager!!.countryCode == null){
+             alertDialog.show()
+         }
 //        m_navigationManager!!.startNavigation(m_route!!)
 //        m_map!!.tilt = 0f
 

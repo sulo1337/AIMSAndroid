@@ -32,6 +32,8 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
         binding.billOfLadingTitle.visibility = View.GONE
         binding.buttonContainer.visibility = View.GONE
+        binding.arrivedButton.visibility = View.GONE
+        binding.directionsButton.visibility = View.GONE
         binding.address.text = waypoint.address1.trim() + ", " + waypoint.city.trim() + ", " + waypoint.state.trim() + " " + waypoint.postalCode
 
         if(waypoint.waypointTypeDescription.equals("Source")){
