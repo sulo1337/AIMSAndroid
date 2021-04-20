@@ -1,6 +1,7 @@
 package com.example.aimsandroid.fragments.trips.detaildialog
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,14 +29,17 @@ import sortWaypointBySeqNum
 class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints, private val completed: Boolean): DialogFragment(){
 
     private lateinit var binding: DialogTripDetailsBinding
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
         setStyle(STYLE_NORMAL, R.style.FullscreenDialogTheme)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DialogTripDetailsBinding.inflate(inflater)
+        prefs = requireActivity().getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
 
         val closeButton = binding.closeButton
         binding.dialogTitle.text = "Trip #"+tripWithWaypoints.trip.tripId
@@ -54,6 +58,20 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints, privat
 
         if(completed) {
             binding.startTrip.visibility = View.GONE
+            binding.continueTrip.visibility = View.GONE
+        } else {
+            if(prefs.getLong("currentTripId", -1) == tripWithWaypoints.trip.tripId){
+                binding.startTrip.visibility = View.GONE
+                binding.continueTrip.visibility = View.VISIBLE
+            } else {
+                binding.continueTrip.visibility  = View.GONE
+                binding.startTrip.visibility = View.VISIBLE
+            }
+        }
+
+        binding.continueTrip.setOnClickListener {
+            this.findNavController().navigate(TripsFragmentDirections.actionTripsFragmentToHomeFragment(true))
+            dismiss()
         }
 
         binding.startTrip.setOnClickListener {
@@ -68,7 +86,6 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints, privat
                 .setPositiveButton(
                     "Yes"
                 ) { dialoginterface, i ->
-                    val prefs = requireActivity().getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
                     prefs.edit().putLong("currentTripId", tripWithWaypoints.trip.tripId).apply()
                     this.findNavController().navigate(TripsFragmentDirections.actionTripsFragmentToHomeFragment(true))
                     dismiss()
@@ -77,9 +94,11 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints, privat
         return binding.root
     }
 
-    override fun onPause() {
-        super.onPause()
-        dismiss()
+    override fun onDestroyView() {
+        if(retainInstance && dialog!= null) {
+            dialog!!.setDismissMessage(null)
+        }
+        super.onDestroyView()
     }
 
     companion object {
