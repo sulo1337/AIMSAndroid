@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -52,8 +53,7 @@ class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private va
             }
             if(!isNextWaypoint){
                 binding.waypointTypeIcon.setColorFilter(Color.LTGRAY)
-                binding.waypointType.setTextColor(Color.GRAY)
-                binding.waypointTitle.setTextColor(Color.LTGRAY)
+                binding.waypointTitle.setTextColor(Color.GRAY)
                 binding.deadline.setTextColor(Color.LTGRAY)
                 binding.address.setTextColor(Color.LTGRAY)
                 binding.divider.setBackgroundColor(Color.LTGRAY)
@@ -61,6 +61,10 @@ class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private va
                 binding.fuelQuantity.setTextColor(Color.LTGRAY)
                 binding.detailsButton.setBackgroundColor(Color.LTGRAY)
                 binding.navigateButton.visibility = View.GONE
+            }
+            if (isNextWaypoint) {
+                binding.waypointTitle.setTextColor(Color.rgb(255,106,118))
+                binding.waypointType.setTextColor(Color.rgb(255,106,118))
             }
         }
     }

@@ -36,7 +36,7 @@
 
         <TextView
             android:id="@+id/waypointTitle"
-            style="@style/san_francisco_bold_20"
+            style="@style/san_francisco_bold_24"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -60,7 +60,7 @@
 
         <TextView
             android:id="@+id/address"
-            style="@style/san_francisco_16"
+            style="@style/san_francisco_bold_16"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -102,34 +102,50 @@
             app:layout_constraintStart_toStartOf="@+id/fuelType" app:layout_constraintTop_toBottomOf="@+id/fuelType"
             tools:text="Quantity: 78 tons"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/detailsButton"
-            style="@style/pillButton"
-            android:layout_marginStart="16dp"
-            android:onClick="@{() -> clickListener.onClickDetails(wayPoint)}"
-            android:text="@string/details"
-            android:textColor="?attr/colorPrimary"
-            app:backgroundTint="@color/secondaryLightColor"
-            app:cornerRadius="20dp"
-            app:icon="@drawable/ic_details"
-            app:iconTint="?attr/colorPrimary"
-            app:layout_constraintStart_toStartOf="@+id/fuelQuantity" app:layout_constraintTop_toBottomOf="@+id/fuelQuantity"/>
+        <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="0dp"
+                                                           android:layout_height="wrap_content"
+        android:id="@+id/buttonsContainer"
+                      android:orientation="horizontal"
+                                                           app:layout_constraintEnd_toEndOf="@+id/fuelQuantity"
+                                                           app:layout_constraintStart_toStartOf="@+id/fuelQuantity"
+                                                           app:layout_constraintTop_toBottomOf="@+id/fuelQuantity">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/detailsButton"
+                style="@style/pillButton"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="16dp"
+                android:onClick="@{() -> clickListener.onClickDetails(wayPoint)}"
+                android:text="@string/details"
+                android:textColor="?attr/colorPrimary"
+                app:backgroundTint="@color/secondaryLightColor"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_details"
+                app:iconTint="?attr/colorPrimary" app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/navigateButton"
-            android:onClick="@{() -> clickListener.onClickNavigate(wayPoint)}"
-            android:text="Directions"
-            android:textColor="@color/secondaryLightColor"
-            app:backgroundTint="?attr/colorPrimary"
-            app:cornerRadius="20dp"
-            app:icon="@drawable/ic_directions"
-            app:iconTint="@color/secondaryLightColor"
-            app:layout_constraintStart_toEndOf="@+id/detailsButton"
-            app:layout_constraintTop_toBottomOf="@+id/fuelQuantity"
-            tools:text="Directions" style="@style/pillButton"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/navigateButton"
+                style="@style/pillButton"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:onClick="@{() -> clickListener.onClickNavigate(wayPoint)}"
+                android:text="Directions"
+                android:textColor="@color/secondaryLightColor"
+                app:backgroundTint="?attr/colorPrimary"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_directions"
+                app:iconTint="@color/secondaryLightColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@+id/detailsButton"
+                app:layout_constraintTop_toTopOf="parent" tools:text="Directions"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <View android:layout_width="match_parent" android:layout_height="10dip"
-              app:layout_constraintTop_toBottomOf="@id/detailsButton"
+              app:layout_constraintTop_toBottomOf="@id/buttonsContainer"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintEnd_toEndOf="parent"/>
 
