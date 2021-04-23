@@ -8,7 +8,7 @@
     android:theme="@style/Theme.AIMSAndroid"
     android:background="?attr/colorPrimary">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/toolbarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,27 +24,21 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:elevation="0dp"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:fitsSystemWindows="true"
             app:titleTextAppearance="@style/san_francisco_bold_20"
             app:titleTextColor="?attr/colorOnPrimary"
             app:contentInsetStart="0dp"
-        >
-
-            <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-                                                               android:layout_height="wrap_content">
-                <ImageView android:layout_width="128dp" android:layout_height="48dp"
-                           android:src="@drawable/aims_logo"
-                           android:layout_marginStart="50dp"
-                           app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.appcompat.widget.Toolbar>
+        />
+        <ImageView android:layout_width="128dp" android:layout_height="48dp"
+                   android:src="@drawable/aims_logo"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   android:layout_gravity="center"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
 <!--        <View android:layout_width="match_parent" android:layout_height="0.1dp" android:background="@color/gray"/>-->
-    </LinearLayout>
+    </FrameLayout>
 
     <fragment
         android:id="@+id/defaultNavHostFragment"
