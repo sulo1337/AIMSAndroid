@@ -57,12 +57,20 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
         binding.tripDetailRecyclerView.adapter = adapter
 
         if (tripWithWaypoints.tripStatus == null){
-            if(prefs.getLong("currentTripId", -1) == tripWithWaypoints.trip.tripId){
+            //if this is the current trip
+            if(prefs.getLong("currentTripId", -1L) == tripWithWaypoints.trip.tripId){
                 binding.startTrip.visibility = View.GONE
                 binding.continueTrip.visibility = View.VISIBLE
-            } else {
+            }
+            //if there is no value for current trip
+            else if (prefs.getLong("currentTripId", -1L) == -1L) {
                 binding.continueTrip.visibility  = View.GONE
                 binding.startTrip.visibility = View.VISIBLE
+            }
+            //if this is not current trip and there is a value for current trip
+            else {
+                binding.startTrip.visibility = View.GONE
+                binding.continueTrip.visibility = View.GONE
             }
         } else if(tripWithWaypoints.tripStatus.complete) {
             binding.startTrip.visibility = View.GONE
