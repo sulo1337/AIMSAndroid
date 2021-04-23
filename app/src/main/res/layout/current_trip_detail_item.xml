@@ -37,36 +37,38 @@
         <TextView
             android:id="@+id/waypointTitle"
             style="@style/san_francisco_bold_20"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            tools:text="Shreveport Refinery"
+            android:layout_marginEnd="16dp"
             android:textColor="?attr/colorOnPrimary"
             app:layout_constraintBottom_toBottomOf="@+id/waypointType"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/waypointTypeIcon"
-            app:layout_constraintTop_toTopOf="@+id/waypointType"
-            app:layout_constraintVertical_bias="0.0"/>
+            app:layout_constraintTop_toTopOf="@+id/waypointType" app:layout_constraintVertical_bias="0.0"
+            tools:text="Shreveport Refinery"/>
 
         <TextView
             android:id="@+id/deadline"
             style="@style/san_francisco_16"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            tools:text="Load by December 18th at 7:30am"
-            app:layout_constraintStart_toStartOf="@+id/waypointTitle"
-            app:layout_constraintTop_toBottomOf="@+id/address"/>
+            app:layout_constraintEnd_toEndOf="@+id/address"
+            app:layout_constraintStart_toStartOf="@+id/waypointTitle" app:layout_constraintTop_toBottomOf="@+id/address"
+            tools:text="Load by December 18th at 7:30am"/>
 
         <TextView
             android:id="@+id/address"
             style="@style/san_francisco_16"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            tools:text="2600 El Camino Real, Arlington, TX 75010"
             android:textColor="?attr/colorOnPrimary"
+            app:layout_constraintEnd_toEndOf="@+id/waypointTitle"
             app:layout_constraintStart_toStartOf="@+id/waypointTitle"
-            app:layout_constraintTop_toBottomOf="@+id/waypointTitle"/>
+            app:layout_constraintTop_toBottomOf="@+id/waypointTitle"
+            tools:text="2600 El Camino Real, Arlington, TX 75010"/>
 
         <View
             android:id="@+id/divider"
@@ -83,37 +85,35 @@
         <TextView
             android:id="@+id/fuelType"
             style="@style/san_francisco_16"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            tools:text="Type: Diesel"
+            app:layout_constraintEnd_toEndOf="@+id/deadline"
             app:layout_constraintStart_toStartOf="@+id/waypointTitle"
-            app:layout_constraintTop_toBottomOf="@+id/deadline"/>
+            app:layout_constraintTop_toBottomOf="@+id/deadline"
+            tools:text="Type: Diesel"/>
 
         <TextView
             android:id="@+id/fuelQuantity"
             style="@style/san_francisco_16"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/fuelType"
-            app:layout_constraintStart_toEndOf="@+id/fuelType"
-            app:layout_constraintTop_toTopOf="@+id/fuelType"
+            app:layout_constraintEnd_toEndOf="@+id/fuelType"
+            app:layout_constraintStart_toStartOf="@+id/fuelType" app:layout_constraintTop_toBottomOf="@+id/fuelType"
             tools:text="Quantity: 78 tons"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/detailsButton"
             style="@style/pillButton"
-            app:icon="@drawable/ic_details"
-            app:iconTint="?attr/colorPrimary"
-            app:backgroundTint="@color/secondaryLightColor"
-            app:cornerRadius="20dp"
+            android:layout_marginStart="16dp"
+            android:onClick="@{() -> clickListener.onClickDetails(wayPoint)}"
             android:text="@string/details"
             android:textColor="?attr/colorPrimary"
-            app:layout_constraintStart_toStartOf="@+id/fuelType"
-            app:layout_constraintTop_toBottomOf="@+id/fuelQuantity"
-            android:onClick="@{() -> clickListener.onClickDetails(wayPoint)}"
-        />
+            app:backgroundTint="@color/secondaryLightColor"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_details"
+            app:iconTint="?attr/colorPrimary"
+            app:layout_constraintStart_toStartOf="@+id/fuelQuantity" app:layout_constraintTop_toBottomOf="@+id/fuelQuantity"/>
 
 
         <com.google.android.material.button.MaterialButton

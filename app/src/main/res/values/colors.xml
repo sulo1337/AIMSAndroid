@@ -10,6 +10,7 @@
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
 
+
     <!-- dark mode colors -->
     <color name="primaryColorDM">#212121</color>
     <color name="primaryLightColorDM">#484848</color>
