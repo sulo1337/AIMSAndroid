@@ -43,6 +43,9 @@ interface TripDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBillOfLading(billOfLading: BillOfLading)
+
+    @Query("select * from trips_table where tripId = :tripId")
+    suspend fun getTrip(tripId: Long): Trip
 }
 
 @Database(entities = [Trip::class, WayPoint::class, BillOfLading::class, TripStatus::class], version = 2)

@@ -98,6 +98,9 @@ class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private va
                 binding.fuelQuantity.setTextColor(Color.LTGRAY)
                 binding.detailsButton.setBackgroundColor(Color.LTGRAY)
                 binding.navigateButton.visibility = View.GONE
+                binding.fuelType.visibility = View.GONE
+                binding.deadline.visibility = View.GONE
+                binding.navigateButton.visibility = View.GONE
             }
 
             if(isCompleted) {
@@ -105,9 +108,8 @@ class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private va
                 binding.waypointTypeIcon.setColorFilter(colorGreen)
                 binding.waypointType.setTextColor(colorGreen)
                 binding.waypointTitle.setTextColor(colorGreen)
-                binding.address.setTextColor(Color.BLACK)
-                binding.deadline.setTextColor(Color.BLACK)
-                binding.detailsButton.setBackgroundColor(Color.LTGRAY)
+                binding.address.setTextColor(Color.GRAY)
+                binding.detailsButton.setBackgroundColor(Color.GRAY)
                 binding.fuelQuantity.visibility = View.GONE
                 binding.fuelType.visibility = View.GONE
                 binding.deadline.visibility = View.GONE

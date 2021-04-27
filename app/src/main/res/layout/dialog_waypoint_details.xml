@@ -339,6 +339,7 @@
                               app:layout_constraintEnd_toEndOf="parent"
                               app:layout_constraintStart_toStartOf="parent"
                               app:layout_constraintTop_toBottomOf="@id/editFormButton"
+                              android:visibility="gone"
                 >
                     <include android:id="@+id/deliveryForm"
                              layout="@layout/form_delivery"
@@ -353,6 +354,7 @@
                               app:layout_constraintEnd_toEndOf="parent"
                               app:layout_constraintStart_toStartOf="parent"
                               app:layout_constraintTop_toBottomOf="@id/deliveryFormLayout"
+                              android:visibility="gone"
                 >
                     <include android:id="@+id/pickUpForm"
                              layout="@layout/form_pickup"

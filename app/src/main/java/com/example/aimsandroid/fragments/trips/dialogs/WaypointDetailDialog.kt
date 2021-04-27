@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.WayPoint
@@ -18,6 +19,9 @@ import com.example.aimsandroid.repository.TripRepository
 import com.example.aimsandroid.utils.OnSaveListener
 import com.google.android.material.textfield.TextInputLayout
 import getFullAddress
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     private lateinit var tripRepository: TripRepository
@@ -45,16 +49,23 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding = DialogWaypointDetailsBinding.inflate(inflater)
         binding.deliveryFormLayout.visibility = View.GONE
         binding.pickUpFormLayout.visibility = View.GONE
+        tripRepository = TripRepository(getDatabase(requireActivity().application))
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.waypoint = waypoint
-        //TODO fetch real data instead of hard-coding
-        binding.tripName.text = "A-159"
-        binding.truck.text = "PETERBILT TRANSPORT"
-        binding.trailer.text = "TANKER #2"
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO){
+                val trip = tripRepository.getTripByTripId(waypoint.owningTripId)
+                withContext(Dispatchers.Main){
+                    binding.tripName.text = trip.tripName
+                    binding.truck.text = trip.truckDesc
+                    binding.trailer.text = trip.trailerDesc
+                }
+            }
+        }
         binding.closeButton.setOnClickListener {
             dismiss()
         }
@@ -75,8 +86,6 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
             binding.siteContainer.visibility = View.VISIBLE
             binding.siteContainer.text = waypoint.siteContainerDescription + " " + waypoint.siteContainerCode + " - " + waypoint.fill
         }
-
-        tripRepository = TripRepository(getDatabase(requireActivity().application))
         val billOfLading: LiveData<BillOfLading> = tripRepository.getBillOfLading(waypoint.seqNum, waypoint.owningTripId)
         billOfLading.observe(viewLifecycleOwner, Observer {
             if(it != null) {

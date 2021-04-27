@@ -11,6 +11,7 @@ import java.lang.Exception
 class TripRepository(private val database: TripDatabase) {
     val trips = database.tripDao.getTripsWithWaypoints()
     fun getTripWithWaypointsByTripId(tripId: Long) = database.tripDao.getTripWithWaypointsByTripId(tripId)
+    suspend fun getTripByTripId(tripId: Long) = database.tripDao.getTrip(tripId)
     suspend fun insertTrip(trip: Trip) = database.tripDao.insertTrip(trip)
     suspend fun setTripStatus(tripStatus: TripStatus) = database.tripDao.setTripStatus(tripStatus)
     suspend fun getTripStatus(tripId: Long) = database.tripDao.getTripStatus(tripId)
