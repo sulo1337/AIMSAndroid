@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -66,18 +67,18 @@ class HomeFragment : Fragment() {
 
         binding.startNavFab.setOnClickListener {
             AlertDialog.Builder(requireActivity(), R.style.AlertDialogTheme)
-            .setTitle("Are you sure?")
-            .setMessage("Do you want to start navigation?")
-            .setNegativeButton(
-                "No"
-            ) { dialog, which ->
-                dialog.cancel()
-            }
-            .setPositiveButton(
-                "Yes"
-            ) { dialog, which ->
-                startNavigationMode()
-            }.create().show()
+                .setTitle("Are you sure?")
+                .setMessage("Do you want to start navigation?")
+                .setNegativeButton(
+                    "No"
+                ) { dialog, which ->
+                    dialog.cancel()
+                }
+                .setPositiveButton(
+                    "Yes"
+                ) { dialog, which ->
+                    startNavigationMode()
+                }.create().show()
         }
 
         binding.stopNavFab.setOnClickListener {
@@ -163,12 +164,17 @@ class HomeFragment : Fragment() {
     }
 
     fun showDirections(destination: GeoCoordinate) {
-        val startPoint = GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!)
-        stopNavigationMode()
-        prefs.edit().putDouble("lastNavigatedLatitude", destination.latitude).apply()
-        prefs.edit().putDouble("lastNavigatedLongitude", destination.longitude).apply()
-        sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        mapFragmentView?.showDirections(startPoint, destination)
+        if(prefs.getBoolean("navigating", false)) {
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            Toast.makeText(requireContext(), "Please End Current Navigation", Toast.LENGTH_SHORT).show()
+        } else {
+            val startPoint = GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!)
+            stopNavigationMode()
+            prefs.edit().putDouble("lastNavigatedLatitude", destination.latitude).apply()
+            prefs.edit().putDouble("lastNavigatedLongitude", destination.longitude).apply()
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            mapFragmentView?.showDirections(startPoint, destination)
+        }
     }
 
     private fun toggleFilters() {
