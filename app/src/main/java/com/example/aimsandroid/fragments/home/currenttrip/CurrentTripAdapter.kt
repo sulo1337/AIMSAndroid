@@ -9,33 +9,66 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import colorGreen
+import colorSecondaryLight
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.WayPoint
 import com.example.aimsandroid.databinding.CurrentTripDetailItemBinding
 import com.example.aimsandroid.databinding.DialogTripDetailsItemBinding
+import com.example.aimsandroid.repository.TripRepository
+import getFullAddress
+import kotlinx.coroutines.*
 import java.lang.Exception
 
-class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private val prefs: SharedPreferences): ListAdapter<WayPoint, CurrentTripAdapter.CurrentTripsDetailViewHolder>(DiffCallback) {
+class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private val prefs: SharedPreferences, private val tripRepository: TripRepository): ListAdapter<WayPoint, CurrentTripAdapter.CurrentTripsDetailViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrentTripAdapter.CurrentTripsDetailViewHolder {
         return CurrentTripsDetailViewHolder(CurrentTripDetailItemBinding.inflate(LayoutInflater.from(parent.context)))
     }
 
     override fun onBindViewHolder(holder: CurrentTripsDetailViewHolder, position: Int) {
         val thisWaypoint = getItem(position)
-        val nextWaypointSeqNum = prefs.getLong("nextWaypointSeqNumber", -1)
-        val currentTripId = prefs.getLong("currentTripId", -1)
-        if(thisWaypoint.owningTripId == currentTripId && thisWaypoint.seqNum == nextWaypointSeqNum) {
-            holder.bind(thisWaypoint, position, clickListener, true)
-        } else {
-            holder.bind(thisWaypoint, position, clickListener, false)
+        val scope = CoroutineScope(Job())
+        scope.launch {
+            withContext(Dispatchers.IO){
+                var isNextWaypoint = false
+                var isCompleted = false
+                val nextWaypointSeqNum = prefs.getLong("nextWaypointSeqNumber", -1)
+                val currentTripId = prefs.getLong("currentTripId", -1)
+                val billOfLading = tripRepository.getWaypointWithBillOfLading(thisWaypoint.seqNum, thisWaypoint.owningTripId).billOfLading
+                if(billOfLading!= null) {
+                    if(billOfLading.complete == true){
+                        isCompleted = true
+                        isNextWaypoint = false
+                    } else {
+                            if(thisWaypoint.owningTripId == currentTripId && thisWaypoint.seqNum == nextWaypointSeqNum) {
+                                isNextWaypoint = true
+                                isCompleted = false
+                            } else {
+                                isNextWaypoint = false
+                                isCompleted = false
+                            }
+                    }
+                } else {
+                        if(thisWaypoint.owningTripId == currentTripId && thisWaypoint.seqNum == nextWaypointSeqNum) {
+                            isNextWaypoint = true
+                            isCompleted = false
+                        } else {
+                            isNextWaypoint = false
+                            isCompleted = false
+                        }
+                }
+                withContext(Dispatchers.Main) {
+                    holder.bind(thisWaypoint, position, clickListener, isNextWaypoint, isCompleted)
+                }
+            }
         }
     }
 
     class CurrentTripsDetailViewHolder(private var binding: CurrentTripDetailItemBinding): RecyclerView.ViewHolder(binding.root){
         //TODO set colors
-        fun bind(thisWayPoint: WayPoint, position: Int, clickListener: CurrentTripClickListener, isNextWaypoint: Boolean){
+        fun bind(thisWayPoint: WayPoint, position: Int, clickListener: CurrentTripClickListener, isNextWaypoint: Boolean, isCompleted: Boolean){
             binding.wayPoint = thisWayPoint
-            binding.address.text = thisWayPoint.address1.trim() + ", " + thisWayPoint.city.trim() + ", " + thisWayPoint.state.trim() + " " + thisWayPoint.postalCode
+            binding.address.text = getFullAddress(thisWayPoint)
             binding.deadline.text = "19 December, 2020"
             binding.fuelQuantity.text = thisWayPoint.requestedQty.toString() + " " + thisWayPoint.uom
             binding.fuelType.text = thisWayPoint.productDesc
@@ -51,7 +84,11 @@ class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private va
                     binding.waypointTypeIcon.setImageResource(R.drawable.ic_destination)
                 }
             }
-            if(!isNextWaypoint){
+
+            if (isNextWaypoint) {
+                binding.waypointTitle.setTextColor(colorSecondaryLight)
+                binding.waypointType.setTextColor(colorSecondaryLight)
+            } else {
                 binding.waypointTypeIcon.setColorFilter(Color.LTGRAY)
                 binding.waypointTitle.setTextColor(Color.GRAY)
                 binding.deadline.setTextColor(Color.LTGRAY)
@@ -62,9 +99,19 @@ class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private va
                 binding.detailsButton.setBackgroundColor(Color.LTGRAY)
                 binding.navigateButton.visibility = View.GONE
             }
-            if (isNextWaypoint) {
-                binding.waypointTitle.setTextColor(Color.rgb(255,106,118))
-                binding.waypointType.setTextColor(Color.rgb(255,106,118))
+
+            if(isCompleted) {
+                binding.divider.setBackgroundColor(colorGreen)
+                binding.waypointTypeIcon.setColorFilter(colorGreen)
+                binding.waypointType.setTextColor(colorGreen)
+                binding.waypointTitle.setTextColor(colorGreen)
+                binding.address.setTextColor(Color.BLACK)
+                binding.deadline.setTextColor(Color.BLACK)
+                binding.detailsButton.setBackgroundColor(Color.LTGRAY)
+                binding.fuelQuantity.visibility = View.GONE
+                binding.fuelType.visibility = View.GONE
+                binding.deadline.visibility = View.GONE
+                binding.navigateButton.visibility = View.GONE
             }
         }
     }

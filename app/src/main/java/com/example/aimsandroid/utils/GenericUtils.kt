@@ -1,5 +1,6 @@
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Matrix
 import com.example.aimsandroid.database.WayPoint
 
@@ -23,3 +24,6 @@ fun getFullAddress(waypoint: WayPoint): String {
 fun sortWaypointBySeqNum(waypoints: List<WayPoint>): List<WayPoint> {
     return waypoints.sortedWith(compareBy({it.owningTripId},{it.seqNum}))
 }
+
+val colorGreen = Color.rgb(0,171,102)
+val colorSecondaryLight = Color.rgb(255,106,118)

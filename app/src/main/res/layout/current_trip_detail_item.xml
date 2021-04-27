@@ -54,7 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toEndOf="@+id/address"
+            app:layout_constraintEnd_toEndOf="@+id/waypointTitle"
             app:layout_constraintStart_toStartOf="@+id/waypointTitle" app:layout_constraintTop_toBottomOf="@+id/address"
             tools:text="Load by December 18th at 7:30am"/>
 
@@ -88,7 +88,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toEndOf="@+id/deadline"
+            app:layout_constraintEnd_toEndOf="@+id/waypointTitle"
             app:layout_constraintStart_toStartOf="@+id/waypointTitle"
             app:layout_constraintTop_toBottomOf="@+id/deadline"
             tools:text="Type: Diesel"/>
@@ -98,16 +98,17 @@
             style="@style/san_francisco_16"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/fuelType"
-            app:layout_constraintStart_toStartOf="@+id/fuelType" app:layout_constraintTop_toBottomOf="@+id/fuelType"
+            app:layout_constraintEnd_toEndOf="@+id/waypointTitle"
+            app:layout_constraintStart_toStartOf="@+id/waypointTitle"
+            app:layout_constraintTop_toBottomOf="@+id/fuelType"
             tools:text="Quantity: 78 tons"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/buttonsContainer"
+                                                           android:layout_width="0dp"
                                                            android:layout_height="wrap_content"
-        android:id="@+id/buttonsContainer"
-                      android:orientation="horizontal"
-                                                           app:layout_constraintEnd_toEndOf="@+id/fuelQuantity"
-                                                           app:layout_constraintStart_toStartOf="@+id/fuelQuantity"
+                                                           android:orientation="horizontal"
+                                                           app:layout_constraintEnd_toEndOf="@+id/waypointTitle"
+                                                           app:layout_constraintStart_toStartOf="@+id/waypointTitle"
                                                            app:layout_constraintTop_toBottomOf="@+id/fuelQuantity">
 
             <com.google.android.material.button.MaterialButton
@@ -136,7 +137,7 @@
                 android:onClick="@{() -> clickListener.onClickNavigate(wayPoint)}"
                 android:text="Directions"
                 android:textColor="@color/secondaryLightColor"
-                app:backgroundTint="?attr/colorPrimary"
+                app:backgroundTint="?attr/colorPrimaryVariant"
                 app:cornerRadius="20dp"
                 app:icon="@drawable/ic_directions"
                 app:iconTint="@color/secondaryLightColor"

@@ -130,7 +130,7 @@ class HomeFragment : Fragment() {
                             val destination = GeoCoordinate(it.latitude, it.longitude)
                             showDirections(destination)
                         })
-                    val adapter = CurrentTripAdapter(clickListeners, prefs)
+                    val adapter = CurrentTripAdapter(clickListeners, prefs, viewModel.tripRepository)
                     adapter.submitList(sortWaypointBySeqNum(it.waypoints))
                     binding.currentTripRecyclerView.adapter = adapter
                 }

@@ -72,6 +72,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="32dp"
             >
 
                 <TextView android:id="@+id/destinationName" style="@style/san_francisco_bold_20"
@@ -186,7 +187,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Directions"
                     android:textColor="@color/secondaryLightColor"
-                    app:backgroundTint="?attr/colorPrimary"
+                    app:backgroundTint="?attr/colorPrimaryVariant"
                     app:icon="@drawable/ic_directions"
 
                     app:iconTint="@color/secondaryLightColor"
@@ -324,10 +325,10 @@
                                                                    android:layout_height="wrap_content"
                                                                    android:layout_marginTop="8dp"
                                                                    android:text="Edit"
-                                                                   android:textColor="?attr/colorPrimary"
-                                                                   app:backgroundTint="@color/secondaryLightColor"
+                                                                   android:textColor="@color/secondaryLightColor"
+                                                                   app:backgroundTint="?attr/colorPrimaryVariant"
                                                                    app:icon="@drawable/ic_edit"
-                                                                   app:iconTint="?attr/colorPrimary"
+                                                                   app:iconTint="@color/secondaryLightColor"
                                                                    app:layout_constraintTop_toBottomOf="@id/billOfLadingTitle"
                                                                    app:layout_constraintStart_toStartOf="@id/billOfLadingTitle"
                                                                    />
