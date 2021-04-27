@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import java.lang.Long.parseLong
+import java.lang.StringBuilder
 
 class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
     private lateinit var binding: FormContainerBinding
@@ -272,9 +273,32 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
         }
 
         if(valid) {
+            val sb: StringBuilder = StringBuilder("Is the data correct?\n\n")
+            sb.append("\nInitial Fuel Stick Reading: ")
+            sb.append(binding.deliveryForm.initialFuelStickReading.text.toString())
+            sb.append("\nFinal Fuel Stick Reading: ")
+            sb.append(binding.deliveryForm.finalFuelStickReading.text.toString())
+            sb.append("\nProduct Delivered: ")
+            sb.append(binding.deliveryForm.productDropped.text.toString())
+            sb.append("\nDelivery Started: ")
+            sb.append(binding.deliveryForm.deliveryStarted.text.toString())
+            sb.append("\nDelivery Ended: ")
+            sb.append(binding.deliveryForm.deliveryEnded.text.toString())
+            sb.append("\nGross Quantity: ")
+            sb.append(binding.deliveryForm.grossQuantity.text.toString())
+            sb.append("\nNet Quantity: ")
+            sb.append(binding.deliveryForm.netQuantity.text.toString())
+            sb.append("\nDelivery Ticket Number: ")
+            sb.append(binding.deliveryForm.deliveryTicketNumber.text.toString())
+            sb.append("\nBill of Lading Number: ")
+            sb.append(binding.deliveryForm.billOfLadingNumber.text.toString())
+            sb.append("\nReceived by: ")
+            sb.append(binding.deliveryForm.pickedUpBy.text.toString())
+            sb.append("\nComments: ")
+            sb.append(binding.deliveryForm.comment.text.toString())
             AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
                 .setTitle("Confirm?")
-                .setMessage("Do you want to save this form?")
+                .setMessage(sb.toString())
                 .setNegativeButton(
                     "No"
                 ) { dialoginterface, i ->
@@ -352,9 +376,32 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
         }
 
         if(valid) {
+            val sb: StringBuilder = StringBuilder("Is the data correct?\n\n")
+            sb.append("\nInitial Fuel Stick Reading: ")
+            sb.append(binding.pickUpForm.initialFuelStickReading.text.toString())
+            sb.append("\nFinal Fuel Stick Reading: ")
+            sb.append(binding.pickUpForm.finalFuelStickReading.text.toString())
+            sb.append("\nProduct Delivered: ")
+            sb.append(binding.pickUpForm.productPickedUp.text.toString())
+            sb.append("\nDelivery Started: ")
+            sb.append(binding.pickUpForm.pickupStarted.text.toString())
+            sb.append("\nDelivery Ended: ")
+            sb.append(binding.pickUpForm.pickupEnded.text.toString())
+            sb.append("\nGross Quantity: ")
+            sb.append(binding.pickUpForm.grossQuantity.text.toString())
+            sb.append("\nNet Quantity: ")
+            sb.append(binding.pickUpForm.netQuantity.text.toString())
+            sb.append("\nDelivery Ticket Number: ")
+            sb.append(binding.pickUpForm.pickupTicketNumber.text.toString())
+            sb.append("\nBill of Lading Number: ")
+            sb.append(binding.pickUpForm.billOfLadingNumber.text.toString())
+            sb.append("\nReceived by: ")
+            sb.append(binding.pickUpForm.pickedUpBy.text.toString())
+            sb.append("\nComments: ")
+            sb.append(binding.pickUpForm.comment.text.toString())
             AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
                 .setTitle("Confirm?")
-                .setMessage("Do you want to save this form?")
+                .setMessage(sb.toString())
                 .setNegativeButton(
                     "No"
                 ) { dialoginterface, i ->
