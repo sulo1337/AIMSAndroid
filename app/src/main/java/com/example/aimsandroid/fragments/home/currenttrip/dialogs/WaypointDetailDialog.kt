@@ -23,6 +23,7 @@ import com.example.aimsandroid.databinding.DialogWaypointDetailsBinding
 import com.example.aimsandroid.fragments.home.HomeFragment
 import com.example.aimsandroid.repository.TripRepository
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 import com.here.android.mpa.common.GeoCoordinate
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -91,21 +92,16 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
             billOfLading.observe(viewLifecycleOwner, Observer {
                 if (it == null) {
                     notArrived()
-                    binding.billOfLadingDescription.text = "not available"
                 } else if (it.complete!!){
-                    waypointCaptured()
-                    binding.billOfLadingDescription.text = it.toString()
+                    waypointCaptured(it)
                 }
                 else {
                     if(it.loadingStarted == null){
                         loadingNotStarted()
-                        binding.billOfLadingDescription.text = it.toString()
                     } else if (it.loadingEnded == null) {
                         loadingNotEnded()
-                        binding.billOfLadingDescription.text = it.toString()
                     } else {
                         loadingEnded()
-                        binding.billOfLadingDescription.text = it.toString()
                     }
                 }
             })
@@ -243,13 +239,17 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.startLoading.visibility = View.GONE
         binding.stopLoading.visibility = View.GONE
         binding.captureButton.visibility = View.GONE
+        binding.billOfLadingTitle.visibility = View.GONE
+        binding.deliveryFormLayout.visibility = View.GONE
+        binding.pickUpFormLayout.visibility = View.GONE
     }
 
-    private fun waypointCaptured() {
+    private fun waypointCaptured(billOfLading: BillOfLading) {
         binding.arrivedButton.visibility = View.GONE
         binding.startLoading.visibility = View.GONE
         binding.stopLoading.visibility = View.GONE
         binding.captureButton.visibility = View.GONE
+        resolveFormView(billOfLading)
     }
 
     private fun loadingNotStarted() {
@@ -261,6 +261,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.startLoading.isEnabled = true
         binding.startLoading.alpha = 1.0f
         binding.stopLoading.alpha = 0.5f
+        binding.billOfLadingTitle.visibility = View.GONE
+        binding.deliveryFormLayout.visibility = View.GONE
+        binding.pickUpFormLayout.visibility = View.GONE
     }
 
     private fun loadingNotEnded() {
@@ -272,6 +275,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.startLoading.isEnabled = false
         binding.startLoading.alpha = 0.5f
         binding.stopLoading.alpha = 1.0f
+        binding.billOfLadingTitle.visibility = View.GONE
+        binding.deliveryFormLayout.visibility = View.GONE
+        binding.pickUpFormLayout.visibility = View.GONE
     }
 
     private fun loadingEnded() {
@@ -279,7 +285,130 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.arrivedButton.visibility = View.GONE
         binding.startLoading.visibility = View.GONE
         binding.stopLoading.visibility = View.GONE
+        binding.billOfLadingTitle.visibility = View.GONE
+        binding.deliveryFormLayout.visibility = View.GONE
+        binding.pickUpFormLayout.visibility = View.GONE
 
+    }
+
+    private fun resolveFormView(billOfLading: BillOfLading) {
+        if(waypoint.waypointTypeDescription=="Source"){
+            binding.billOfLadingTitle.visibility = View.VISIBLE
+            binding.deliveryFormLayout.visibility = View.GONE
+            binding.pickUpFormLayout.visibility = View.VISIBLE
+            resolvePickupFormView(billOfLading)
+        } else {
+            binding.billOfLadingTitle.visibility = View.VISIBLE
+            binding.deliveryFormLayout.visibility = View.VISIBLE
+            binding.pickUpFormLayout.visibility = View.GONE
+            resolveDeliveryFormView(billOfLading)
+        }
+    }
+
+    private fun resolveDeliveryFormView(billOfLading: BillOfLading) {
+        deliveryFormNonEditable()
+        binding.deliveryForm.initialFuelStickReading.setText(billOfLading.initialMeterReading.toString())
+        binding.deliveryForm.finalFuelStickReading.setText(billOfLading.finalMeterReading.toString())
+        binding.deliveryForm.productDropped.setText("Implement this")
+        binding.deliveryForm.grossQuantity.setText(billOfLading.grossQuantity.toString())
+        binding.deliveryForm.netQuantity.setText(billOfLading.netQuantity.toString())
+        binding.deliveryForm.deliveryTicketNumber.setText(billOfLading.deliveryTicketNumber.toString())
+        binding.deliveryForm.billOfLadingNumber.setText(billOfLading.billOfLadingNumber.toString())
+        binding.deliveryForm.pickedUpBy.setText(billOfLading.pickedUpBy.toString())
+        binding.deliveryForm.comment.setText(billOfLading.comments.toString())
+        binding.deliveryForm.deliveryStarted.setText(billOfLading.loadingStarted.toString())
+        binding.deliveryForm.deliveryEnded.setText(billOfLading.loadingEnded.toString())
+    }
+
+    private fun resolvePickupFormView(billOfLading: BillOfLading) {
+        pickUpFormNonEditable()
+        binding.pickUpForm.initialFuelStickReading.setText(billOfLading.initialMeterReading.toString())
+        binding.pickUpForm.finalFuelStickReading.setText(billOfLading.finalMeterReading.toString())
+        binding.pickUpForm.productPickedUp.setText("Implement this")
+        binding.pickUpForm.grossQuantity.setText(billOfLading.grossQuantity.toString())
+        binding.pickUpForm.netQuantity.setText(billOfLading.netQuantity.toString())
+        binding.pickUpForm.pickupTicketNumber.setText(billOfLading.deliveryTicketNumber.toString())
+        binding.pickUpForm.billOfLadingNumber.setText(billOfLading.billOfLadingNumber.toString())
+        binding.pickUpForm.pickedUpBy.setText(billOfLading.pickedUpBy.toString())
+        binding.pickUpForm.comment.setText(billOfLading.comments.toString())
+        binding.pickUpForm.pickupStarted.setText(billOfLading.loadingStarted.toString())
+        binding.pickUpForm.pickupEnded.setText(billOfLading.loadingEnded.toString())
+    }
+
+    private fun deliveryFormEditable() {
+        binding.deliveryForm.initialFuelStickReading.isEnabled = true
+        binding.deliveryForm.finalFuelStickReading.isEnabled = true
+        binding.deliveryForm.productDropped.isEnabled = true
+        binding.deliveryForm.grossQuantity.isEnabled = true
+        binding.deliveryForm.netQuantity.isEnabled = true
+        binding.deliveryForm.deliveryTicketNumber.isEnabled = true
+        binding.deliveryForm.billOfLadingNumber.isEnabled = true
+        binding.deliveryForm.pickedUpBy.isEnabled = true
+        binding.deliveryForm.comment.isEnabled = true
+        binding.deliveryForm.saveButton.visibility = View.GONE
+        binding.deliveryForm.captureSignatureButton.visibility = View.GONE
+        binding.deliveryForm.scanBOL.visibility = View.GONE
+    }
+
+    private fun deliveryFormNonEditable(){
+        binding.deliveryForm.initialFuelStickReading.isEnabled = false
+        binding.deliveryForm.finalFuelStickReading.isEnabled = false
+        binding.deliveryForm.productDropped.isEnabled = false
+        binding.deliveryForm.grossQuantity.isEnabled = false
+        binding.deliveryForm.netQuantity.isEnabled = false
+        binding.deliveryForm.deliveryTicketNumber.isEnabled = false
+        binding.deliveryForm.billOfLadingNumber.isEnabled = false
+        binding.deliveryForm.pickedUpBy.isEnabled = false
+        binding.deliveryForm.comment.isEnabled = false
+        binding.deliveryForm.saveButton.visibility = View.GONE
+        binding.deliveryForm.captureSignatureButton.visibility = View.GONE
+        binding.deliveryForm.scanBOL.visibility = View.GONE
+        binding.deliveryForm.initialFuelStickReadingLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.deliveryForm.finalFuelStickLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.deliveryForm.productDroppedLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.deliveryForm.grossQuantityLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.deliveryForm.netQuantityLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.deliveryForm.deliveryTicketLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.deliveryForm.billOfLadingNumberLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.deliveryForm.pickedUpByLayout.endIconMode = TextInputLayout.END_ICON_NONE
+    }
+
+    private fun pickUpFormEditable() {
+        binding.pickUpForm.initialFuelStickReading.isEnabled = true
+        binding.pickUpForm.finalFuelStickReading.isEnabled = true
+        binding.pickUpForm.productPickedUp.isEnabled = true
+        binding.pickUpForm.grossQuantity.isEnabled = true
+        binding.pickUpForm.netQuantity.isEnabled = true
+        binding.pickUpForm.pickupTicketNumber.isEnabled = true
+        binding.pickUpForm.billOfLadingNumber.isEnabled = true
+        binding.pickUpForm.pickedUpBy.isEnabled = true
+        binding.pickUpForm.comment.isEnabled = true
+        binding.pickUpForm.saveButton.visibility = View.GONE
+        binding.pickUpForm.captureSignatureButton.visibility = View.GONE
+        binding.pickUpForm.scanBOL.visibility = View.GONE
+    }
+
+    private fun pickUpFormNonEditable() {
+        binding.pickUpForm.initialFuelStickReading.isEnabled = false
+        binding.pickUpForm.finalFuelStickReading.isEnabled = false
+        binding.pickUpForm.productPickedUp.isEnabled = false
+        binding.pickUpForm.grossQuantity.isEnabled = false
+        binding.pickUpForm.netQuantity.isEnabled = false
+        binding.pickUpForm.pickupTicketNumber.isEnabled = false
+        binding.pickUpForm.billOfLadingNumber.isEnabled = false
+        binding.pickUpForm.pickedUpBy.isEnabled = false
+        binding.pickUpForm.comment.isEnabled = false
+        binding.pickUpForm.saveButton.visibility = View.GONE
+        binding.pickUpForm.captureSignatureButton.visibility = View.GONE
+        binding.pickUpForm.scanBOL.visibility = View.GONE
+        binding.pickUpForm.initialFuelStickReadingLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.pickUpForm.finalFuelStickLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.pickUpForm.productPickedUpLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.pickUpForm.grossQuantityLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.pickUpForm.netQuantityLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.pickUpForm.deliveryTicketLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.pickUpForm.billOfLadingNumberLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        binding.pickUpForm.pickedUpByLayout.endIconMode = TextInputLayout.END_ICON_NONE
     }
 
     override fun onDestroyView() {

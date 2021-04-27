@@ -70,7 +70,8 @@
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
                                                                      android:inputType="numberDecimal"
-                                                                     android:textCursorDrawable="@null"/>
+                                                                     android:textCursorDrawable="@null"
+                                                                     android:textColor="?attr/colorOnPrimary"/>
 
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -107,6 +108,7 @@
                                                                      android:textCursorDrawable="@null"
                                                                      android:maxLines="1"
                                                                      android:inputType="text"
+                                                                     android:textColor="?attr/colorOnPrimary"
             />
 
 
@@ -208,6 +210,7 @@
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
                                                                      android:textCursorDrawable="@null"
+                                                                     android:textColor="?attr/colorOnPrimary"
             />
 
 
@@ -234,6 +237,7 @@
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
                                                                      android:textCursorDrawable="@null"
+                                                                     android:textColor="?attr/colorOnPrimary"
             />
 
 
@@ -271,6 +275,7 @@
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
                                                                      android:textCursorDrawable="@null"
+                                                                     android:textColor="?attr/colorOnPrimary"
             />
 
 
@@ -296,6 +301,7 @@
                                                                      android:inputType="numberDecimal"
                                                                      android:maxLines="1"
                                                                      android:textCursorDrawable="@null"
+                                                                     android:textColor="?attr/colorOnPrimary"
             />
 
 
@@ -354,6 +360,7 @@
                                                                      android:inputType="text"
                                                                      android:maxLines="1"
                                                                      android:textCursorDrawable="@null"
+                                                                     android:textColor="?attr/colorOnPrimary"
             />
 
 
@@ -413,6 +420,7 @@
                                                                      android:maxLines="10"
                                                                      android:minLines="5"
                                                                      android:textCursorDrawable="@null"
+                                                                     android:textColor="?attr/colorOnPrimary"
             />
 
 
@@ -420,16 +428,16 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/saveButton"
+            style="@style/pillButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/pillButton"
+            android:layout_marginBottom="16dp"
             android:text="Save"
+            android:textColor="?attr/colorPrimary"
+            app:backgroundTint="@color/secondaryLightColor"
             app:icon="@drawable/ic_save"
             app:iconTint="?attr/colorPrimary"
-            app:backgroundTint="@color/secondaryLightColor"
-            android:textColor="?attr/colorPrimary"
-            app:layout_constraintTop_toBottomOf="@id/commentLayout"
             app:layout_constraintStart_toStartOf="@id/commentLayout"
-        />
+            app:layout_constraintTop_toBottomOf="@id/commentLayout"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

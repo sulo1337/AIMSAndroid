@@ -64,8 +64,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detailsDialogToolbar">
+            app:layout_constraintTop_toBottomOf="@+id/detailsDialogToolbar"
+            app:layout_constraintVertical_bias="1.0">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -96,16 +98,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:letterSpacing="0"
+                        android:text="Start Loading"
                         android:textAllCaps="false"
                         android:textColor="?attr/colorPrimary"
                         app:backgroundTint="@color/secondaryLightColor"
                         app:cornerRadius="20dp"
-                        android:text="Start Loading"
                         app:icon="@drawable/ic_capture_bol"
                         app:iconTint="?attr/colorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         tools:text="Start Loading"/>
 
                     <com.google.android.material.button.MaterialButton
@@ -121,25 +123,25 @@
                         app:backgroundTint="@color/secondaryLightColor"
                         app:cornerRadius="20dp" app:icon="@drawable/ic_capture_bol"
                         app:iconTint="?attr/colorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/startLoading"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         tools:text="Stop Loading"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/captureButton"
+                        style="@style/pillButton"
                         android:layout_width="wrap_content"
-                                                                       android:layout_height="wrap_content"
-                                                                       app:layout_constraintStart_toStartOf="parent"
-                                                                       app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_height="wrap_content"
+                        android:text="Capture BOL"
+                        android:textColor="?attr/colorPrimary"
+                        app:backgroundTint="@color/secondaryLightColor"
+                        app:icon="@drawable/ic_edit"
+                        app:iconTint="?attr/colorPrimary"
                         app:layout_constraintBottom_toBottomOf="parent"
-                                                                       style="@style/pillButton"
-                                                                       android:text="Capture BOL"
-                                                                       app:icon="@drawable/ic_edit"
-                                                                       app:backgroundTint="@color/secondaryLightColor"
-                                                                       android:textColor="?attr/colorPrimary"
-                                                                       app:iconTint="?attr/colorPrimary"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
@@ -195,15 +197,16 @@
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginTop="16dp"
-                          app:layout_constraintStart_toStartOf="@+id/addressTitle" app:layout_constraintTop_toBottomOf="@+id/directionsButton"
+                          app:layout_constraintStart_toStartOf="@+id/addressTitle"
+                          app:layout_constraintTop_toBottomOf="@+id/directionsButton"
                           tools:text="Pickup"/>
 
                 <TextView android:id="@+id/fuelTypeTitle" style="@style/san_francisco_bold_16"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginStart="16dp"
-                          android:text="@string/fuel"
                           android:layout_marginTop="8dp"
+                          android:text="@string/fuel"
                           app:layout_constraintStart_toStartOf="@id/pickupOrDeliverTitle"
                           app:layout_constraintTop_toBottomOf="@id/pickupOrDeliverTitle" tools:text="Fuel"/>
 
@@ -235,9 +238,9 @@
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginTop="16dp"
+                          android:text="@{`Trip #`+String.valueOf(waypoint.owningTripId)}"
                           app:layout_constraintStart_toStartOf="@id/pickupOrDeliverTitle"
                           app:layout_constraintTop_toBottomOf="@id/fuelQuantity"
-                          android:text="@{`Trip #`+String.valueOf(waypoint.owningTripId)}"
                           tools:text="Trip #159"/>
 
                 <TextView android:id="@+id/tripNameTitle" style="@style/san_francisco_bold_16"
@@ -245,10 +248,10 @@
                           android:layout_height="wrap_content"
                           android:layout_marginStart="16dp"
                           android:layout_marginTop="8dp"
+                          android:text="@string/trip_name"
                           app:layout_constraintStart_toStartOf="@id/tripTitle"
                           app:layout_constraintTop_toBottomOf="@id/tripTitle"
                           tools:text="Trip Name"
-                            android:text="@string/trip_name"
                 />
 
                 <TextView android:id="@+id/tripName" style="@style/san_francisco_16"
@@ -293,13 +296,13 @@
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginTop="16dp"
+                          android:text="@string/site_container"
                           app:layout_constraintStart_toStartOf="@id/tripTitle"
                           app:layout_constraintTop_toBottomOf="@id/trailerTitle"
-                          android:text="@string/site_container"
                           tools:text="Site Container"/>
 
-                <TextView style="@style/san_francisco_16" android:layout_width="wrap_content"
-                          android:id="@+id/siteContainer"
+                <TextView android:id="@+id/siteContainer" style="@style/san_francisco_16"
+                          android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginStart="16dp"
                           android:layout_marginTop="8dp"
@@ -311,17 +314,37 @@
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginTop="16dp"
-                          android:text="Bill Of Lading"
+                          android:text="Captured Information"
                           app:layout_constraintStart_toStartOf="@id/tripTitle"
                           app:layout_constraintTop_toBottomOf="@id/siteContainer"/>
 
-                <TextView android:id="@+id/billOfLadingDescription" style="@style/san_francisco_16"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_marginStart="16dp"
-                          android:layout_marginTop="8dp"
-                          app:layout_constraintStart_toStartOf="@id/billOfLadingTitle" app:layout_constraintTop_toBottomOf="@id/billOfLadingTitle"
-                          tools:text="Not yet recorded"/>
+                <LinearLayout android:id="@+id/deliveryFormLayout" android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_marginTop="16dp"
+                              app:layout_constraintEnd_toEndOf="parent"
+                              app:layout_constraintStart_toStartOf="parent"
+                              app:layout_constraintTop_toBottomOf="@id/billOfLadingTitle"
+                >
+                    <include android:id="@+id/deliveryForm"
+                             layout="@layout/form_delivery"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                    />
+                </LinearLayout>
+
+                <LinearLayout android:id="@+id/pickUpFormLayout" android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_marginTop="16dp"
+                              app:layout_constraintEnd_toEndOf="parent"
+                              app:layout_constraintStart_toStartOf="parent"
+                              app:layout_constraintTop_toBottomOf="@id/deliveryFormLayout"
+                >
+                    <include android:id="@+id/pickUpForm"
+                             layout="@layout/form_pickup"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                    />
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
