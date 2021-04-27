@@ -9,6 +9,8 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,24 +26,37 @@ import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.WayPoint
 import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.databinding.FormContainerBinding
+import com.example.aimsandroid.fragments.home.currenttrip.dialogs.CaptureBolDialog
+import com.example.aimsandroid.fragments.home.currenttrip.dialogs.CaptureSignatureDialog
 import com.example.aimsandroid.repository.TripRepository
 import com.example.aimsandroid.utils.getDeliveryFormSummary
 import com.example.aimsandroid.utils.getPickUpFormSummary
-import com.example.aimsandroid.utils.validateDeliveryForm
 import com.example.aimsandroid.utils.validatePickUpForm
 import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import getFullAddress
-import java.lang.Long.parseLong
+import java.lang.Long
 import java.lang.StringBuilder
+import kotlin.math.sign
 
-open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment() {
-    protected lateinit var binding: FormContainerBinding
+class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
+    private lateinit var binding: FormContainerBinding
     private lateinit var tripRepository: TripRepository
-    protected lateinit var billOfLading: LiveData<BillOfLading>
+    private lateinit var billOfLading: LiveData<BillOfLading>
     private var signatureBitmap: Bitmap? = null
     private var bolBitmap: Bitmap? = null
+    companion object {
+        fun newInstance(waypoint: WayPoint): EditBolDialog {
+            return EditBolDialog(waypoint)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+        setStyle(STYLE_NORMAL, R.style.FullscreenDialogTheme)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val root = RelativeLayout(activity)
@@ -55,18 +70,6 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         return dialog
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-        setStyle(STYLE_NORMAL, R.style.FullscreenDialogTheme)
-    }
-
-    companion object {
-        fun newInstance(waypoint: WayPoint): CaptureBolDialog {
-            return CaptureBolDialog(waypoint)
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FormContainerBinding.inflate(inflater)
@@ -74,8 +77,6 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         tripRepository = TripRepository(getDatabase(requireActivity().application))
         billOfLading = tripRepository.getBillOfLading(waypoint.seqNum, waypoint.owningTripId)
 
@@ -84,15 +85,19 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         if(waypoint.waypointTypeDescription.equals("Source")){
             binding.deliveryFormLayout.visibility = View.GONE
             billOfLading.observe(viewLifecycleOwner, Observer {
+                binding.pickUpForm.captureSignatureButton.visibility = View.GONE
                 binding.pickUpForm.initialFuelStickReading.setText(it.initialMeterReading.toString())
-                binding.pickUpForm.productPickedUp.setText(waypoint.productDesc)
-                binding.pickUpForm.pickupStarted.setText(it.loadingStarted)
-                binding.pickUpForm.pickupEnded.setText(it.loadingEnded)
+                binding.pickUpForm.finalFuelStickReading.setText(it.finalMeterReading.toString())
+                binding.pickUpForm.productPickedUp.setText("Implement this")
+                binding.pickUpForm.grossQuantity.setText(it.grossQuantity.toString())
+                binding.pickUpForm.netQuantity.setText(it.netQuantity.toString())
+                binding.pickUpForm.pickupTicketNumber.setText(it.deliveryTicketNumber.toString())
+                binding.pickUpForm.billOfLadingNumber.setText(it.billOfLadingNumber.toString())
+                binding.pickUpForm.pickedUpBy.setText(it.pickedUpBy.toString())
+                binding.pickUpForm.comment.setText(it.comments.toString())
+                binding.pickUpForm.pickupStarted.setText(it.loadingStarted.toString())
+                binding.pickUpForm.pickupEnded.setText(it.loadingEnded.toString())
             })
-            binding.pickUpForm.captureSignatureButton.setOnClickListener {
-                val captureSignatureDialog = CaptureSignatureDialog.newInstance()
-                captureSignatureDialog.show(childFragmentManager, "captureSignatureDialog")
-            }
             binding.pickUpForm.scanBOL.setOnClickListener {
                 startCameraActivity()
             }
@@ -102,10 +107,18 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         } else {
             binding.pickUpFormLayout.visibility = View.GONE
             billOfLading.observe(viewLifecycleOwner, Observer {
+                binding.deliveryForm.captureSignatureButton.visibility = View.GONE
                 binding.deliveryForm.initialFuelStickReading.setText(it.initialMeterReading.toString())
-                binding.deliveryForm.productDropped.setText(waypoint.productDesc)
-                binding.deliveryForm.deliveryStarted.setText(it.loadingStarted)
-                binding.deliveryForm.deliveryEnded.setText(it.loadingEnded)
+                binding.deliveryForm.finalFuelStickReading.setText(it.finalMeterReading.toString())
+                binding.deliveryForm.productDropped.setText("Implement this")
+                binding.deliveryForm.grossQuantity.setText(it.grossQuantity.toString())
+                binding.deliveryForm.netQuantity.setText(it.netQuantity.toString())
+                binding.deliveryForm.deliveryTicketNumber.setText(it.deliveryTicketNumber.toString())
+                binding.deliveryForm.billOfLadingNumber.setText(it.billOfLadingNumber.toString())
+                binding.deliveryForm.pickedUpBy.setText(it.pickedUpBy.toString())
+                binding.deliveryForm.comment.setText(it.comments.toString())
+                binding.deliveryForm.deliveryStarted.setText(it.loadingStarted.toString())
+                binding.deliveryForm.deliveryEnded.setText(it.loadingEnded.toString())
             })
             binding.deliveryForm.captureSignatureButton.setOnClickListener {
                 val captureSignatureDialog = CaptureSignatureDialog.newInstance()
@@ -164,25 +177,17 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         super.onDestroyView()
     }
 
-     fun saveSignature(signatureBitmap: Bitmap) {
-        binding.deliveryForm.signatureView.visibility = View.VISIBLE
-        binding.deliveryForm.signatureView.setImageBitmap(RotateBitmap(signatureBitmap, 270.0f))
-        binding.pickUpForm.signatureView.visibility = View.VISIBLE
-        binding.pickUpForm.signatureView.setImageBitmap(RotateBitmap(signatureBitmap, 270.0f))
-        this.signatureBitmap = signatureBitmap
-    }
-
     private fun generateDeliveryBillOfLading(): BillOfLading{
         return BillOfLading(
             waypoint.seqNum,
             waypoint.owningTripId,
             true,
-            parseLong(binding.deliveryForm.deliveryTicketNumber.text.toString()),
+            Long.parseLong(binding.deliveryForm.deliveryTicketNumber.text.toString()),
             java.lang.Double.parseDouble(binding.deliveryForm.initialFuelStickReading.text.toString()),
             java.lang.Double.parseDouble(binding.deliveryForm.finalFuelStickReading.text.toString()),
             binding.deliveryForm.pickedUpBy.text.toString(),
             binding.deliveryForm.comment.text.toString(),
-            parseLong(binding.deliveryForm.billOfLadingNumber.text.toString()),
+            Long.parseLong(binding.deliveryForm.billOfLadingNumber.text.toString()),
             binding.deliveryForm.deliveryStarted.text.toString(),
             binding.deliveryForm.deliveryEnded.text.toString(),
             java.lang.Double.parseDouble(binding.deliveryForm.grossQuantity.text.toString()),
@@ -196,12 +201,12 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
             waypoint.seqNum,
             waypoint.owningTripId,
             true,
-            parseLong(binding.pickUpForm.pickupTicketNumber.text.toString()),
+            Long.parseLong(binding.pickUpForm.pickupTicketNumber.text.toString()),
             java.lang.Double.parseDouble(binding.pickUpForm.initialFuelStickReading.text.toString()),
             java.lang.Double.parseDouble(binding.pickUpForm.finalFuelStickReading.text.toString()),
             binding.pickUpForm.pickedUpBy.text.toString(),
             binding.pickUpForm.comment.text.toString(),
-            parseLong(binding.pickUpForm.billOfLadingNumber.text.toString()),
+            Long.parseLong(binding.pickUpForm.billOfLadingNumber.text.toString()),
             binding.pickUpForm.pickupStarted.text.toString(),
             binding.pickUpForm.pickupEnded.text.toString(),
             java.lang.Double.parseDouble(binding.pickUpForm.grossQuantity.text.toString()),
@@ -211,22 +216,17 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
     }
 
     fun saveDeliveryForm() {
-        (parentFragment as WaypointDetailDialog).saveForm(generateDeliveryBillOfLading(), bolBitmap!!, signatureBitmap!!)
+        (parentFragment as WaypointDetailDialog).saveForm(generateDeliveryBillOfLading(), bolBitmap!!, null)
         dismiss()
     }
 
     fun savePickupForm() {
-        (parentFragment as WaypointDetailDialog).saveForm(generatePickUpBillOfLading(), bolBitmap!!, signatureBitmap!!)
+        (parentFragment as WaypointDetailDialog).saveForm(generatePickUpBillOfLading(), bolBitmap!!, null)
         dismiss()
     }
 
-    private fun validateDeliveryForm() {
-        var valid = validateDeliveryForm(binding.deliveryForm)
-
-        if(signatureBitmap == null) {
-            valid = false
-            Snackbar.make(requireView(), "Signature not captured", Snackbar.LENGTH_SHORT).show()
-        }
+    fun validateDeliveryForm() {
+        var valid = com.example.aimsandroid.utils.validateDeliveryForm(binding.deliveryForm)
 
         if(bolBitmap == null) {
             valid = false
@@ -254,11 +254,6 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
 
     fun validatePickupForm() {
         var valid = validatePickUpForm(binding.pickUpForm)
-
-        if(signatureBitmap == null) {
-            valid = false
-            Snackbar.make(requireView(), "Signature not captured", Snackbar.LENGTH_SHORT).show()
-        }
 
         if(bolBitmap == null) {
             valid = false

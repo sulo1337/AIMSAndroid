@@ -3,7 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable name="wayPoint" type="com.example.aimsandroid.database.WayPoint"/>
-        <variable name="clickListener" type="com.example.aimsandroid.fragments.trips.detaildialog.TripsDetailAdapter.TripsDetailClickListener"/>
+        <variable name="clickListener" type="com.example.aimsandroid.fragments.trips.dialogs.TripsDetailAdapter.TripsDetailClickListener"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="?attr/colorPrimary"

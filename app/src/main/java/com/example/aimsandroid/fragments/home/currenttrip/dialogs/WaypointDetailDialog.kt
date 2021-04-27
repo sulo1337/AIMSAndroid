@@ -25,6 +25,7 @@ import com.example.aimsandroid.repository.TripRepository
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.here.android.mpa.common.GeoCoordinate
+import getFullAddress
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,17 +35,17 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     private lateinit var tripRepository: TripRepository
     private lateinit var binding: DialogWaypointDetailsBinding
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val root = RelativeLayout(activity)
-        root.layoutParams =
-            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        val dialog = Dialog(requireActivity())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(root)
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        return dialog
-    }
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+//        val root = RelativeLayout(activity)
+//        root.layoutParams =
+//            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+//        val dialog = Dialog(requireActivity())
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+//        dialog.setContentView(root)
+//        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+//        return dialog
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +58,8 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = DialogWaypointDetailsBinding.inflate(inflater);
         binding.waypoint = waypoint
-
+        binding.pickUpFormLayout.visibility = View.GONE
+        binding.deliveryFormLayout.visibility = View.GONE
         //TODO fetch real data instead of hard-coding
         binding.tripName.text = "A-159"
         binding.truck.text = "PETERBILT TRANSPORT"
@@ -65,7 +67,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.closeButton.setOnClickListener {
             dismiss()
         }
-        binding.address.text = waypoint.address1.trim() + ", " + waypoint.city.trim() + ", " + waypoint.state.trim() + " " + waypoint.postalCode
+        binding.address.text =getFullAddress(waypoint)
         if(waypoint.waypointTypeDescription.equals("Source")){
             binding.pickupOrDeliverTitle.text = "Pick Up"
             binding.startLoading.text = "Start Loading"
@@ -216,6 +218,11 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                 }.create().show()
         }
 
+        binding.editFormButton.setOnClickListener {
+            val editBolDialog = EditBolDialog.newInstance(waypoint)
+            editBolDialog.show(childFragmentManager, "editBolDialog")
+        }
+
         binding.captureButton.setOnClickListener {
             CaptureBolDialog.newInstance(waypoint).show(childFragmentManager, "captureBolFormDialog")
         }
@@ -235,6 +242,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     private fun notArrived() {
+        binding.editFormButton.visibility = View.GONE
         binding.arrivedButton.visibility = View.VISIBLE
         binding.startLoading.visibility = View.GONE
         binding.stopLoading.visibility = View.GONE
@@ -245,6 +253,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     private fun waypointCaptured(billOfLading: BillOfLading) {
+        binding.editFormButton.visibility = View.VISIBLE
         binding.arrivedButton.visibility = View.GONE
         binding.startLoading.visibility = View.GONE
         binding.stopLoading.visibility = View.GONE
@@ -253,6 +262,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     private fun loadingNotStarted() {
+        binding.editFormButton.visibility = View.GONE
         binding.arrivedButton.visibility = View.GONE
         binding.captureButton.visibility = View.GONE
         binding.startLoading.visibility = View.VISIBLE
@@ -267,6 +277,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     private fun loadingNotEnded() {
+        binding.editFormButton.visibility = View.GONE
         binding.arrivedButton.visibility = View.GONE
         binding.captureButton.visibility = View.GONE
         binding.startLoading.visibility = View.VISIBLE
@@ -281,6 +292,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     private fun loadingEnded() {
+        binding.editFormButton.visibility = View.GONE
         binding.captureButton.visibility = View.VISIBLE
         binding.arrivedButton.visibility = View.GONE
         binding.startLoading.visibility = View.GONE
@@ -418,9 +430,10 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         super.onDestroyView()
     }
 
-    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap) {
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?) {
         (parentFragment as HomeFragment).saveForm(billOfLading, bolBitmap, signatureBitmap)
     }
+
 
     companion object {
         fun newInstance(waypoint: WayPoint): WaypointDetailDialog {

@@ -1,4 +1,4 @@
-package com.example.aimsandroid.fragments.trips.detaildialog
+package com.example.aimsandroid.fragments.trips.dialogs
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

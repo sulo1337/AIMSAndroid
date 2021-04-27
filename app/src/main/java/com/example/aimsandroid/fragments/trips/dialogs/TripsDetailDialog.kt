@@ -1,11 +1,13 @@
-package com.example.aimsandroid.fragments.trips.detaildialog
+package com.example.aimsandroid.fragments.trips.dialogs
 
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +17,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.example.aimsandroid.R
+import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.databinding.DialogTripDetailsBinding
+import com.example.aimsandroid.fragments.trips.TripsFragment
 import com.example.aimsandroid.fragments.trips.TripsFragmentDirections
+import com.example.aimsandroid.utils.OnSaveListener
 import sortWaypointBySeqNum
 
 
@@ -114,6 +119,10 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
             dialog!!.setDismissMessage(null)
         }
         super.onDestroyView()
+    }
+
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, onSaveListener: OnSaveListener) {
+        (parentFragment as TripsFragment).getViewModel().saveForm(billOfLading, bolBitmap, onSaveListener)
     }
 
     companion object {

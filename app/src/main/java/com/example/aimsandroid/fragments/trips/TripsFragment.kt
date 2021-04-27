@@ -1,6 +1,5 @@
 package com.example.aimsandroid.fragments.trips
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -13,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentTripsBinding
-import com.example.aimsandroid.fragments.trips.detaildialog.TripsDetailDialog
+import com.example.aimsandroid.fragments.trips.dialogs.TripsDetailDialog
 import com.example.aimsandroid.utils.FetchApiEventListener
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
@@ -109,5 +108,9 @@ class TripsFragment : Fragment() {
             override fun onSuccess() {}
             override fun onError(error: String) {}
         })
+    }
+
+    fun getViewModel(): TripsViewModel{
+        return viewModel
     }
 }

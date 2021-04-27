@@ -59,7 +59,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    suspend fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap) {
+    suspend fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?) {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 tripRepository.insertBillOfLading(billOfLading)
@@ -110,7 +110,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _currentTripCompleted.value = false
     }
 
-    private fun saveBitmaps(bolBitmap: Bitmap, signatureBitmap: Bitmap) {
+    private fun saveBitmaps(bolBitmap: Bitmap, signatureBitmap: Bitmap?) {
 
     }
 
