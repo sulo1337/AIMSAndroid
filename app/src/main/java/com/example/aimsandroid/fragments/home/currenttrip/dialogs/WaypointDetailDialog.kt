@@ -1,9 +1,13 @@
 package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -28,6 +32,18 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
 
     private lateinit var tripRepository: TripRepository
     private lateinit var binding: DialogWaypointDetailsBinding
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val root = RelativeLayout(activity)
+        root.layoutParams =
+            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val dialog = Dialog(requireActivity())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(root)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        return dialog
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

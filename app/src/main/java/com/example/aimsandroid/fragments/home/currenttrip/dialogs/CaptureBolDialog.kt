@@ -3,12 +3,17 @@ package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 import RotateBitmap
 import android.Manifest
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -31,6 +36,19 @@ class CaptureBolDialog(private val waypoint: WayPoint) : DialogFragment() {
     private lateinit var billOfLading: LiveData<BillOfLading>
     private var signatureBitmap: Bitmap? = null
     private var bolBitmap: Bitmap? = null
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val root = RelativeLayout(activity)
+        root.layoutParams =
+            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val dialog = Dialog(requireActivity())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(root)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        return dialog
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true

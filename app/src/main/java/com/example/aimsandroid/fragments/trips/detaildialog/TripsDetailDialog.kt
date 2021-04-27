@@ -1,35 +1,42 @@
 package com.example.aimsandroid.fragments.trips.detaildialog
 
+import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.view.Window
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.aimsandroid.R
-import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.databinding.DialogTripDetailsBinding
-import com.example.aimsandroid.fragments.trips.TripsFragment
 import com.example.aimsandroid.fragments.trips.TripsFragmentDirections
-import com.example.aimsandroid.fragments.trips.TripsViewModel
-import com.example.aimsandroid.fragments.trips.TripsViewModelFactory
-import com.example.aimsandroid.repository.TripRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import sortWaypointBySeqNum
+
 
 class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): DialogFragment(){
 
     private lateinit var binding: DialogTripDetailsBinding
     private lateinit var prefs: SharedPreferences
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val root = RelativeLayout(activity)
+        root.layoutParams =
+            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val dialog = Dialog(requireActivity())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(root)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        return dialog
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
