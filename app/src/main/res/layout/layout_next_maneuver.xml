@@ -47,6 +47,18 @@
                       app:layout_constraintTop_toBottomOf="@id/speedLimitContainer"
                       tools:text="2:41 AM"/>
 
+            <TextView android:id="@+id/remainingDistance" style="@style/san_francisco_bold_16"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="8dp"
+                      android:layout_marginBottom="4dp"
+                      android:width="0dp"
+                      android:textColor="@color/white"
+                      app:layout_constraintBottom_toTopOf="@id/speedLimitContainer"
+                      app:layout_constraintEnd_toEndOf="@id/speedLimitContainer"
+                      app:layout_constraintStart_toStartOf="@id/speedLimitContainer"
+                      app:layout_constraintTop_toTopOf="parent" tools:text="2:41 AM"/>
+
             <TextView android:id="@+id/distanceToNextManeuver" style="@style/san_francisco_bold_16"
                       android:layout_width="0dp"
                       android:layout_height="wrap_content"
@@ -91,7 +103,6 @@
                                       android:layout_height="wrap_content"
                                       android:background="@drawable/bg_speed_limit"
                                       android:padding="8sp"
-                                      android:text="20"
                                       android:textColor="@color/black"
                                       tools:text="20"/>
                         </androidx.cardview.widget.CardView>

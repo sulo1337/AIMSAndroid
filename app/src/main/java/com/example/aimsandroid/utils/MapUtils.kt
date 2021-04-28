@@ -86,8 +86,25 @@ fun HomeFragment.updateNextManeuverIcon(icon: Maneuver.Icon?) {
     binding.nextManeuverLayout.nextManeuverIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, getManeuverDrawableId(icon), null))
 }
 
+fun HomeFragment.updateDistanceRemaining(distance: Int) {
+    var distanceImperial: Double = distance*3.28084
+    var unit = " feet"
+    if(distanceImperial > 1320) {
+        distanceImperial /= 5280
+        unit = " miles"
+    }
+    val rounded: BigDecimal
+    if(unit.trim().equals("feet")){
+        rounded = BigDecimal(distanceImperial).setScale(0, RoundingMode.HALF_EVEN)
+    } else {
+        rounded = BigDecimal(distanceImperial).setScale(2, RoundingMode.HALF_EVEN)
+    }
+
+    val displayString = rounded.toPlainString() + unit
+    binding.nextManeuverLayout.remainingDistance.text = displayString
+}
+
 fun getManeuverDrawableId(icon: Maneuver.Icon?): Int {
-    Log.i("aimsDebug_nav-icon", icon.toString())
     when(icon){
         Maneuver.Icon.CHANGE_LINE -> return R.drawable.direction_continue
         Maneuver.Icon.END -> return R.drawable.direction_arrive
