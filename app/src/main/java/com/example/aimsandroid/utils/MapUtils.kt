@@ -3,6 +3,7 @@ package com.example.aimsandroid.utils
 import android.icu.text.SimpleDateFormat
 import android.util.Log
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import com.example.aimsandroid.R
 import com.example.aimsandroid.fragments.home.HomeFragment
 import com.example.aimsandroid.fragments.home.MapEventListeners
@@ -31,10 +32,6 @@ class MapTransformListener: Map.OnTransformListener{
 
     override fun onMapTransformEnd(p0: MapState?) {
     }
-}
-
-fun HomeFragment.updateNextManeuverIcon(icon: Maneuver.Icon?) {
-
 }
 
 fun HomeFragment.updateCurrentSpeed(speed: Double){
@@ -83,4 +80,39 @@ fun HomeFragment.updateEta(eta: Date) {
     val dateFormat = SimpleDateFormat("hh:mm aa", Locale.US)
     val time = dateFormat.format(eta)
     binding.nextManeuverLayout.arrivalTime.text = time.toString()
+}
+
+fun HomeFragment.updateNextManeuverIcon(icon: Maneuver.Icon?) {
+    binding.nextManeuverLayout.nextManeuverIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, getManeuverDrawableId(icon), null))
+}
+
+fun getManeuverDrawableId(icon: Maneuver.Icon?): Int {
+    Log.i("aimsDebug_nav-icon", icon.toString())
+    when(icon){
+        Maneuver.Icon.CHANGE_LINE -> return R.drawable.direction_continue
+        Maneuver.Icon.END -> return R.drawable.direction_arrive
+        Maneuver.Icon.ENTER_HIGHWAY_LEFT_LANE -> return R.drawable.direction_merge_slight_right
+        Maneuver.Icon.ENTER_HIGHWAY_RIGHT_LANE -> return R.drawable.direction_merge_slight_left
+        Maneuver.Icon.FERRY -> return R.drawable.direction_flag
+        Maneuver.Icon.GO_STRAIGHT -> return R.drawable.direction_continue_straight
+        Maneuver.Icon.HEAD_TO -> return R.drawable.direction_continue_straight
+        Maneuver.Icon.HEAVY_LEFT -> return R.drawable.direction_turn_sharp_left
+        Maneuver.Icon.HEAVY_RIGHT -> return R.drawable.direction_turn_sharp_right
+        Maneuver.Icon.HIGHWAY_KEEP_LEFT -> return R.drawable.direction_fork_slight_left
+        Maneuver.Icon.HIGHWAY_KEEP_RIGHT -> return R.drawable.direction_fork_slight_right
+        Maneuver.Icon.KEEP_LEFT -> return  R.drawable.direction_fork_slight_left
+        Maneuver.Icon.KEEP_RIGHT -> return R.drawable.direction_fork_slight_right
+        Maneuver.Icon.LEAVE_HIGHWAY_LEFT_LANE -> return R.drawable.direction_fork_slight_left
+        Maneuver.Icon.LEAVE_HIGHWAY_RIGHT_LANE -> return R.drawable.direction_fork_slight_right
+        Maneuver.Icon.LIGHT_LEFT -> return R.drawable.direction_turn_slight_left
+        Maneuver.Icon.LIGHT_RIGHT -> return R.drawable.direction_turn_slight_right
+        Maneuver.Icon.PASS_STATION -> return R.drawable.direction_continue
+        Maneuver.Icon.QUITE_LEFT -> return R.drawable.direction_turn_left
+        Maneuver.Icon.QUITE_RIGHT -> return R.drawable.direction_turn_right
+        Maneuver.Icon.START -> return R.drawable.direction_depart
+        Maneuver.Icon.UNDEFINED -> return R.drawable.direction_flag
+        Maneuver.Icon.UTURN_LEFT -> return R.drawable.direction_uturn
+        Maneuver.Icon.UTURN_RIGHT -> return R.drawable.direction_uturn
+        else -> return R.drawable.direction_roundabout
+    }
 }

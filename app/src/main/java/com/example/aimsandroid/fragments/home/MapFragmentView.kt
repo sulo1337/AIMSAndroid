@@ -255,7 +255,7 @@ open class MapFragmentView(
         alertDialogBuilder.setPositiveButton(
             "Simulation"
         ) { dialoginterface, i ->
-            m_navigationManager!!.simulate(m_route!!, 17)
+            m_navigationManager!!.simulate(m_route!!, 120)
             m_map!!.tilt = 0f
         }
         val alertDialog = alertDialogBuilder.create()
