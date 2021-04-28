@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.os.Environment
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.aimsandroid.database.BillOfLading
@@ -18,6 +19,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sortWaypointBySeqNum
+import java.io.File
+import java.io.FileOutputStream
 import java.lang.Exception
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -69,7 +72,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 tripRepository.insertBillOfLading(billOfLading)
-                saveBitmaps(bolBitmap, signatureBitmap)
+                saveBitmaps(bolBitmap, signatureBitmap, billOfLading)
                 resolveNextWaypoint()
                 if(checkCurrentTripIsCompleted()) {
                     val currentTripId = currentTrip.value?.trip?.tripId
@@ -116,7 +119,32 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _currentTripCompleted.value = false
     }
 
-    private fun saveBitmaps(bolBitmap: Bitmap, signatureBitmap: Bitmap?) {
+    private suspend fun saveBitmaps(bolBitmap: Bitmap, signatureBitmap: Bitmap?, billOfLading: BillOfLading) {
+        saveBolBitmap(bolBitmap, billOfLading)
+        saveSignatureBitmap(signatureBitmap, billOfLading)
+    }
+
+    suspend fun saveBolBitmap(bolBitmap: Bitmap, billOfLading: BillOfLading){
+        withContext(Dispatchers.IO){
+            try {
+                val filePath =  getApplication<Application>().getDir(Environment.DIRECTORY_PICTURES, Context.MODE_PRIVATE).absolutePath + "/AIMS/bol/"
+                val dir = File(filePath)
+                if(!dir.exists()) {
+                    dir.mkdirs()
+                }
+                val file = File(dir, "bol_"+billOfLading.tripIdFk.toString()+"_"+billOfLading.wayPointSeqNum.toString()+".jpeg")
+                val fOut = FileOutputStream(file)
+                bolBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
+                fOut.flush()
+                fOut.close()
+                Log.i("aimsDebug_fh", file.absolutePath+" saved")
+            } catch (e: Exception) {
+                Log.i("aimsDebug_fh", e.toString())
+            }
+        }
+    }
+
+    suspend fun saveSignatureBitmap(signatureBitmap: Bitmap?, billOfLading: BillOfLading){
 
     }
 

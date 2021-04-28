@@ -1,7 +1,9 @@
 package com.example.aimsandroid.fragments.trips
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
+import android.os.Environment
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -16,6 +18,9 @@ import com.example.aimsandroid.utils.OnSaveListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.lang.Exception
 
 class TripsViewModel(application: Application) : AndroidViewModel(application) {
     private val database = getDatabase(application)
@@ -43,7 +48,7 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 tripRepository.insertBillOfLading(billOfLading)
-                saveBitmaps(bolBitmap)
+                saveBitmaps(bolBitmap, billOfLading)
                 withContext(Dispatchers.Main){
                     onSaveListener.onSave()
                 }
@@ -51,7 +56,23 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    suspend fun saveBitmaps(bolBitmap: Bitmap){
-
+    suspend fun saveBitmaps(bolBitmap: Bitmap, billOfLading: BillOfLading){
+        withContext(Dispatchers.IO){
+            try {
+                val filePath =  getApplication<Application>().getDir(Environment.DIRECTORY_PICTURES, Context.MODE_PRIVATE).absolutePath + "/AIMS/bol/"
+                val dir = File(filePath)
+                if(!dir.exists()) {
+                    dir.mkdirs()
+                }
+                val file = File(dir, "bol_"+billOfLading.tripIdFk.toString()+"_"+billOfLading.wayPointSeqNum.toString()+".jpeg")
+                val fOut = FileOutputStream(file)
+                bolBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
+                fOut.flush()
+                fOut.close()
+                Log.i("aimsDebug_fh", file.absolutePath+" saved")
+            } catch (e: Exception) {
+                Log.i("aimsDebug_fh", e.toString())
+            }
+        }
     }
 }

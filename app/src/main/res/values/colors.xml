@@ -5,7 +5,7 @@
     <color name="primaryLightColor">#ffffff</color>
     <color name="primaryDarkColor">#cccccc</color>
     <color name="secondaryColor">#e3324a</color>
-    <color name="secondaryLightColor">#ff6a76</color>
+    <color name="secondaryLightColor">#f18640</color>
     <color name="secondaryDarkColor">#aa0023</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
@@ -16,7 +16,7 @@
     <color name="primaryLightColorDM">#484848</color>
     <color name="primaryDarkColorDM">#000000</color>
     <color name="secondaryColorDM">#e3324a</color>
-    <color name="secondaryLightColorDM">#ff6a76</color>
+    <color name="secondaryLightColorDM">#f18640</color>
     <color name="secondaryDarkColorDM">#aa0023</color>
     <color name="primaryTextColorDM">#ffffff</color>
 

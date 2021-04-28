@@ -27,4 +27,4 @@ fun sortWaypointBySeqNum(waypoints: List<WayPoint>): List<WayPoint> {
 
 val colorGreen = Color.rgb(0,171,102)
 val colorBlue = Color.rgb(0,150,255)
-val colorSecondaryLight = Color.rgb(255,106,118)
+val colorSecondaryLight = Color.rgb(241,134,64)

@@ -6,9 +6,14 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +21,11 @@ import android.view.Window
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.WayPoint
@@ -33,6 +40,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import getFullAddress
+import java.io.File
+import java.lang.Exception
 import java.lang.Long.parseLong
 import java.lang.StringBuilder
 
@@ -42,6 +51,9 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
     protected lateinit var billOfLading: LiveData<BillOfLading>
     private var signatureBitmap: Bitmap? = null
     private var bolBitmap: Bitmap? = null
+    private var tempBolPath: String? = null
+    private var photoUri: Uri? = null
+    private var photoFile: File? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val root = RelativeLayout(activity)
@@ -125,7 +137,14 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
             .setPermissionListener(object : PermissionListener{
                 override fun onPermissionGranted() {
                     val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-                    startActivityForResult(cameraIntent, 1888)
+                    try {
+                        photoFile = createTempImageFile()
+                        photoUri = FileProvider.getUriForFile(requireContext(), "com.example.aimsandroid", photoFile!!)
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                        startActivityForResult(cameraIntent, 1888)
+                    } catch (e: Exception) {
+                        Log.i("aimsDebug_fh", e.toString())
+                    }
                 }
 
                 override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
@@ -140,15 +159,38 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
             .check()
     }
 
+    private fun createTempImageFile(): File {
+        val tempFileName = waypoint.owningTripId.toString() + "_" + waypoint.seqNum.toString()
+        val storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val tempFile = File.createTempFile(
+            tempFileName,
+            ".png",
+            storageDir
+        )
+        tempFile.deleteOnExit()
+        tempBolPath = tempFile.absolutePath
+        return tempFile
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 1888 && resultCode == Activity.RESULT_OK) {
-            val bolBitmap = data?.extras?.get("data") as Bitmap
-            binding.deliveryForm.bolView.visibility = View.VISIBLE
-            binding.deliveryForm.bolView.setImageBitmap(bolBitmap)
-            binding.pickUpForm.bolView.visibility = View.VISIBLE
-            binding.pickUpForm.bolView.setImageBitmap(bolBitmap)
-            this.bolBitmap = bolBitmap
+        if(requestCode == 1888 && resultCode == Activity.RESULT_OK){
+            try {
+                bolBitmap = BitmapFactory.decodeFile(photoFile!!.absolutePath)
+                if(waypoint.waypointTypeDescription == "Source") {
+                    Glide.with(requireContext())
+                        .load(photoUri)
+                        .into(binding.pickUpForm.bolView)
+                    binding.pickUpForm.bolView.visibility = View.VISIBLE
+                } else {
+                    Glide.with(requireContext())
+                        .load(photoUri)
+                        .into(binding.deliveryForm.bolView)
+                    binding.deliveryForm.bolView.visibility = View.VISIBLE
+                }
+            } catch (e: Exception){
+                Log.i("aimsDebug_fh", e.toString())
+            }
         }
     }
 

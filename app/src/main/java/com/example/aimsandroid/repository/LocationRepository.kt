@@ -8,6 +8,7 @@ import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.lang.Exception
 
 class LocationRepository(private val application: Application) {
 
@@ -26,10 +27,14 @@ class LocationRepository(private val application: Application) {
     var prevLongitude = 0.0
 
     fun onLocationChanged(location: Location) {
-        prevLatitude = this._latitude.value!!
-        prevLongitude = this._longitude.value!!
-        this._latitude.value = location.latitude
-        this._longitude.value = location.longitude
+        try {
+            prevLatitude = this._latitude.value!!
+            prevLongitude = this._longitude.value!!
+            this._latitude.value = location.latitude
+            this._longitude.value = location.longitude
+        } catch (e: Exception) {
+
+        }
     }
 
     init {

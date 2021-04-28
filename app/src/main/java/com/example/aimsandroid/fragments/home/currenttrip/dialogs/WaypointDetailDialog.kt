@@ -356,20 +356,6 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.pickUpForm.pickupEnded.setText(billOfLading.loadingEnded.toString())
     }
 
-    private fun deliveryFormEditable() {
-        binding.deliveryForm.initialFuelStickReading.isEnabled = true
-        binding.deliveryForm.finalFuelStickReading.isEnabled = true
-        binding.deliveryForm.productDropped.isEnabled = true
-        binding.deliveryForm.grossQuantity.isEnabled = true
-        binding.deliveryForm.netQuantity.isEnabled = true
-        binding.deliveryForm.deliveryTicketNumber.isEnabled = true
-        binding.deliveryForm.billOfLadingNumber.isEnabled = true
-        binding.deliveryForm.pickedUpBy.isEnabled = true
-        binding.deliveryForm.comment.isEnabled = true
-        binding.deliveryForm.saveButton.visibility = View.GONE
-        binding.deliveryForm.captureSignatureButton.visibility = View.GONE
-        binding.deliveryForm.scanBOL.visibility = View.GONE
-    }
 
     private fun deliveryFormNonEditable(){
         binding.deliveryForm.initialFuelStickReading.isEnabled = false
@@ -392,21 +378,6 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.deliveryForm.deliveryTicketLayout.endIconMode = TextInputLayout.END_ICON_NONE
         binding.deliveryForm.billOfLadingNumberLayout.endIconMode = TextInputLayout.END_ICON_NONE
         binding.deliveryForm.pickedUpByLayout.endIconMode = TextInputLayout.END_ICON_NONE
-    }
-
-    private fun pickUpFormEditable() {
-        binding.pickUpForm.initialFuelStickReading.isEnabled = true
-        binding.pickUpForm.finalFuelStickReading.isEnabled = true
-        binding.pickUpForm.productPickedUp.isEnabled = true
-        binding.pickUpForm.grossQuantity.isEnabled = true
-        binding.pickUpForm.netQuantity.isEnabled = true
-        binding.pickUpForm.pickupTicketNumber.isEnabled = true
-        binding.pickUpForm.billOfLadingNumber.isEnabled = true
-        binding.pickUpForm.pickedUpBy.isEnabled = true
-        binding.pickUpForm.comment.isEnabled = true
-        binding.pickUpForm.saveButton.visibility = View.GONE
-        binding.pickUpForm.captureSignatureButton.visibility = View.GONE
-        binding.pickUpForm.scanBOL.visibility = View.GONE
     }
 
     private fun pickUpFormNonEditable() {
