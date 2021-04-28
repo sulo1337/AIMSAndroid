@@ -94,6 +94,8 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
 
         binding.destInfo.text = waypoint.destinationName
         binding.addrInfo.text = getFullAddress(waypoint)
+        binding.pickUpForm.scanBOL.text = "Update Bill of Lading"
+        binding.deliveryForm.scanBOL.text = "Update Bill of Lading"
         if(waypoint.waypointTypeDescription.equals("Source")){
             binding.deliveryFormLayout.visibility = View.GONE
             billOfLading.observe(viewLifecycleOwner, Observer {

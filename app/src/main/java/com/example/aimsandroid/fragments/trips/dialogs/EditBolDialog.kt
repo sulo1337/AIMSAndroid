@@ -93,6 +93,8 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
 
         binding.destInfo.text = waypoint.destinationName
         binding.addrInfo.text = getFullAddress(waypoint)
+        binding.pickUpForm.scanBOL.text = "Update Bill of Lading"
+        binding.deliveryForm.scanBOL.text = "Update Bill of Lading"
         if(waypoint.waypointTypeDescription.equals("Source")){
             binding.deliveryFormLayout.visibility = View.GONE
             billOfLading.observe(viewLifecycleOwner, Observer {
@@ -260,9 +262,14 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
         (parentFragment as WaypointDetailDialog).saveForm(generateDeliveryBillOfLading(), bolBitmap!!, object : OnSaveListener{
             override fun onSave() {
                 Toast.makeText(requireActivity(), "Successfully Updated", Toast.LENGTH_LONG).show()
+                (parentFragment as WaypointDetailDialog).getBolUri()
                 dismiss()
             }
             override fun onSaving() {
+
+            }
+
+            override fun onTripCompleted() {
 
             }
         })
@@ -277,6 +284,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
                 dismiss()
             }
             override fun onSaving(){
+
+            }
+            override fun onTripCompleted() {
 
             }
         })
