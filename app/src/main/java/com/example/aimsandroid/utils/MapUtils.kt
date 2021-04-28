@@ -1,5 +1,6 @@
 package com.example.aimsandroid.utils
 
+import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.util.Log
 import android.view.View
@@ -35,11 +36,10 @@ class MapTransformListener: Map.OnTransformListener{
 }
 
 fun HomeFragment.updateCurrentSpeed(speed: Double){
-    Log.i("aimsDebug_nav_speed",Math.round(speed).toString().trim() )
     if(speed < 300) {
         binding.nextManeuverLayout.currentSpeed.text = java.lang.String.valueOf(Math.round(speed*2.23694)).trim()
     } else {
-        binding.nextManeuverLayout.currentSpeed.text = "..."
+        binding.nextManeuverLayout.currentSpeed.text = "NA"
     }
 }
 
@@ -48,12 +48,11 @@ fun HomeFragment.updateSpeedLimit(speedLimit: Float){
     if(speedLimitUS >= 25) {
         binding.nextManeuverLayout.speedLimit.text = java.lang.String.valueOf(speedLimitUS).trim()
     } else {
-        binding.nextManeuverLayout.speedLimit.text = "..."
+        binding.nextManeuverLayout.speedLimit.text = "NA"
     }
 }
 
 fun HomeFragment.updateDistanceToNextManeuver(distance: Long){
-    Log.i("aimsDebug_nav-distance", distance.toString())
     var distanceImperial: Double = distance*3.28084
     var unit = " feet"
     if(distanceImperial > 1320) {
@@ -72,8 +71,8 @@ fun HomeFragment.updateDistanceToNextManeuver(distance: Long){
 }
 
 fun HomeFragment.updateNextStreet(streetNum: String, streetName: String){
-    Log.i("aimsDebug_nav-street", streetNum.trim() + " " + streetName.trim())
-    binding.nextManeuverLayout.nextManeuverStreet.text = streetNum.trim() + " " + streetName.trim()
+    val displayText = streetNum.trim() + " " + streetName.trim()
+    binding.nextManeuverLayout.nextManeuverStreet.text = displayText
 }
 
 fun HomeFragment.updateEta(eta: Date) {
@@ -102,6 +101,14 @@ fun HomeFragment.updateDistanceRemaining(distance: Int) {
 
     val displayString = rounded.toPlainString() + unit
     binding.nextManeuverLayout.remainingDistance.text = displayString
+}
+
+fun HomeFragment.onSpeedExceeded() {
+    binding.nextManeuverLayout.currentSpeed.setTextColor(Color.rgb(255,132,106))
+}
+
+fun HomeFragment.onSpeedExceededEnd(){
+    binding.nextManeuverLayout.currentSpeed.setTextColor(Color.BLACK)
 }
 
 fun getManeuverDrawableId(icon: Maneuver.Icon?): Int {

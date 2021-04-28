@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import sortWaypointBySeqNum
+import java.lang.Exception
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var map: Map? = null
@@ -35,8 +36,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val longitude = locationRepository.longitude
 
     fun recenterMap() {
-        if(!this.latitude.value?.equals(0.0)!! && !this.longitude.value?.equals(0.0)!!) {
-            this.map?.setCenter(GeoCoordinate(latitude.value!!, longitude.value!!), Map.Animation.BOW, map?.maxZoomLevel!!*0.75, 0.0f, 0.1f)
+        try{
+            if(!this.latitude.value?.equals(0.0)!! && !this.longitude.value?.equals(0.0)!!) {
+                this.map?.setCenter(GeoCoordinate(latitude.value!!, longitude.value!!), Map.Animation.BOW, map?.maxZoomLevel!!*0.75, 0.0f, 0.1f)
+            }
+        }
+        catch (e: Exception) {
+            Log.i("aimsDebug", "no location info")
         }
     }
 

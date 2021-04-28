@@ -5,15 +5,22 @@ import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import colorBlue
+import colorGreen
+import colorSecondaryLight
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.TripWithWaypoints
@@ -23,11 +30,13 @@ import com.example.aimsandroid.fragments.home.currenttrip.dialogs.WaypointDetail
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoBoundingBox
 import com.here.android.mpa.common.GeoCoordinate
+import com.here.android.mpa.common.Image
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import putDouble
 import sortWaypointBySeqNum
+import java.lang.Exception
 
 
 class HomeFragment : Fragment() {
@@ -168,12 +177,17 @@ class HomeFragment : Fragment() {
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             Toast.makeText(requireContext(), "Please End Current Navigation", Toast.LENGTH_SHORT).show()
         } else {
-            val startPoint = GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!)
-            stopNavigationMode()
-            prefs.edit().putDouble("lastNavigatedLatitude", destination.latitude).apply()
-            prefs.edit().putDouble("lastNavigatedLongitude", destination.longitude).apply()
-            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            mapFragmentView?.showDirections(startPoint, destination)
+            try{
+                val startPoint = GeoCoordinate(viewModel.latitude.value!!, viewModel.longitude.value!!)
+                stopNavigationMode()
+                prefs.edit().putDouble("lastNavigatedLatitude", destination.latitude).apply()
+                prefs.edit().putDouble("lastNavigatedLongitude", destination.longitude).apply()
+                sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                mapFragmentView?.showDirections(startPoint, destination)
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Cannot find your current location", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 
@@ -267,6 +281,7 @@ class HomeFragment : Fragment() {
     fun viewStopNavFab() {
         binding.stopNavFab.visibility = View.VISIBLE
         viewTurnByTurnLayout()
+        positionIndicatorNav()
     }
 
     fun hideNavFab() {
@@ -284,6 +299,7 @@ class HomeFragment : Fragment() {
     fun hideStopNavFab() {
         binding.stopNavFab.visibility = View.GONE
         hideTurnByTurnLayout()
+        positionIndicatorReset()
     }
 
     fun viewTurnByTurnLayout() {
@@ -292,6 +308,35 @@ class HomeFragment : Fragment() {
 
     fun hideTurnByTurnLayout() {
         binding.nextManeuverContainer.visibility = View.GONE
+    }
+
+    fun positionIndicatorNav() {
+        if(mapFragmentView!=null) {
+            if(mapFragmentView!!.m_map!=null) {
+                val indicator = ResourcesCompat.getDrawable(resources, R.drawable.ic_recenter_fab, null)
+                indicator?.setTint(colorSecondaryLight)
+                val indicatorBitmap = indicator?.toBitmap(150, 150, null)
+                indicatorBitmap?.let {
+                    val image = Image()
+                    image.setBitmap(it)
+                    mapFragmentView!!.m_map!!.positionIndicator.setMarker(image)
+                }
+            }
+        }
+    }
+
+    fun positionIndicatorReset() {
+        if(mapFragmentView!=null) {
+            if(mapFragmentView!!.m_map!=null) {
+                val indicator = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_current_location)
+                val indicatorBitmap = indicator?.toBitmap(92, 92, null)
+                indicatorBitmap?.let {
+                    val image = Image()
+                    image.setBitmap(it)
+                    mapFragmentView!!.m_map!!.positionIndicator.setMarker(image)
+                }
+            }
+        }
     }
 
     fun resetButtons() {

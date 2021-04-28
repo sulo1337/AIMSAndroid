@@ -40,11 +40,11 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
 
     val m_speedWarningListener: NavigationManager.SpeedWarningListener = object : NavigationManager.SpeedWarningListener() {
         override fun onSpeedExceeded(p0: String, p1: Float) {
-
+            homeFragment.onSpeedExceeded()
         }
 
         override fun onSpeedExceededEnd(p0: String, p1: Float) {
-
+            homeFragment.onSpeedExceededEnd()
         }
     }
 

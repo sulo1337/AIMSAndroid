@@ -87,6 +87,7 @@ open class MapFragmentView(
                         it.zoomLevel = zoomLevel
                         it.orientation = orientation
                         it.positionIndicator.isVisible = true
+                        parentFragment.positionIndicatorReset()
                         val mode = m_activity.applicationContext?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
                         it.addTransformListener(MapTransformListener())
                         m_navigationManager = NavigationManager.getInstance()
@@ -255,7 +256,7 @@ open class MapFragmentView(
         alertDialogBuilder.setPositiveButton(
             "Simulation"
         ) { dialoginterface, i ->
-            m_navigationManager!!.simulate(m_route!!, 120)
+            m_navigationManager!!.simulate(m_route!!, 17)
             m_map!!.tilt = 0f
         }
         val alertDialog = alertDialogBuilder.create()
