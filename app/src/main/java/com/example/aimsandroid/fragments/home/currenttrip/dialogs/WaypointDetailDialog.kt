@@ -27,6 +27,7 @@ import com.example.aimsandroid.databinding.DialogWaypointDetailsBinding
 import com.example.aimsandroid.fragments.home.HomeFragment
 import com.example.aimsandroid.repository.TripRepository
 import com.example.aimsandroid.utils.FileLoaderListener
+import com.example.aimsandroid.utils.OnSaveListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.here.android.mpa.common.GeoCoordinate
@@ -417,8 +418,8 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         super.onDestroyView()
     }
 
-    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?) {
-        (parentFragment as HomeFragment).saveForm(billOfLading, bolBitmap, signatureBitmap)
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
+        (parentFragment as HomeFragment).saveForm(billOfLading, bolBitmap, signatureBitmap, onSaveListener)
     }
 
     fun getSignatureUri(){

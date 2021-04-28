@@ -28,6 +28,7 @@ import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.dialogs.WaypointDetailDialog
 import com.example.aimsandroid.utils.FileLoaderListener
+import com.example.aimsandroid.utils.OnSaveListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoBoundingBox
 import com.here.android.mpa.common.GeoCoordinate
@@ -361,10 +362,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?) {
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         lifecycleScope.launch{
             withContext(Dispatchers.IO){
-                viewModel.saveForm(billOfLading, bolBitmap, signatureBitmap)
+                viewModel.saveForm(billOfLading, bolBitmap, signatureBitmap, onSaveListener)
                 withContext(Dispatchers.Main){
                     refreshRecyclerView()
                 }

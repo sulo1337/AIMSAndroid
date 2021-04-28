@@ -18,6 +18,7 @@ import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.repository.LocationRepository
 import com.example.aimsandroid.repository.TripRepository
 import com.example.aimsandroid.utils.FileLoaderListener
+import com.example.aimsandroid.utils.OnSaveListener
 import com.here.android.mpa.common.GeoCoordinate
 import com.here.android.mpa.mapping.Map
 import kotlinx.coroutines.Dispatchers
@@ -73,8 +74,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    suspend fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?) {
+    suspend fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         viewModelScope.launch {
+            onSaveListener.onSaving()
             withContext(Dispatchers.IO){
                 tripRepository.insertBillOfLading(billOfLading)
                 saveBitmaps(bolBitmap, signatureBitmap, billOfLading)
@@ -87,6 +89,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     withContext(Dispatchers.Main) {
                         removeCurrentTrip()
                     }
+                }
+                withContext(Dispatchers.Main){
+                    onSaveListener.onSave()
                 }
             }
         }

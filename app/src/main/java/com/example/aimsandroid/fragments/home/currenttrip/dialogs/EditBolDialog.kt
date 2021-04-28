@@ -34,6 +34,7 @@ import com.example.aimsandroid.databinding.FormContainerBinding
 import com.example.aimsandroid.fragments.home.currenttrip.dialogs.CaptureBolDialog
 import com.example.aimsandroid.fragments.home.currenttrip.dialogs.CaptureSignatureDialog
 import com.example.aimsandroid.repository.TripRepository
+import com.example.aimsandroid.utils.OnSaveListener
 import com.example.aimsandroid.utils.getDeliveryFormSummary
 import com.example.aimsandroid.utils.getPickUpFormSummary
 import com.example.aimsandroid.utils.validatePickUpForm
@@ -259,13 +260,33 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     fun saveDeliveryForm() {
-        (parentFragment as WaypointDetailDialog).saveForm(generateDeliveryBillOfLading(), bolBitmap!!, null)
-        dismiss()
+        (parentFragment as WaypointDetailDialog).saveForm(generateDeliveryBillOfLading(), bolBitmap!!, null, object : OnSaveListener{
+            override fun onSaving() {
+
+            }
+
+            override fun onSave() {
+                Toast.makeText(requireContext(), "Updated Successfully", Toast.LENGTH_SHORT).show()
+                (parentFragment as WaypointDetailDialog).getBolUri()
+                (parentFragment as WaypointDetailDialog).getSignatureUri()
+                dismiss()
+            }
+        })
     }
 
     fun savePickupForm() {
-        (parentFragment as WaypointDetailDialog).saveForm(generatePickUpBillOfLading(), bolBitmap!!, null)
-        dismiss()
+        (parentFragment as WaypointDetailDialog).saveForm(generatePickUpBillOfLading(), bolBitmap!!, null, object : OnSaveListener{
+            override fun onSaving() {
+
+            }
+
+            override fun onSave() {
+                Toast.makeText(requireContext(), "Updated Successfully", Toast.LENGTH_SHORT).show()
+                (parentFragment as WaypointDetailDialog).getBolUri()
+                (parentFragment as WaypointDetailDialog).getSignatureUri()
+                dismiss()
+            }
+        })
     }
 
     fun validateDeliveryForm() {

@@ -273,6 +273,7 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
         (parentFragment as WaypointDetailDialog).saveForm(generatePickUpBillOfLading(), bolBitmap!!, object : OnSaveListener{
             override fun onSave() {
                 Toast.makeText(requireActivity(), "Successfully Updated", Toast.LENGTH_LONG).show()
+                (parentFragment as WaypointDetailDialog).getBolUri()
                 dismiss()
             }
             override fun onSaving(){
