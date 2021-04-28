@@ -88,10 +88,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     }
                     withContext(Dispatchers.Main) {
                         removeCurrentTrip()
+                        onSaveListener.onTripCompleted()
                     }
-                }
-                withContext(Dispatchers.Main){
-                    onSaveListener.onSave()
+                } else {
+                    withContext(Dispatchers.Main){
+                        onSaveListener.onSave()
+                    }
                 }
             }
         }

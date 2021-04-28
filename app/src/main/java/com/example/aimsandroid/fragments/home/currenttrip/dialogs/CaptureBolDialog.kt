@@ -259,6 +259,12 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
                 Toast.makeText(requireContext(), "Saved Successfully", Toast.LENGTH_SHORT).show()
                 (parentFragment as WaypointDetailDialog).getBolUri()
                 (parentFragment as WaypointDetailDialog).getSignatureUri()
+                (parentFragment as WaypointDetailDialog).refreshRecyclerView()
+                dismiss()
+            }
+
+            override fun onTripCompleted() {
+                (parentFragment as WaypointDetailDialog).onTripCompleted()
                 dismiss()
             }
         })
@@ -274,6 +280,12 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
                 Toast.makeText(requireContext(), "Saved Successfully", Toast.LENGTH_SHORT).show()
                 (parentFragment as WaypointDetailDialog).getBolUri()
                 (parentFragment as WaypointDetailDialog).getSignatureUri()
+                (parentFragment as WaypointDetailDialog).refreshRecyclerView()
+                dismiss()
+            }
+
+            override fun onTripCompleted() {
+                (parentFragment as WaypointDetailDialog).onTripCompleted()
                 dismiss()
             }
         })

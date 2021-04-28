@@ -271,6 +271,10 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
                 (parentFragment as WaypointDetailDialog).getSignatureUri()
                 dismiss()
             }
+
+            override fun onTripCompleted() {
+
+            }
         })
     }
 
@@ -285,6 +289,10 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
                 (parentFragment as WaypointDetailDialog).getBolUri()
                 (parentFragment as WaypointDetailDialog).getSignatureUri()
                 dismiss()
+            }
+
+            override fun onTripCompleted() {
+
             }
         })
     }

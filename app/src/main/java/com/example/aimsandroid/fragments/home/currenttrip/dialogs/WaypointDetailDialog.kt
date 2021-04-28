@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.aimsandroid.R
@@ -25,6 +26,7 @@ import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.databinding.AlertStartBolBinding
 import com.example.aimsandroid.databinding.DialogWaypointDetailsBinding
 import com.example.aimsandroid.fragments.home.HomeFragment
+import com.example.aimsandroid.fragments.home.HomeFragmentDirections
 import com.example.aimsandroid.repository.TripRepository
 import com.example.aimsandroid.utils.FileLoaderListener
 import com.example.aimsandroid.utils.OnSaveListener
@@ -493,6 +495,15 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    fun refreshRecyclerView() {
+        (parentFragment as HomeFragment).refreshRecyclerView()
+    }
+
+    fun onTripCompleted() {
+        Toast.makeText(requireContext(), "Trip Completed!", Toast.LENGTH_LONG).show()
+        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToTripsFragment())
+        dismiss()
+    }
 
     companion object {
         fun newInstance(waypoint: WayPoint): WaypointDetailDialog {
