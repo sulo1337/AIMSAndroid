@@ -255,7 +255,7 @@ open class MapFragmentView(
         alertDialogBuilder.setPositiveButton(
             "Simulation"
         ) { dialoginterface, i ->
-            m_navigationManager!!.simulate(m_route!!, 120) //Simualtion speed is set to 60 m/s
+            m_navigationManager!!.simulate(m_route!!, 17)
             m_map!!.tilt = 0f
         }
         val alertDialog = alertDialogBuilder.create()
@@ -301,6 +301,14 @@ open class MapFragmentView(
             WeakReference(mapEventListeners!!.m_instructionListener)
         )
 
+        m_navigationManager!!.addLaneInformationListener(
+            WeakReference(mapEventListeners!!.m_laneInformationListener)
+        )
+
+        m_navigationManager!!.addSpeedWarningListener(
+            WeakReference(mapEventListeners!!.m_speedWarningListener)
+        )
+
         m_navigationManager!!.audioPlayer.setDelegate(mapEventListeners!!.m_audioPlayerDelegate)
     }
 
@@ -324,6 +332,8 @@ open class MapFragmentView(
             m_navigationManager!!.removePositionListener(mapEventListeners!!.m_positionListener)
             m_navigationManager!!.removeManeuverEventListener(mapEventListeners!!.m_maneuverListener)
             m_navigationManager!!.removeNewInstructionEventListener(mapEventListeners!!.m_instructionListener)
+            m_navigationManager!!.removeLaneInformationListener(mapEventListeners!!.m_laneInformationListener)
+            m_navigationManager!!.removeSpeedWarningListener(mapEventListeners!!.m_speedWarningListener)
         }
         m_map?.removeAllMapObjects()
         m_map?.positionIndicator?.isVisible = true
@@ -355,7 +365,7 @@ open class MapFragmentView(
 
         val voicePackages = voiceCatalog.catalogList
         for(vPackage in voicePackages){
-            if(vPackage.marcCode.compareTo("eng", ignoreCase = true) == 0 ){
+            if(vPackage.bcP47Code.compareTo("en-US", ignoreCase = false) == 0 ){
                 if(checkVoice(vPackage, voiceCatalog)) break
             }
         }
@@ -363,9 +373,7 @@ open class MapFragmentView(
 
     private fun checkVoice(voicePackage: VoicePackage, voiceCatalog: VoiceCatalog): Boolean{
         if(voicePackage.isTts){
-            Log.i("aimsDebug", "checkVoice")
             val voiceId = voicePackage.id
-            Log.i("aimsDebug", voiceId.toString())
             voiceCatalog.downloadVoice(voiceId){error ->
                 if(error == VoiceCatalog.Error.NONE){
                     val voiceGuidanceOptions = m_navigationManager!!.voiceGuidanceOptions

@@ -3,10 +3,10 @@ package com.example.aimsandroid.fragments.home
 import android.graphics.PointF
 import android.util.Log
 import android.widget.Toast
-import com.example.aimsandroid.utils.changeNextManeuverIcon
-import com.here.android.mpa.common.GeoPosition
-import com.here.android.mpa.common.ViewObject
+import com.example.aimsandroid.utils.*
+import com.here.android.mpa.common.*
 import com.here.android.mpa.guidance.AudioPlayerDelegate
+import com.here.android.mpa.guidance.LaneInformation
 import com.here.android.mpa.guidance.NavigationManager
 import com.here.android.mpa.mapping.MapGesture
 import com.here.android.mpa.mapping.MapRoute
@@ -24,13 +24,41 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
 
     val m_instructionListener: NavigationManager.NewInstructionEventListener = object : NavigationManager.NewInstructionEventListener() {
         override fun onNewInstructionEvent() {
-            val iconPlaceholder = homeFragment.
-            changeNextManeuverIcon(m_navigationManager.nextManeuver?.icon)
+            homeFragment.updateNextManeuverIcon(m_navigationManager.nextManeuver?.icon)
+        }
+    }
+
+    val m_laneInformationListener: NavigationManager.LaneInformationListener = object : NavigationManager.LaneInformationListener() {
+        override fun onLaneInformation(laneInformations: MutableList<LaneInformation>, roadElement: RoadElement?) {
+            if(laneInformations.size > 0) {
+
+            } else {
+
+            }
+        }
+    }
+
+    val m_speedWarningListener: NavigationManager.SpeedWarningListener = object : NavigationManager.SpeedWarningListener() {
+        override fun onSpeedExceeded(p0: String, p1: Float) {
+
+        }
+
+        override fun onSpeedExceededEnd(p0: String, p1: Float) {
+
         }
     }
 
     val m_positionListener: NavigationManager.PositionListener = object : NavigationManager.PositionListener() {
         override fun onPositionUpdated(geoPosition: GeoPosition) {
+            homeFragment.updateCurrentSpeed(geoPosition.speed)
+            if(m_navigationManager.nextManeuver!=null) {
+                homeFragment.updateNextStreet(m_navigationManager.nextManeuver!!.nextRoadNumber, m_navigationManager.nextManeuver!!.nextRoadName)
+                homeFragment.updateDistanceToNextManeuver(m_navigationManager.nextManeuverDistance)
+                if(geoPosition is MatchedGeoPosition) {
+                    geoPosition.roadElement?.speedLimit?.let { homeFragment.updateSpeedLimit(it) }
+                }
+//                homeFragment.updateSpeedLimit(m_navigationManager.lane)
+            }
         }
     }
     val m_navigationManagerEventListener: NavigationManager.NavigationManagerEventListener =

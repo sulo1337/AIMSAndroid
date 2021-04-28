@@ -33,7 +33,7 @@ import sortWaypointBySeqNum
 class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<LinearLayout>
-    private lateinit var binding: FragmentHomeBinding
+    lateinit var binding: FragmentHomeBinding
     private lateinit var currentTripObserver: Observer<TripWithWaypoints>
     private var mapFragmentView: MapFragmentView? = null
     private lateinit var prefs: SharedPreferences
@@ -266,6 +266,7 @@ class HomeFragment : Fragment() {
 
     fun viewStopNavFab() {
         binding.stopNavFab.visibility = View.VISIBLE
+        viewTurnByTurnLayout()
     }
 
     fun hideNavFab() {
@@ -282,6 +283,15 @@ class HomeFragment : Fragment() {
 
     fun hideStopNavFab() {
         binding.stopNavFab.visibility = View.GONE
+        hideTurnByTurnLayout()
+    }
+
+    fun viewTurnByTurnLayout() {
+        binding.nextManeuverContainer.visibility = View.VISIBLE
+    }
+
+    fun hideTurnByTurnLayout() {
+        binding.nextManeuverContainer.visibility = View.GONE
     }
 
     fun resetButtons() {
