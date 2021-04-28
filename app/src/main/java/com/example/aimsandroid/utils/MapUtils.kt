@@ -1,5 +1,6 @@
 package com.example.aimsandroid.utils
 
+import android.icu.text.SimpleDateFormat
 import android.util.Log
 import android.view.View
 import com.example.aimsandroid.R
@@ -14,6 +15,7 @@ import com.here.android.mpa.mapping.MapState
 import com.here.android.mpa.routing.Maneuver
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.*
 
 class MapPositionChangedListener: PositioningManager.OnPositionChangedListener{
     override fun onPositionUpdated(p0: PositioningManager.LocationMethod?, p1: GeoPosition?, p2: Boolean) {
@@ -75,4 +77,10 @@ fun HomeFragment.updateDistanceToNextManeuver(distance: Long){
 fun HomeFragment.updateNextStreet(streetNum: String, streetName: String){
     Log.i("aimsDebug_nav-street", streetNum.trim() + " " + streetName.trim())
     binding.nextManeuverLayout.nextManeuverStreet.text = streetNum.trim() + " " + streetName.trim()
+}
+
+fun HomeFragment.updateEta(eta: Date) {
+    val dateFormat = SimpleDateFormat("hh:mm aa", Locale.US)
+    val time = dateFormat.format(eta)
+    binding.nextManeuverLayout.arrivalTime.text = time.toString()
 }

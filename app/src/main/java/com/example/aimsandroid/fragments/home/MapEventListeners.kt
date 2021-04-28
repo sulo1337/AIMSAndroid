@@ -54,6 +54,7 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
             if(m_navigationManager.nextManeuver!=null) {
                 homeFragment.updateNextStreet(m_navigationManager.nextManeuver!!.nextRoadNumber, m_navigationManager.nextManeuver!!.nextRoadName)
                 homeFragment.updateDistanceToNextManeuver(m_navigationManager.nextManeuverDistance)
+                homeFragment.updateEta(m_navigationManager.getEta(true, Route.TrafficPenaltyMode.OPTIMAL))
                 if(geoPosition is MatchedGeoPosition) {
                     geoPosition.roadElement?.speedLimit?.let { homeFragment.updateSpeedLimit(it) }
                 }

@@ -18,8 +18,8 @@
 
             <ImageView android:id="@+id/nextManeuverIcon" android:layout_width="64dp"
                        android:layout_height="64dp"
-                       android:layout_marginStart="8dp"
-                       android:layout_marginTop="8dp"
+                       android:layout_marginStart="16dp"
+                       android:layout_marginTop="16dp"
                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
                        app:srcCompat="@drawable/direction_continue_uturn"/>
 
@@ -34,16 +34,30 @@
                       app:layout_constraintBottom_toBottomOf="parent"
                       app:layout_constraintTop_toTopOf="parent" tools:text="Desiard Street"/>
 
+            <TextView android:id="@+id/arrivalTime" style="@style/san_francisco_bold_16"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="4dp"
+                      android:layout_marginBottom="8dp"
+                      android:width="0dp"
+                      android:textColor="@color/white"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintEnd_toEndOf="@id/speedLimitContainer"
+                      app:layout_constraintStart_toStartOf="@id/speedLimitContainer"
+                      app:layout_constraintTop_toBottomOf="@id/speedLimitContainer"
+                      tools:text="2:41 AM"/>
+
             <TextView android:id="@+id/distanceToNextManeuver" style="@style/san_francisco_bold_16"
                       android:layout_width="0dp"
                       android:layout_height="wrap_content"
-                      android:layout_marginStart="8dp"
+                      android:layout_marginTop="8dp"
+                      android:layout_marginBottom="8dp"
                       android:textColor="@color/white"
                       app:layout_constraintBottom_toBottomOf="parent"
-                      android:layout_marginBottom="8dp"
                       app:layout_constraintEnd_toStartOf="@id/nextManeuverStreet"
                       app:layout_constraintStart_toStartOf="@id/nextManeuverIcon"
-                      app:layout_constraintTop_toBottomOf="@id/nextManeuverIcon" tools:text="2.4 miles"/>
+                      app:layout_constraintTop_toBottomOf="@id/nextManeuverIcon"
+                      tools:text="2.4 miles"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/speedLimitContainer"
                                                                android:layout_width="wrap_content"
