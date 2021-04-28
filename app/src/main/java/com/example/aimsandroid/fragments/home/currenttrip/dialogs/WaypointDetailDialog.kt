@@ -5,7 +5,9 @@ import android.app.Dialog
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.RelativeLayout
 import android.widget.Toast
@@ -14,6 +16,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.WayPoint
@@ -22,6 +26,7 @@ import com.example.aimsandroid.databinding.AlertStartBolBinding
 import com.example.aimsandroid.databinding.DialogWaypointDetailsBinding
 import com.example.aimsandroid.fragments.home.HomeFragment
 import com.example.aimsandroid.repository.TripRepository
+import com.example.aimsandroid.utils.FileLoaderListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.here.android.mpa.common.GeoCoordinate
@@ -92,13 +97,13 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
             binding.siteContainer.visibility = View.VISIBLE
             binding.siteContainer.text = waypoint.siteContainerDescription + " " + waypoint.siteContainerCode + " - " + waypoint.fill
         }
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //fetch this waypoint's bill of lading
+
             val billOfLading: LiveData<BillOfLading> = tripRepository.getBillOfLading(waypoint.seqNum, waypoint.owningTripId)
             billOfLading.observe(viewLifecycleOwner, Observer {
                 if (it == null) {
@@ -235,6 +240,8 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.captureButton.setOnClickListener {
             CaptureBolDialog.newInstance(waypoint).show(childFragmentManager, "captureBolFormDialog")
         }
+        getSignatureUri()
+        getBolUri()
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -412,6 +419,77 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
 
     fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?) {
         (parentFragment as HomeFragment).saveForm(billOfLading, bolBitmap, signatureBitmap)
+    }
+
+    fun getSignatureUri(){
+        lifecycleScope.launch{
+            withContext(Dispatchers.IO){
+                (parentFragment as HomeFragment).getSignatureUri(waypoint.owningTripId, waypoint.seqNum, object: FileLoaderListener{
+                    override fun onSuccess(uri: Uri) {
+                        loadSignature(uri)
+                    }
+                    override fun onError(error: String) {
+                        Toast.makeText(requireContext(), "Could not load signature!", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+        }
+    }
+
+    fun getBolUri(){
+        lifecycleScope.launch{
+            withContext(Dispatchers.IO){
+                (parentFragment as HomeFragment).getBolUri(waypoint.owningTripId, waypoint.seqNum, object: FileLoaderListener{
+                    override fun onSuccess(uri: Uri) {
+                        loadBol(uri)
+                    }
+                    override fun onError(error: String) {
+                        Toast.makeText(requireContext(), "Could not load Bill of Lading Image!", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+        }
+    }
+
+    fun loadBol(uri: Uri) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main){
+                if(waypoint.waypointTypeDescription == "Source") {
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.pickUpForm.bolView)
+                    binding.pickUpForm.bolView.visibility = View.VISIBLE
+                } else {
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.deliveryForm.bolView)
+                    binding.deliveryForm.bolView.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+
+    fun loadSignature(uri: Uri){
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main){
+                if(waypoint.waypointTypeDescription == "Source") {
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .into(binding.pickUpForm.signatureView)
+                    binding.pickUpForm.signatureView.visibility = View.VISIBLE
+                } else {
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .into(binding.deliveryForm.signatureView)
+                    binding.deliveryForm.signatureView.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
 

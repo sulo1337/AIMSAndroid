@@ -262,6 +262,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
                 Toast.makeText(requireActivity(), "Successfully Updated", Toast.LENGTH_LONG).show()
                 dismiss()
             }
+            override fun onSaving() {
+
+            }
         })
 
     }
@@ -271,6 +274,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
             override fun onSave() {
                 Toast.makeText(requireActivity(), "Successfully Updated", Toast.LENGTH_LONG).show()
                 dismiss()
+            }
+            override fun onSaving(){
+
             }
         })
     }

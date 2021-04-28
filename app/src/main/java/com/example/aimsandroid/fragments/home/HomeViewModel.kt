@@ -1,18 +1,23 @@
 package com.example.aimsandroid.fragments.home
 
+import RotateBitmap
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.*
+import com.bumptech.glide.load.resource.bitmap.Rotate
 import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.TripStatus
 import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.repository.LocationRepository
 import com.example.aimsandroid.repository.TripRepository
+import com.example.aimsandroid.utils.FileLoaderListener
 import com.here.android.mpa.common.GeoCoordinate
 import com.here.android.mpa.mapping.Map
 import kotlinx.coroutines.Dispatchers
@@ -134,7 +139,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 }
                 val file = File(dir, "bol_"+billOfLading.tripIdFk.toString()+"_"+billOfLading.wayPointSeqNum.toString()+".jpeg")
                 val fOut = FileOutputStream(file)
-                bolBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
+                val rotatedBolBitmap = RotateBitmap(bolBitmap, 90.0f)
+                rotatedBolBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
                 fOut.flush()
                 fOut.close()
                 Log.i("aimsDebug_fh", file.absolutePath+" saved")
@@ -145,7 +151,51 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     suspend fun saveSignatureBitmap(signatureBitmap: Bitmap?, billOfLading: BillOfLading){
+        if(signatureBitmap!=null){
+            withContext(Dispatchers.IO){
+                try{
+                    val filePath = getApplication<Application>().getDir(Environment.DIRECTORY_PICTURES, Context.MODE_PRIVATE).absolutePath + "/AIMS/signature/"
+                    val dir = File(filePath)
+                    if(!dir.exists()) {
+                        dir.mkdirs()
+                    }
+                    val file = File(dir, "signature_"+billOfLading.tripIdFk.toString()+"_"+billOfLading.wayPointSeqNum.toString()+".png")
+                    val fOut = FileOutputStream(file)
+                    signatureBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut)
+                    fOut.flush()
+                    fOut.close()
+                    Log.i("aimsDebug_fh", file.absolutePath+" saved")
+                } catch (e: Exception) {
+                    Log.i("aimsDebug_fh", e.toString())
+                }
+            }
+        }
+    }
 
+    suspend fun getSignatureUri(tripIdFk: Long, wayPointSeqNum: Long, fileLoaderListener: FileLoaderListener){
+        withContext(Dispatchers.IO) {
+            try {
+                val filePath = getApplication<Application>().getDir(Environment.DIRECTORY_PICTURES, Context.MODE_PRIVATE).absolutePath + "/AIMS/signature/"
+                val dir = File(filePath)
+                val file = File(dir, "signature_"+tripIdFk.toString()+"_"+wayPointSeqNum.toString()+".png")
+                fileLoaderListener.onSuccess(file.toUri())
+            } catch (e: Exception) {
+                fileLoaderListener.onError(e.toString())
+            }
+        }
+    }
+
+    suspend fun getBolUri(tripIdFk: Long, wayPointSeqNum: Long, fileLoaderListener: FileLoaderListener){
+        withContext(Dispatchers.IO) {
+            try {
+                val filePath = getApplication<Application>().getDir(Environment.DIRECTORY_PICTURES, Context.MODE_PRIVATE).absolutePath + "/AIMS/bol/"
+                val dir = File(filePath)
+                val file = File(dir, "bol_"+tripIdFk.toString()+"_"+wayPointSeqNum.toString()+".jpeg")
+                fileLoaderListener.onSuccess(file.toUri())
+            } catch (e: Exception) {
+                fileLoaderListener.onError(e.toString())
+            }
+        }
     }
 
     init {

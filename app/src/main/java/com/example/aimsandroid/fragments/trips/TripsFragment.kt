@@ -14,6 +14,7 @@ import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentTripsBinding
 import com.example.aimsandroid.fragments.trips.dialogs.TripsDetailDialog
 import com.example.aimsandroid.utils.FetchApiEventListener
+import com.example.aimsandroid.utils.FileLoaderListener
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -112,5 +113,13 @@ class TripsFragment : Fragment() {
 
     fun getViewModel(): TripsViewModel{
         return viewModel
+    }
+
+    suspend fun getSignatureUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
+        viewModel.getSignatureUri(tripIdFk, waypointSeqNum, fileLoaderListener)
+    }
+
+    suspend fun getBolUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
+        viewModel.getBolUri(tripIdFk, waypointSeqNum, fileLoaderListener)
     }
 }

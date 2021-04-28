@@ -1,21 +1,28 @@
 package com.example.aimsandroid.fragments.trips.dialogs
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.WayPoint
 import com.example.aimsandroid.database.getDatabase
 import com.example.aimsandroid.databinding.DialogWaypointDetailsBinding
+import com.example.aimsandroid.fragments.home.HomeFragment
+import com.example.aimsandroid.fragments.trips.TripsFragment
 import com.example.aimsandroid.repository.TripRepository
+import com.example.aimsandroid.utils.FileLoaderListener
 import com.example.aimsandroid.utils.OnSaveListener
 import com.google.android.material.textfield.TextInputLayout
 import getFullAddress
@@ -99,6 +106,8 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
             val editBolDialog = EditBolDialog.newInstance(waypoint)
             editBolDialog.show(childFragmentManager, "editBolDialog")
         }
+        getBolUri()
+        getSignatureUri()
     }
 
     private fun resolveFormView(billOfLading: BillOfLading) {
@@ -207,6 +216,79 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     companion object {
         fun newInstance(waypoint: WayPoint): WaypointDetailDialog{
             return WaypointDetailDialog(waypoint)
+        }
+    }
+
+    fun getSignatureUri(){
+        lifecycleScope.launch{
+            withContext(Dispatchers.IO){
+                (parentFragment as TripsDetailDialog).getSignatureUri(waypoint.owningTripId, waypoint.seqNum, object:
+                    FileLoaderListener {
+                    override fun onSuccess(uri: Uri) {
+                        loadSignature(uri)
+                    }
+                    override fun onError(error: String) {
+                        Toast.makeText(requireContext(), "Could not load signature!", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+        }
+    }
+
+    fun getBolUri(){
+        lifecycleScope.launch{
+            withContext(Dispatchers.IO){
+                (parentFragment as TripsDetailDialog).getBolUri(waypoint.owningTripId, waypoint.seqNum, object:
+                    FileLoaderListener {
+                    override fun onSuccess(uri: Uri) {
+                        loadBol(uri)
+                    }
+                    override fun onError(error: String) {
+                        Toast.makeText(requireContext(), "Could not load Bill of Lading Image!", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+        }
+    }
+
+    fun loadBol(uri: Uri) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main){
+                if(waypoint.waypointTypeDescription == "Source") {
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.pickUpForm.bolView)
+                    binding.pickUpForm.bolView.visibility = View.VISIBLE
+                } else {
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(binding.deliveryForm.bolView)
+                    binding.deliveryForm.bolView.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+
+    fun loadSignature(uri: Uri){
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main){
+                if(waypoint.waypointTypeDescription == "Source") {
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .into(binding.pickUpForm.signatureView)
+                    binding.pickUpForm.signatureView.visibility = View.VISIBLE
+                } else {
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .into(binding.deliveryForm.signatureView)
+                    binding.deliveryForm.signatureView.visibility = View.VISIBLE
+                }
+            }
         }
     }
 }

@@ -22,6 +22,7 @@ import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.databinding.DialogTripDetailsBinding
 import com.example.aimsandroid.fragments.trips.TripsFragment
 import com.example.aimsandroid.fragments.trips.TripsFragmentDirections
+import com.example.aimsandroid.utils.FileLoaderListener
 import com.example.aimsandroid.utils.OnSaveListener
 import sortWaypointBySeqNum
 
@@ -129,5 +130,13 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
         fun newInstance(tripWithWaypoints: TripWithWaypoints): TripsDetailDialog {
             return TripsDetailDialog(tripWithWaypoints)
         }
+    }
+
+    suspend fun getSignatureUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
+        (parentFragment as TripsFragment).getSignatureUri(tripIdFk, waypointSeqNum, fileLoaderListener)
+    }
+
+    suspend fun getBolUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
+        (parentFragment as TripsFragment).getBolUri(tripIdFk, waypointSeqNum, fileLoaderListener)
     }
 }

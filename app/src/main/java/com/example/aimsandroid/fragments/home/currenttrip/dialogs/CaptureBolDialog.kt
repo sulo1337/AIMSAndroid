@@ -211,7 +211,7 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         binding.deliveryForm.signatureView.setImageBitmap(RotateBitmap(signatureBitmap, 270.0f))
         binding.pickUpForm.signatureView.visibility = View.VISIBLE
         binding.pickUpForm.signatureView.setImageBitmap(RotateBitmap(signatureBitmap, 270.0f))
-        this.signatureBitmap = signatureBitmap
+        this.signatureBitmap = RotateBitmap(signatureBitmap, 270.0f)
     }
 
     private fun generateDeliveryBillOfLading(): BillOfLading{

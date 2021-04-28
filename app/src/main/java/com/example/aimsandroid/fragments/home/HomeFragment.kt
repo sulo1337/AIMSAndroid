@@ -27,6 +27,7 @@ import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.databinding.FragmentHomeBinding
 import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.dialogs.WaypointDetailDialog
+import com.example.aimsandroid.utils.FileLoaderListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoBoundingBox
 import com.here.android.mpa.common.GeoCoordinate
@@ -385,6 +386,14 @@ class HomeFragment : Fragment() {
 
     fun expandSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    suspend fun getSignatureUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
+        viewModel.getSignatureUri(tripIdFk, waypointSeqNum, fileLoaderListener)
+    }
+
+    suspend fun getBolUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
+        viewModel.getBolUri(tripIdFk, waypointSeqNum, fileLoaderListener)
     }
 
 }
