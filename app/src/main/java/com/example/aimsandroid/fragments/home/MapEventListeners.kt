@@ -19,7 +19,6 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
 
     val m_maneuverListener: NavigationManager.ManeuverEventListener = object: NavigationManager.ManeuverEventListener(){
         override fun onManeuverEvent() {
-            m_navigationManager.nextManeuver!!
         }
     }
 
@@ -32,7 +31,6 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
 
     val m_positionListener: NavigationManager.PositionListener = object : NavigationManager.PositionListener() {
         override fun onPositionUpdated(geoPosition: GeoPosition) {
-            /* Current position information can be retrieved in this callback */
         }
     }
     val m_navigationManagerEventListener: NavigationManager.NavigationManagerEventListener =
