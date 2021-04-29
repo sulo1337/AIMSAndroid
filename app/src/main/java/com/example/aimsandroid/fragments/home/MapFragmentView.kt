@@ -87,7 +87,6 @@ open class MapFragmentView(
                         it.zoomLevel = zoomLevel
                         it.orientation = orientation
                         it.positionIndicator.isVisible = true
-                        parentFragment.positionIndicatorReset()
                         val mode = m_activity.applicationContext?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
                         it.addTransformListener(MapTransformListener())
                         m_navigationManager = NavigationManager.getInstance()

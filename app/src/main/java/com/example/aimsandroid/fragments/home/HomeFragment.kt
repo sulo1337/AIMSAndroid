@@ -284,7 +284,6 @@ class HomeFragment : Fragment() {
     fun viewStopNavFab() {
         binding.stopNavFab.visibility = View.VISIBLE
         viewTurnByTurnLayout()
-        positionIndicatorNav()
     }
 
     fun hideNavFab() {
@@ -302,7 +301,6 @@ class HomeFragment : Fragment() {
     fun hideStopNavFab() {
         binding.stopNavFab.visibility = View.GONE
         hideTurnByTurnLayout()
-        positionIndicatorReset()
     }
 
     fun viewTurnByTurnLayout() {
