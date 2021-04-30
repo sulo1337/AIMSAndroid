@@ -40,7 +40,6 @@ import kotlinx.coroutines.withContext
 class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     private lateinit var tripRepository: TripRepository
     private lateinit var binding: DialogWaypointDetailsBinding
-    private lateinit var loader: AlertDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -114,7 +113,6 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
             val editBolDialog = EditBolDialog.newInstance(waypoint)
             editBolDialog.show(childFragmentManager, "editBolDialog")
         }
-        loader = getLoader(requireActivity())
         getBolUri()
         getSignatureUri()
     }

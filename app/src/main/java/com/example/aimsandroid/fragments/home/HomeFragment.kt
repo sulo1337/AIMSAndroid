@@ -7,6 +7,8 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
@@ -34,6 +36,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoBoundingBox
 import com.here.android.mpa.common.GeoCoordinate
 import com.here.android.mpa.common.Image
+import getLoader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -49,6 +52,7 @@ class HomeFragment : Fragment() {
     private lateinit var currentTripObserver: Observer<TripWithWaypoints>
     private var mapFragmentView: MapFragmentView? = null
     private lateinit var prefs: SharedPreferences
+    private lateinit var loader: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +75,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loader = getLoader(requireActivity())
         resetButtons()
         hideGpsFab()
         binding.navFab.setOnClickListener {
@@ -203,6 +208,7 @@ class HomeFragment : Fragment() {
     }
 
     fun afterRouteCalculated(boundingBox: GeoBoundingBox?) {
+        hideLoader()
         if(prefs.getBoolean("navigating", false)){
             continueNavigationMode()
         } else {
@@ -396,4 +402,19 @@ class HomeFragment : Fragment() {
         viewModel.getBolUri(tripIdFk, waypointSeqNum, fileLoaderListener)
     }
 
+    fun routeCalculationOnProgress(i: Int) {
+        showLoader()
+    }
+
+    fun showLoader(){
+        if(!loader.isShowing){
+            loader.show()
+        }
+    }
+
+    fun hideLoader(){
+        Handler(Looper.getMainLooper()).postDelayed({
+            loader.dismiss()
+        }, 1000)
+    }
 }

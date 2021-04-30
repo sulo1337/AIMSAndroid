@@ -170,7 +170,7 @@ open class MapFragmentView(
             routePlan,
             object : Router.Listener<List<RouteResult>, RoutingError> {
                 override fun onProgress(i: Int) {
-                    /* The calculation progress can be retrieved in this callback. */
+                    parentFragment.routeCalculationOnProgress(i)
                 }
 
                 override fun onCalculateRouteFinished(
