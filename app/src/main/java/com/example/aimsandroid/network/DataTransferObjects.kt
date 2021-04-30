@@ -13,6 +13,30 @@ data class PutTripStatusResponse(
     @Json(name = "resultSet1") val responseStatus: List<ResponseStatus>
 )
 
+data class PutTripProductPickupContainer(
+    @Json(name = "data") val data: PutTripProductPickupResponse,
+    @Json(name = "status") val status: String
+)
+
+data class PutTripProductPickupResponse(
+    @Json(name = "resultSet1") val responseStatus: List<ResponseStatus>,
+    @Json(name = "resultSet2") val responseData: List<PutTripProductPickupData>
+)
+
+data class PutTripProductPickupData(
+    @Json(name = "DriverCode") val driverCode: String,
+    @Json(name = "TripID") val tripId: Long,
+    @Json(name = "SourceID") val sourceId: Long,
+    @Json(name = "TripWayPointID") val tripWayPointId: Long,
+    @Json(name = "id") val id: Long,
+    @Json(name = "Productid") val productId: Long,
+    @Json(name = "ManifestNumber") val manifestNumber: String,
+    @Json(name = "LoadstartDateTime") val startDateTime: String,
+    @Json(name = "LoadEndDateTime") val endDateTime: String,
+    @Json(name = "SourceGrossQuantity") val grossQuantity: Double,
+    @Json(name = "SourceNetQuantity") val netQuantity: Double
+)
+
 data class TripData(
     @Json(name = "resultSet2") val responseStatus: List<ResponseStatus>,
     @Json(name = "resultSet1") val tripSections: List<TripSection>?

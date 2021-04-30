@@ -30,6 +30,20 @@ interface Dispatcher {
         @Path("statusDate") statusDate: String,
         @Query("apiKey") apiKey: String
     ): Deferred<PutTripStatusResponseContainer>
+
+    @GET("TripProductPickupPut/{Id}/{tripId}/{sourceId}/{productId}/{bolNum}/{startTime}/{endTime}/{grossQty}/{netQty}")
+    fun putTripProductPickupAsync(
+        @Path("Id") driverId: String,
+        @Path("tripId") tripId: String,
+        @Path("sourceId") sourceId: String,
+        @Path("productId") productId: String,
+        @Path("bolNum") bolNum: String,
+        @Path("startTime") startTime: String,
+        @Path("endTime") endTime: String,
+        @Path("grossQty") grossQty: String,
+        @Path("netQty") netQty: String,
+        @Query("apiKey") apiKey: String
+    ): Deferred<PutTripProductPickupContainer>
 }
 
 private val moshi = Moshi.Builder()
