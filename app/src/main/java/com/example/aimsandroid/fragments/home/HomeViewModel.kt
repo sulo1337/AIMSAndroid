@@ -74,7 +74,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    suspend fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
+    suspend fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         viewModelScope.launch {
             onSaveListener.onSaving()
             withContext(Dispatchers.IO){
@@ -131,28 +131,30 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _currentTripCompleted.value = false
     }
 
-    private suspend fun saveBitmaps(bolBitmap: Bitmap, signatureBitmap: Bitmap?, billOfLading: BillOfLading) {
+    private suspend fun saveBitmaps(bolBitmap: Bitmap?, signatureBitmap: Bitmap?, billOfLading: BillOfLading) {
         saveBolBitmap(bolBitmap, billOfLading)
         saveSignatureBitmap(signatureBitmap, billOfLading)
     }
 
-    suspend fun saveBolBitmap(bolBitmap: Bitmap, billOfLading: BillOfLading){
-        withContext(Dispatchers.IO){
-            try {
-                val filePath =  getApplication<Application>().getDir(Environment.DIRECTORY_PICTURES, Context.MODE_PRIVATE).absolutePath + "/AIMS/bol/"
-                val dir = File(filePath)
-                if(!dir.exists()) {
-                    dir.mkdirs()
+    suspend fun saveBolBitmap(bolBitmap: Bitmap?, billOfLading: BillOfLading){
+        if(bolBitmap!=null){
+            withContext(Dispatchers.IO){
+                try {
+                    val filePath =  getApplication<Application>().getDir(Environment.DIRECTORY_PICTURES, Context.MODE_PRIVATE).absolutePath + "/AIMS/bol/"
+                    val dir = File(filePath)
+                    if(!dir.exists()) {
+                        dir.mkdirs()
+                    }
+                    val file = File(dir, "bol_"+billOfLading.tripIdFk.toString()+"_"+billOfLading.wayPointSeqNum.toString()+".jpeg")
+                    val fOut = FileOutputStream(file)
+                    val rotatedBolBitmap = RotateBitmap(bolBitmap, 90.0f)
+                    rotatedBolBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
+                    fOut.flush()
+                    fOut.close()
+                    Log.i("aimsDebug_fh", file.absolutePath+" saved")
+                } catch (e: Exception) {
+                    Log.i("aimsDebug_fh", e.toString())
                 }
-                val file = File(dir, "bol_"+billOfLading.tripIdFk.toString()+"_"+billOfLading.wayPointSeqNum.toString()+".jpeg")
-                val fOut = FileOutputStream(file)
-                val rotatedBolBitmap = RotateBitmap(bolBitmap, 90.0f)
-                rotatedBolBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
-                fOut.flush()
-                fOut.close()
-                Log.i("aimsDebug_fh", file.absolutePath+" saved")
-            } catch (e: Exception) {
-                Log.i("aimsDebug_fh", e.toString())
             }
         }
     }

@@ -122,7 +122,7 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
         super.onDestroyView()
     }
 
-    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, onSaveListener: OnSaveListener) {
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         (parentFragment as TripsFragment).getViewModel().saveForm(billOfLading, bolBitmap, onSaveListener)
     }
 

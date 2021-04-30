@@ -266,7 +266,7 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     fun saveDeliveryForm() {
-        (parentFragment as WaypointDetailDialog).saveForm(generateDeliveryBillOfLading(), bolBitmap!!, null, object : OnSaveListener{
+        (parentFragment as WaypointDetailDialog).saveForm(generateDeliveryBillOfLading(), bolBitmap, null, object : OnSaveListener{
             override fun onSaving() {
                 loader.show()
             }
@@ -288,7 +288,7 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     fun savePickupForm() {
-        (parentFragment as WaypointDetailDialog).saveForm(generatePickUpBillOfLading(), bolBitmap!!, null, object : OnSaveListener{
+        (parentFragment as WaypointDetailDialog).saveForm(generatePickUpBillOfLading(), bolBitmap, null, object : OnSaveListener{
             override fun onSaving() {
                 loader.show()
             }
@@ -312,11 +312,6 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
     fun validateDeliveryForm() {
         var valid = com.example.aimsandroid.utils.validateDeliveryForm(binding.deliveryForm)
 
-        if(bolBitmap == null) {
-            valid = false
-            Snackbar.make(requireView(), "Bill of lading not scanned", Snackbar.LENGTH_SHORT).show()
-        }
-
         if(valid) {
             val sb: StringBuilder = StringBuilder("Is the data correct?\n\n")
             sb.append(getDeliveryFormSummary(binding.deliveryForm))
@@ -338,11 +333,6 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
 
     fun validatePickupForm() {
         var valid = validatePickUpForm(binding.pickUpForm)
-
-        if(bolBitmap == null) {
-            valid = false
-            Snackbar.make(requireView(), "Bill of lading not scanned", Snackbar.LENGTH_SHORT).show()
-        }
 
         if(valid) {
             val sb: StringBuilder = StringBuilder("Is the data correct?\n\n")

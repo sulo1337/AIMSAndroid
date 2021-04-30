@@ -420,7 +420,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         super.onDestroyView()
     }
 
-    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         (parentFragment as HomeFragment).saveForm(billOfLading, bolBitmap, signatureBitmap, onSaveListener)
     }
 

@@ -367,7 +367,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         lifecycleScope.launch{
             withContext(Dispatchers.IO){
                 viewModel.saveForm(billOfLading, bolBitmap, signatureBitmap, onSaveListener)

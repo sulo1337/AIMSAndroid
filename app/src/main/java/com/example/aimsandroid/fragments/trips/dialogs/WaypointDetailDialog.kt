@@ -216,7 +216,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         super.onDestroyView()
     }
 
-    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap, onSaveListener: OnSaveListener) {
+    fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         (parentFragment as TripsDetailDialog).saveForm(billOfLading, bolBitmap, onSaveListener)
     }
 
