@@ -1,68 +1,79 @@
 package com.example.aimsandroid.service
 
-
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
-import android.content.Context
+import android.app.*
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.os.postDelayed
 import com.example.aimsandroid.MainActivity
 import com.example.aimsandroid.R
+import com.example.aimsandroid.repository.TripRepository
+import kotlinx.coroutines.*
+import java.lang.Runnable
 
+class ForegroundService: Service() {
 
-class ForegroundService : Service() {
-    override fun onCreate() {
-        super.onCreate()
-        initChannels(this.applicationContext)
+    val INTERVAL = 10000L
+    val CHANNEL_ID = "AIMSNetworkService"
+
+    private lateinit var notification: Notification
+    private lateinit var doWorkRunnable: Runnable
+    private val tripRepository = TripRepository(application)
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        createNotificationChannel()
+
+        notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentText("Communicating with the dispatcher...")
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSound(null)
+            .build()
+        doWork()
+        return START_STICKY
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        if (intent.action == START_ACTION) {
-            val notificationIntent = Intent(this, MainActivity::class.java)
-            notificationIntent.action = Intent.ACTION_MAIN
-            notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER)
-            val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
-            val notification = NotificationCompat.Builder(this.applicationContext, CHANNEL)
-                .setContentTitle("Guidance")
-                .setContentText("Guidance in progress ...")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent)
-                .setLocalOnly(true)
-                .build()
-            startForeground(FOREGROUND_SERVICE_ID, notification)
-        } else if (intent.action == STOP_ACTION) {
-            stopForeground(true)
-            stopSelf()
+    private fun createNotificationChannel() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                CHANNEL_ID,
+                "AIMSDispatcher",
+                NotificationManager.IMPORTANCE_LOW
+            )
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(notificationChannel)
         }
-        return START_NOT_STICKY
     }
 
-    fun initChannels(context: Context) {
-        if (Build.VERSION.SDK_INT < 26) {
-            return
+    private fun doWork() {
+        val handler = Handler(Looper.getMainLooper())
+        doWorkRunnable = Runnable {
+            CoroutineScope(Job()).launch {
+                withContext(Dispatchers.IO){
+                    startForeground(1, notification)
+                    syncTripsData()
+                    stopForeground(true)
+                    handler.postDelayed(doWorkRunnable, INTERVAL)
+                }
+            }
         }
-        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(
-            CHANNEL, "Foreground channel",
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
-        channel.description = "Channel for foreground service"
-        notificationManager.createNotificationChannel(channel)
+        handler.post(doWorkRunnable)
+        return
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        // Used only in case of bound services.
+    private suspend fun syncTripsData() {
+
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
-    companion object {
-        var FOREGROUND_SERVICE_ID = 101
-        var START_ACTION = "com.here.android.example.voice.guidance.fs.action.start"
-        var STOP_ACTION = "com.here.android.example.voice.guidance.fs.action.stop"
-        private const val CHANNEL = "default"
+    override fun onDestroy() {
+        stopForeground(true)
+        super.onDestroy()
     }
 }

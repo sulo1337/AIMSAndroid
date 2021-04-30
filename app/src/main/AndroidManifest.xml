@@ -49,20 +49,16 @@
         <meta-data
             android:name="com.here.android.maps.license.key"
             android:value="a30Lad4H1j85ffdFbAcCzEOncagAXP4uV4Ym0FJhOkeE1+nv9wxkXW/R7wywTAximcd5db/s7jNq1kZAVX26GEvxt4QBUvi4Bd5DmEftWSUW2woa0V0D4xsBv7K4MbuEQpfNyLXEAvxKjRyKfhCgfOnHhjkGyv66smI2t5jYbDs3lLdOpADrbzHVQrRRlgec89R5iPhTJm+B+MHraDlrdckh0/hTQmqVagA6zhRB0MLD1ykrwpHdrjZKw8CtUvrG8HFiiCCpauErXkNr3SezYXfYBGdbPVDPBetyDlaXkm+srhJk+AlJWH+pin2wxlAh6f5gb2twGNPNxdiWSnu5DUyQ1rCQxFEJXH0rcH3gPKJsOZmAjRqZewes4DBZYXYWYLBbR303taEwtqM4ILocCSsdaQEKCviXd2lkDF1UkGD0gwqS4tJHDPLn5Vq3n894p5scLnUDyXOaL5qWyxcPhRAO9agJy1+tzepBBwPZxnGkGBQlO1s4OlqniH8QFFcp51wv0XDAru1Erv56Z1t98zgU/Ile6owNvPyCgTbr3k/6xb6nV+1ap/sk6lMV0Mx7PExI+CO7PdlhHPkTrX4g2n8lPugoHF6IXQDoV4vX72UMlfkqAzR2GgAjfj4YtgBICwW6nxFEH1JA2NIj5ejciCUZB9PLtzDp90anxbfoPgc="/>
-        <!--
-            Embed the HERE Positioning Service.
-            For more information, see the HERE Mobile SDK Developer's Guide
-        -->
+
+        <service android:enabled="true" android:name=".service.ForegroundService"/>
+
         <service
             android:name="com.here.services.internal.LocationService"
             android:enabled="true"
             android:exported="false"
             android:process=":remote">
         </service>
-        <!--
-            HERE Location boot receiver definition.
-            For more information, see the HERE Mobile SDK Developer's Guide
-        -->
+
         <receiver
             android:name="com.here.services.internal.BootReceiver"
             android:exported="true">

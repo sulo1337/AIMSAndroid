@@ -1,17 +1,20 @@
 package com.example.aimsandroid
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.os.SystemClock
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.aimsandroid.service.ForegroundService
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gu.toolargetool.TooLargeTool
 import com.gun0912.tedpermission.PermissionListener
@@ -20,6 +23,7 @@ import com.jakewharton.processphoenix.ProcessPhoenix
 
 class MainActivity : AppCompatActivity() {
     var PERMISSION_ALL = 1
+    private lateinit var foregroundServiceIntent: Intent
     var PERMISSIONS = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -40,12 +44,17 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
         bottomNavigationView.setOnNavigationItemReselectedListener {  }
         checkLogin()
-
+        setupForegroundService()
         TooLargeTool.startLogging(this.application)
-//        //if we do not have location permission
-//        if(ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            requestLocationPermission()
-//        }
+    }
+
+    private fun setupForegroundService() {
+        foregroundServiceIntent = Intent(this, ForegroundService::class.java)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            startForegroundService(foregroundServiceIntent)
+        } else {
+            startService(foregroundServiceIntent)
+        }
     }
 
     private fun checkLogin() {
@@ -92,5 +101,10 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState, outPersistentState)
         outPersistentState.clear()
         outState.clear()
+    }
+
+    override fun onDestroy() {
+        stopService(foregroundServiceIntent)
+        super.onDestroy()
     }
 }

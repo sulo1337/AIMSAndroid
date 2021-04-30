@@ -122,8 +122,6 @@ open class MapFragmentView(
     }
 
     fun showDirections(srcGeoCoordinate: GeoCoordinate, destGeoCoordinate: GeoCoordinate){
-        Log.i("aimsDebug", "here")
-        Log.i("aimsDebug", m_navigationManager?.navigationMode?.toString()!!)
         if(m_navigationManager?.navigationMode?.toString().equals("NONE")!!){
             createRoute(srcGeoCoordinate, destGeoCoordinate)
         } else {
