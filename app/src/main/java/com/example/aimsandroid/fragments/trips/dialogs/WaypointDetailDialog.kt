@@ -1,5 +1,6 @@
 package com.example.aimsandroid.fragments.trips.dialogs
 
+import androidx.appcompat.app.AlertDialog
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -31,6 +32,7 @@ import com.example.aimsandroid.utils.FileLoaderListener
 import com.example.aimsandroid.utils.OnSaveListener
 import com.google.android.material.textfield.TextInputLayout
 import getFullAddress
+import getLoader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,6 +40,7 @@ import kotlinx.coroutines.withContext
 class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     private lateinit var tripRepository: TripRepository
     private lateinit var binding: DialogWaypointDetailsBinding
+    private lateinit var loader: AlertDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -111,6 +114,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
             val editBolDialog = EditBolDialog.newInstance(waypoint)
             editBolDialog.show(childFragmentManager, "editBolDialog")
         }
+        loader = getLoader(requireActivity())
         getBolUri()
         getSignatureUri()
     }

@@ -1,7 +1,12 @@
+import android.app.Activity
+import androidx.appcompat.app.AlertDialog
+import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.drawable.ColorDrawable
+import com.example.aimsandroid.R
 import com.example.aimsandroid.database.WayPoint
 
 
@@ -23,6 +28,15 @@ fun getFullAddress(waypoint: WayPoint): String {
 
 fun sortWaypointBySeqNum(waypoints: List<WayPoint>): List<WayPoint> {
     return waypoints.sortedWith(compareBy({it.owningTripId},{it.seqNum}))
+}
+
+fun getLoader(activity: Activity): AlertDialog{
+    val alertDialog = AlertDialog.Builder(activity, R.style.TransparentAlertDialogTheme)
+        .setView(R.layout.alert_progress_bar)
+        .setCancelable(false)
+        .create()
+    alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    return alertDialog
 }
 
 val colorGreen = Color.rgb(0,171,102)

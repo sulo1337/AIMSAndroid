@@ -4,6 +4,7 @@ import RotateBitmap
 import android.Manifest
 import android.app.Activity
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -12,6 +13,8 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -42,6 +45,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import getFullAddress
+import getLoader
 import java.io.File
 import java.lang.Exception
 import java.lang.Long
@@ -57,6 +61,7 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
     private var tempBolPath: String? = null
     private var photoUri: Uri? = null
     private var photoFile: File? = null
+    private lateinit var loader: AlertDialog
     companion object {
         fun newInstance(waypoint: WayPoint): EditBolDialog {
             return EditBolDialog(waypoint)
@@ -144,6 +149,7 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
                 validateDeliveryForm()
             }
         }
+        loader = getLoader(requireActivity())
     }
 
     private fun startCameraActivity() {
@@ -261,12 +267,15 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
     fun saveDeliveryForm() {
         (parentFragment as WaypointDetailDialog).saveForm(generateDeliveryBillOfLading(), bolBitmap!!, object : OnSaveListener{
             override fun onSave() {
-                Toast.makeText(requireActivity(), "Successfully Updated", Toast.LENGTH_LONG).show()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    loader.dismiss()
+                    dismiss()
+                    Toast.makeText(requireActivity(), "Successfully Updated", Toast.LENGTH_LONG).show()
+                }, 3000)
                 (parentFragment as WaypointDetailDialog).getBolUri()
-                dismiss()
             }
             override fun onSaving() {
-
+                loader.show()
             }
 
             override fun onTripCompleted() {
@@ -279,12 +288,15 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
     fun savePickupForm() {
         (parentFragment as WaypointDetailDialog).saveForm(generatePickUpBillOfLading(), bolBitmap!!, object : OnSaveListener{
             override fun onSave() {
-                Toast.makeText(requireActivity(), "Successfully Updated", Toast.LENGTH_LONG).show()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    loader.dismiss()
+                    dismiss()
+                    Toast.makeText(requireActivity(), "Successfully Updated", Toast.LENGTH_LONG).show()
+                }, 1000)
                 (parentFragment as WaypointDetailDialog).getBolUri()
-                dismiss()
             }
             override fun onSaving(){
-
+                loader.show()
             }
             override fun onTripCompleted() {
 
