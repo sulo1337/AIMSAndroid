@@ -52,6 +52,7 @@ class TripRepository(application: Application) {
                     driverId,
                     "170",
                     "27",
+                    //TODO implement product id
                     "1175",
                     billOfLading.billOfLadingNumber.toString().trim(),
                     billOfLading.loadingStarted.toString(),
@@ -61,17 +62,18 @@ class TripRepository(application: Application) {
                     API_KEY
                 ).await()
                 billOfLading.synced = true
-                Log.i("aimsDebugRepository", "Sent bill of lading:$billOfLading")
+                Log.i("aimsDebugRepository", "Sent bill of lading: $billOfLading")
             } catch (e: UnknownHostException) {
                 billOfLading.synced = false
-                Log.i("aimsDebugRepository", "No internet connection, saving for later: $billOfLading")
+                Log.w("aimsDebugRepository", "No internet connection, saving for later: $billOfLading")
             } catch (e: Exception) {
                 billOfLading.synced = false
-                Log.i("aimsDebugRepository", "Unexpected error occurred while sending: $billOfLading")
+                Log.w("aimsDebugRepository", "Unexpected error occurred while sending: $billOfLading")
             } finally {
                 database.tripDao.insertBillOfLading(billOfLading)
             }
         } else {
+            Log.i("aimsDebugRepository", "Updated waypoint information")
             database.tripDao.insertBillOfLading(billOfLading)
         }
     }
@@ -104,10 +106,11 @@ class TripRepository(application: Application) {
                     API_KEY
                 ).await()
                 tripEvent.synced = true
+                Log.i("aimsDebugRepository", "Sent trip status: $tripEvent")
             } catch(e: UnknownHostException){
-                Log.i("aimsDebugRepository", "No internet connection, saving into database.")
+                Log.w("aimsDebugRepository", "No internet connection, saving for later: $tripEvent")
             } catch (e: Exception){
-                Log.i("aimsDebugRepository", e.toString())
+                Log.w("aimsDebugRepository", "Unexpected error while saving: $tripEvent")
             } finally {
                 database.tripDao.insertTripEvent(tripEvent)
             }

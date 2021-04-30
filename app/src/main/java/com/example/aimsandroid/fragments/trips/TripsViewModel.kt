@@ -46,8 +46,8 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             onSaveListener.onSaving()
             withContext(Dispatchers.IO) {
-                tripRepository.insertBillOfLading(billOfLading)
                 saveBitmaps(bolBitmap, billOfLading)
+                tripRepository.insertBillOfLading(billOfLading)
                 withContext(Dispatchers.Main){
                     onSaveListener.onSave()
                 }
@@ -70,9 +70,9 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
                     rotatedBolBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
                     fOut.flush()
                     fOut.close()
-                    Log.i("aimsDebug_fh", file.absolutePath+" saved")
+                    Log.i("aimsDebugFiles", "BOL image saved at path ${file.absolutePath}")
                 } catch (e: Exception) {
-                    Log.i("aimsDebug_fh", e.toString())
+                    Log.w("aimsDebugFiles", "Error while saving BOL image: $e")
                 }
             }
         }

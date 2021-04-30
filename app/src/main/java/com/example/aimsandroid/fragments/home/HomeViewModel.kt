@@ -51,7 +51,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         catch (e: Exception) {
-            Log.i("aimsDebug", "no location info")
+            Log.w("aimsDebug", "GPS Signal Lost")
         }
     }
 
@@ -78,8 +78,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             onSaveListener.onSaving()
             withContext(Dispatchers.IO){
-                tripRepository.insertBillOfLading(billOfLading)
                 saveBitmaps(bolBitmap, signatureBitmap, billOfLading)
+                tripRepository.insertBillOfLading(billOfLading)
                 resolveNextWaypoint()
                 if(checkCurrentTripIsCompleted()) {
                     val currentTripId = currentTrip.value?.trip?.tripId
@@ -108,7 +108,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             waypoints = sortWaypointBySeqNum(waypoints)
             var complete = true
             for(waypoint in waypoints){
-                Log.i("aimsDebug", waypoint.toString())
                 val waypointWithBillOfLading = tripRepository.getWaypointWithBillOfLading(waypoint.seqNum, waypoint.owningTripId)
                 if(waypointWithBillOfLading.billOfLading == null) {
                     complete = false
@@ -154,9 +153,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     rotatedBolBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
                     fOut.flush()
                     fOut.close()
-                    Log.i("aimsDebug_fh", file.absolutePath+" saved")
+                    Log.i("aimsDebugFiles", "BOL image saved at path ${file.absolutePath}")
                 } catch (e: Exception) {
-                    Log.i("aimsDebug_fh", e.toString())
+                    Log.w("aimsDebugFiles", "Error while saving BOL image: $e")
                 }
             }
         }
@@ -176,9 +175,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     signatureBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut)
                     fOut.flush()
                     fOut.close()
-                    Log.i("aimsDebug_fh", file.absolutePath+" saved")
+                    Log.i("aimsDebugFiles", "Signature image saved at path ${file.absolutePath}")
                 } catch (e: Exception) {
-                    Log.i("aimsDebug_fh", e.toString())
+                    Log.w("aimsDebugFiles", "Error while saving signature image: $e")
                 }
             }
         }
