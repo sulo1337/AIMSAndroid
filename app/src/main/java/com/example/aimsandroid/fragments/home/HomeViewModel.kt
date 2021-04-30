@@ -19,6 +19,7 @@ import com.example.aimsandroid.repository.LocationRepository
 import com.example.aimsandroid.repository.TripRepository
 import com.example.aimsandroid.utils.FileLoaderListener
 import com.example.aimsandroid.utils.OnSaveListener
+import com.example.aimsandroid.utils.TripStatusCode
 import com.here.android.mpa.common.GeoCoordinate
 import com.here.android.mpa.mapping.Map
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +36,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private var prefs: SharedPreferences = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
     private val locationRepository = LocationRepository(application)
     private val database = getDatabase(application)
-    val tripRepository = TripRepository(database)
+    val tripRepository = TripRepository(database, prefs)
     private val _currentTripCompleted = MutableLiveData<Boolean>(false)
     val currentTripCompleted: LiveData<Boolean>
         get() = _currentTripCompleted
@@ -85,6 +86,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     val currentTripId = currentTrip.value?.trip?.tripId
                     currentTripId?.let {
                         tripRepository.setTripStatus(TripStatus(it, true))
+                        if(signatureBitmap!=null){
+                            onTripEvent(it, TripStatusCode.TRIP_DONE)
+                        }
                     }
                     withContext(Dispatchers.Main) {
                         removeCurrentTrip()
@@ -203,6 +207,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 fileLoaderListener.onSuccess(file.toUri())
             } catch (e: Exception) {
                 fileLoaderListener.onError(e.toString())
+            }
+        }
+    }
+
+    fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                tripRepository.onTripEvent(tripId, tripStatusCode)
             }
         }
     }

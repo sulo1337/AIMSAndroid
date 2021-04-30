@@ -5,6 +5,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -93,7 +94,7 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        tripRepository = TripRepository(getDatabase(requireActivity().application))
+        tripRepository = TripRepository(getDatabase(requireActivity().application), requireActivity().application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE))
         billOfLading = tripRepository.getBillOfLading(waypoint.seqNum, waypoint.owningTripId)
 
         binding.destInfo.text = waypoint.destinationName

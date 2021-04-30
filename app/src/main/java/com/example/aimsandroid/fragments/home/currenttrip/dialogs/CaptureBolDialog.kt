@@ -4,6 +4,7 @@ import RotateBitmap
 import android.Manifest
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -89,7 +90,7 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loader = getLoader(requireActivity())
-        tripRepository = TripRepository(getDatabase(requireActivity().application))
+        tripRepository = TripRepository(getDatabase(requireActivity().application), requireActivity().application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE))
         billOfLading = tripRepository.getBillOfLading(waypoint.seqNum, waypoint.owningTripId)
 
         binding.destInfo.text = waypoint.destinationName
@@ -265,6 +266,7 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
                     Toast.makeText(requireContext(), "Saved Successfully", Toast.LENGTH_SHORT).show()
                     dismiss()
                 }, 1000)
+                (parentFragment as WaypointDetailDialog).onTripEvent(waypoint.owningTripId, TripStatusCode.LEAVE_SITE)
                 (parentFragment as WaypointDetailDialog).getBolUri()
                 (parentFragment as WaypointDetailDialog).getSignatureUri()
                 (parentFragment as WaypointDetailDialog).refreshRecyclerView()
@@ -293,6 +295,7 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
                     Toast.makeText(requireContext(), "Saved Successfully", Toast.LENGTH_SHORT).show()
                     dismiss()
                 }, 1000)
+                (parentFragment as WaypointDetailDialog).onTripEvent(waypoint.owningTripId, TripStatusCode.LEAVE_SRC)
                 (parentFragment as WaypointDetailDialog).getBolUri()
                 (parentFragment as WaypointDetailDialog).getSignatureUri()
                 (parentFragment as WaypointDetailDialog).refreshRecyclerView()

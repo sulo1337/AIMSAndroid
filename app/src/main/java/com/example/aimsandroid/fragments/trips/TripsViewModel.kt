@@ -18,6 +18,7 @@ import com.example.aimsandroid.repository.TripRepository
 import com.example.aimsandroid.utils.FetchApiEventListener
 import com.example.aimsandroid.utils.FileLoaderListener
 import com.example.aimsandroid.utils.OnSaveListener
+import com.example.aimsandroid.utils.TripStatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,7 +28,7 @@ import java.lang.Exception
 
 class TripsViewModel(application: Application) : AndroidViewModel(application) {
     private val database = getDatabase(application)
-    private val tripRepository = TripRepository(database)
+    private val tripRepository = TripRepository(database, application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE))
     val trips = tripRepository.trips
 
     private val _refreshing = MutableLiveData<Boolean>()
@@ -100,6 +101,14 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
                 fileLoaderListener.onSuccess(file.toUri())
             } catch (e: Exception) {
                 fileLoaderListener.onError(e.toString())
+            }
+        }
+    }
+
+    fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                tripRepository.onTripEvent(tripId, tripStatusCode)
             }
         }
     }

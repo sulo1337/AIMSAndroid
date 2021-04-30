@@ -2,6 +2,7 @@ package com.example.aimsandroid.fragments.trips.dialogs
 
 import androidx.appcompat.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -63,7 +64,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding = DialogWaypointDetailsBinding.inflate(inflater)
         binding.deliveryFormLayout.visibility = View.GONE
         binding.pickUpFormLayout.visibility = View.GONE
-        tripRepository = TripRepository(getDatabase(requireActivity().application))
+        tripRepository = TripRepository(getDatabase(requireActivity().application), requireActivity().application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE))
         return binding.root
     }
 

@@ -2,6 +2,7 @@ package com.example.aimsandroid.fragments.home.currenttrip.dialogs
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -30,6 +31,7 @@ import com.example.aimsandroid.fragments.home.HomeFragmentDirections
 import com.example.aimsandroid.repository.TripRepository
 import com.example.aimsandroid.utils.FileLoaderListener
 import com.example.aimsandroid.utils.OnSaveListener
+import com.example.aimsandroid.utils.TripStatusCode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.here.android.mpa.common.GeoCoordinate
@@ -68,10 +70,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = DialogWaypointDetailsBinding.inflate(inflater)
         binding.waypoint = waypoint
-        tripRepository = TripRepository(getDatabase(requireActivity().application))
+        tripRepository = TripRepository(getDatabase(requireActivity().application), requireActivity().application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE))
         binding.pickUpFormLayout.visibility = View.GONE
         binding.deliveryFormLayout.visibility = View.GONE
-        //TODO fetch real data instead of hard-coding
         lifecycleScope.launch {
             withContext(Dispatchers.IO){
                 val trip = tripRepository.getTripByTripId(waypoint.owningTripId)
@@ -160,6 +161,11 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                     getCurrentDateTimeString()
                 )
                 updateBillOfLading(billOfLading)
+                if(waypoint.waypointTypeDescription == "Source"){
+                    onTripEvent(waypoint.owningTripId, TripStatusCode.ARRIVE_AT_SOURCE)
+                } else {
+                    onTripEvent(waypoint.owningTripId, TripStatusCode.ARRIVE_AT_SITE)
+                }
             }.create().show()
         }
 
@@ -503,6 +509,10 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         Toast.makeText(requireContext(), "Trip Completed!", Toast.LENGTH_LONG).show()
         findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToTripsFragment())
         dismiss()
+    }
+
+    fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode){
+        (parentFragment as HomeFragment).onTripEvent(tripId, tripStatusCode)
     }
 
     companion object {

@@ -32,6 +32,7 @@ import com.example.aimsandroid.fragments.home.currenttrip.CurrentTripAdapter
 import com.example.aimsandroid.fragments.home.currenttrip.dialogs.WaypointDetailDialog
 import com.example.aimsandroid.utils.FileLoaderListener
 import com.example.aimsandroid.utils.OnSaveListener
+import com.example.aimsandroid.utils.TripStatusCode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.here.android.mpa.common.GeoBoundingBox
 import com.here.android.mpa.common.GeoCoordinate
@@ -95,6 +96,10 @@ class HomeFragment : Fragment() {
                     "Yes"
                 ) { dialog, which ->
                     startNavigationMode()
+                    val currentTripId = viewModel.currentTrip.value?.trip?.tripId
+                    if(currentTripId != null) {
+                        onTripEvent(currentTripId, TripStatusCode.DRIVING)
+                    }
                 }.create().show()
         }
 
@@ -416,5 +421,9 @@ class HomeFragment : Fragment() {
         Handler(Looper.getMainLooper()).postDelayed({
             loader.dismiss()
         }, 1000)
+    }
+
+    fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode){
+        viewModel.onTripEvent(tripId, tripStatusCode)
     }
 }

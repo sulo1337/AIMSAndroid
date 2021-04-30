@@ -24,6 +24,7 @@ import com.example.aimsandroid.fragments.trips.TripsFragment
 import com.example.aimsandroid.fragments.trips.TripsFragmentDirections
 import com.example.aimsandroid.utils.FileLoaderListener
 import com.example.aimsandroid.utils.OnSaveListener
+import com.example.aimsandroid.utils.TripStatusCode
 import sortWaypointBySeqNum
 
 
@@ -108,6 +109,7 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
                     "Yes"
                 ) { dialoginterface, i ->
                     prefs.edit().putLong("currentTripId", tripWithWaypoints.trip.tripId).apply()
+                    (parentFragment as TripsFragment).getViewModel().onTripEvent(tripWithWaypoints.trip.tripId, TripStatusCode.SELECT_TRIP)
                     this.findNavController().navigate(TripsFragmentDirections.actionTripsFragmentToHomeFragment(true))
                     dismiss()
                 }.create().show()
