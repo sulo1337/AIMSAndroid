@@ -98,9 +98,11 @@ data class BillOfLading(
     val billOfLadingNumber: Long?,
     val loadingStarted: String?,
     val loadingEnded: String?,
+    val product: String?,
     val grossQuantity: Double?,
     val netQuantity: Double?,
-    val arrivedAt: String?
+    val arrivedAt: String?,
+    var synced: Boolean
 )
 
 data class WaypointWithBillOfLading(

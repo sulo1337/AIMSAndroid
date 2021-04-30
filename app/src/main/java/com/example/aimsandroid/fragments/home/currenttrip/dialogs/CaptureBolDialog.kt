@@ -229,9 +229,11 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
             parseLong(binding.deliveryForm.billOfLadingNumber.text.toString()),
             binding.deliveryForm.deliveryStarted.text.toString(),
             binding.deliveryForm.deliveryEnded.text.toString(),
+            binding.deliveryForm.productDropped.text.toString(),
             java.lang.Double.parseDouble(binding.deliveryForm.grossQuantity.text.toString()),
             java.lang.Double.parseDouble(binding.deliveryForm.netQuantity.text.toString()),
-            this.billOfLading.value!!.arrivedAt
+            this.billOfLading.value!!.arrivedAt,
+            false
         )
     }
 
@@ -248,9 +250,11 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
             parseLong(binding.pickUpForm.billOfLadingNumber.text.toString()),
             binding.pickUpForm.pickupStarted.text.toString(),
             binding.pickUpForm.pickupEnded.text.toString(),
+            binding.pickUpForm.productPickedUp.text.toString(),
             java.lang.Double.parseDouble(binding.pickUpForm.grossQuantity.text.toString()),
             java.lang.Double.parseDouble(binding.pickUpForm.netQuantity.text.toString()),
-            this.billOfLading.value!!.arrivedAt
+            this.billOfLading.value!!.arrivedAt,
+            false
         )
     }
 
