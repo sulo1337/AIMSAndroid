@@ -107,7 +107,7 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
                 binding.pickUpForm.captureSignatureButton.visibility = View.GONE
                 binding.pickUpForm.initialFuelStickReading.setText(it.initialMeterReading.toString())
                 binding.pickUpForm.finalFuelStickReading.setText(it.finalMeterReading.toString())
-                binding.pickUpForm.productPickedUp.setText("Implement this")
+                binding.pickUpForm.productPickedUp.setText(it.product)
                 binding.pickUpForm.grossQuantity.setText(it.grossQuantity.toString())
                 binding.pickUpForm.netQuantity.setText(it.netQuantity.toString())
                 binding.pickUpForm.pickupTicketNumber.setText(it.deliveryTicketNumber.toString())
@@ -129,7 +129,7 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
                 binding.deliveryForm.captureSignatureButton.visibility = View.GONE
                 binding.deliveryForm.initialFuelStickReading.setText(it.initialMeterReading.toString())
                 binding.deliveryForm.finalFuelStickReading.setText(it.finalMeterReading.toString())
-                binding.deliveryForm.productDropped.setText("Implement this")
+                binding.deliveryForm.productDropped.setText(it.product)
                 binding.deliveryForm.grossQuantity.setText(it.grossQuantity.toString())
                 binding.deliveryForm.netQuantity.setText(it.netQuantity.toString())
                 binding.deliveryForm.deliveryTicketNumber.setText(it.deliveryTicketNumber.toString())
