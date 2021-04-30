@@ -14,12 +14,22 @@ import retrofit2.http.Query
 import java.lang.Exception
 
 interface Dispatcher {
-    @GET("{Id}")
+    @GET("GetTripListDetailByDriver/{Id}")
     @Throws(Exception::class)
     fun getTripsAsync(
         @Path("Id") driverId: String,
         @Query("apiKey") apiKey: String
-    ): Deferred<TripDataContainer>
+    ): Deferred<ResponseContainer>
+
+    @GET("TripStatusPut/{Id}/{tripId}/{statusCode}/{statusMessage}/true/{statusDate}")
+    fun putTripEventStatusAsync(
+        @Path("Id") driverId: String,
+        @Path("tripId") tripId: String,
+        @Path("statusCode") statusCode: String,
+        @Path("statusMessage") statusMessage: String,
+        @Path("statusDate") statusDate: String,
+        @Query("apiKey") apiKey: String
+    ): Deferred<PutTripStatusResponseContainer>
 }
 
 private val moshi = Moshi.Builder()
@@ -34,7 +44,7 @@ object Network{
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         val httpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
         retrofit= Retrofit.Builder()
-            .baseUrl("https://api.appery.io/rest/1/apiexpress/api/DispatcherMobileApp/GetTripListDetailByDriver/")
+            .baseUrl("https://api.appery.io/rest/1/apiexpress/api/DispatcherMobileApp/")
 //            .baseUrl("http://a4b36076744b.ngrok.io")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())

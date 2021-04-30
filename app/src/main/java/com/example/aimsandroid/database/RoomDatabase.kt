@@ -46,9 +46,12 @@ interface TripDao {
 
     @Query("select * from trips_table where tripId = :tripId")
     suspend fun getTrip(tripId: Long): Trip
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTripEvent(tripEvent: TripEvent)
 }
 
-@Database(entities = [Trip::class, WayPoint::class, BillOfLading::class, TripStatus::class], version = 2)
+@Database(entities = [Trip::class, WayPoint::class, BillOfLading::class, TripStatus::class, TripEvent::class], version = 2)
 abstract class TripDatabase: RoomDatabase() {
     abstract val tripDao: TripDao
 }

@@ -1,6 +1,5 @@
 import android.app.Activity
 import androidx.appcompat.app.AlertDialog
-import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -8,7 +7,11 @@ import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.WayPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
+
+val API_KEY = "f20f8b25-b149-481c-9d2c-41aeb76246ef"
 
 fun SharedPreferences.Editor.putDouble(key: String, double: Double) =
     putLong(key, java.lang.Double.doubleToRawLongBits(double))
@@ -37,6 +40,10 @@ fun getLoader(activity: Activity): AlertDialog{
         .create()
     alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     return alertDialog
+}
+
+fun getCurrentDateTimeString(): String {
+    return  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())
 }
 
 val colorGreen = Color.rgb(0,171,102)

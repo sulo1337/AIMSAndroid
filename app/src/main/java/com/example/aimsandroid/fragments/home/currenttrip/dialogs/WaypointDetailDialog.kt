@@ -35,6 +35,7 @@ import com.example.aimsandroid.utils.TripStatusCode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.here.android.mpa.common.GeoCoordinate
+import getCurrentDateTimeString
 import getFullAddress
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -251,13 +252,6 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
         getSignatureUri()
         getBolUri()
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private fun getCurrentDateTimeString(): String{
-        val sdf = SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z")
-        val currentDateandTime: String = sdf.format(Date())
-        return currentDateandTime
     }
 
     private fun updateBillOfLading(billOfLading: BillOfLading){
