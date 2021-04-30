@@ -64,7 +64,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding = DialogWaypointDetailsBinding.inflate(inflater)
         binding.deliveryFormLayout.visibility = View.GONE
         binding.pickUpFormLayout.visibility = View.GONE
-        tripRepository = TripRepository(getDatabase(requireActivity().application), requireActivity().application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE))
+        tripRepository = TripRepository(requireActivity().application)
         return binding.root
     }
 

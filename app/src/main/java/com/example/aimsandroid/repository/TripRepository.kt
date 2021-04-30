@@ -1,6 +1,8 @@
 package com.example.aimsandroid.repository
 
 import API_KEY
+import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.example.aimsandroid.database.*
@@ -13,9 +15,11 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.net.UnknownHostException
 
-class TripRepository(private val database: TripDatabase, private val prefs: SharedPreferences) {
-    val trips = database.tripDao.getTripsWithWaypoints()
+class TripRepository(application: Application) {
+    private val prefs = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
     private val driverId = prefs.getString("driverId", "D1")!!.trim()
+    val database = getDatabase(application, driverId)
+    val trips = database.tripDao.getTripsWithWaypoints()
     fun getTripWithWaypointsByTripId(tripId: Long) = database.tripDao.getTripWithWaypointsByTripId(tripId)
     suspend fun getTripByTripId(tripId: Long) = database.tripDao.getTrip(tripId)
     suspend fun insertTrip(trip: Trip) = database.tripDao.insertTrip(trip)

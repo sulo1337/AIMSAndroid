@@ -58,11 +58,11 @@ abstract class TripDatabase: RoomDatabase() {
 
 private lateinit var INSTANCE: TripDatabase
 
-fun getDatabase(context: Context): TripDatabase {
+fun getDatabase(context: Context, driverCode: String): TripDatabase {
     synchronized(TripDatabase::class.java) {
         if(!::INSTANCE.isInitialized) {
             INSTANCE = Room.databaseBuilder(context.applicationContext,
-            TripDatabase::class.java, "trips").build()
+            TripDatabase::class.java, driverCode+"_trips").build()
         }
     }
     return INSTANCE

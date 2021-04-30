@@ -35,8 +35,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private var _currentTripId: Long = -1L
     private var prefs: SharedPreferences = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
     private val locationRepository = LocationRepository(application)
-    private val database = getDatabase(application)
-    val tripRepository = TripRepository(database, prefs)
+    val tripRepository = TripRepository(application)
     private val _currentTripCompleted = MutableLiveData<Boolean>(false)
     val currentTripCompleted: LiveData<Boolean>
         get() = _currentTripCompleted

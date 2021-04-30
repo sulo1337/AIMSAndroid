@@ -90,7 +90,7 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loader = getLoader(requireActivity())
-        tripRepository = TripRepository(getDatabase(requireActivity().application), requireActivity().application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE))
+        tripRepository = TripRepository(requireActivity().application)
         billOfLading = tripRepository.getBillOfLading(waypoint.seqNum, waypoint.owningTripId)
 
         binding.destInfo.text = waypoint.destinationName

@@ -27,8 +27,7 @@ import java.io.FileOutputStream
 import java.lang.Exception
 
 class TripsViewModel(application: Application) : AndroidViewModel(application) {
-    private val database = getDatabase(application)
-    private val tripRepository = TripRepository(database, application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE))
+    private val tripRepository = TripRepository(application)
     val trips = tripRepository.trips
 
     private val _refreshing = MutableLiveData<Boolean>()
