@@ -23,6 +23,7 @@ class ForegroundService: Service() {
     private lateinit var notification: Notification
     private var doWorkRunnable: Runnable? = null
     private var handler: Handler? = null
+    lateinit var tripRepository: TripRepository
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         createNotificationChannel()
@@ -43,6 +44,7 @@ class ForegroundService: Service() {
             startForeground(1, notification)
             endWork()
         }
+        tripRepository = TripRepository(application)
         return START_STICKY
     }
 
@@ -76,10 +78,6 @@ class ForegroundService: Service() {
         if(handler!=null && doWorkRunnable != null) {
             handler!!.removeCallbacks(doWorkRunnable!!)
         }
-    }
-
-    private suspend fun syncTripsData() {
-        Log.i("aimsDebug", "Syncing...")
     }
 
     override fun onBind(intent: Intent?): IBinder? {

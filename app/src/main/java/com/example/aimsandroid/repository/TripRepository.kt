@@ -17,7 +17,7 @@ import java.net.UnknownHostException
 
 class TripRepository(application: Application) {
     private val prefs = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
-    private val driverId = prefs.getString("driverId", "D1")!!.trim()
+    val driverId = prefs.getString("driverId", "D1")!!.trim()
     val database = getDatabase(application, driverId)
     val trips = database.tripDao.getTripsWithWaypoints()
     fun getTripWithWaypointsByTripId(tripId: Long) = database.tripDao.getTripWithWaypointsByTripId(tripId)
@@ -48,13 +48,13 @@ class TripRepository(application: Application) {
         if(billOfLading.complete == true) {
             try {
                 //TODO check status code 1000 on response
-                Network.dispatcher.putTripProductPickupAsync(
+                putTripProductPickupAsync(
                     driverId,
                     "170",
                     "27",
                     //TODO implement product id
                     "1175",
-                    billOfLading.billOfLadingNumber.toString().trim(),
+                    billOfLading.billOfLadingNumber.toString(),
                     billOfLading.loadingStarted.toString(),
                     billOfLading.loadingEnded.toString(),
                     billOfLading.grossQuantity.toString(),
@@ -97,9 +97,9 @@ class TripRepository(application: Application) {
             )
             try{
                 //TODO check status code 1000 on response
-                Network.dispatcher.putTripEventStatusAsync(
+                putTripEventStatusAsync(
                     tripEvent.driverId,
-                    tripEvent.tripId.toString().trim(),
+                    tripEvent.tripId.toString(),
                     tripEvent.statusCode,
                     tripEvent.statusMessage,
                     tripEvent.datetime,
@@ -142,4 +142,48 @@ class TripRepository(application: Application) {
             }
         }
     }
+    suspend fun getUnSyncedBillOfLading() = database.tripDao.getUnSyncedBillOfLading()
+    suspend fun getUnSyncedTripEvents() = database.tripDao.getUnSyncedTripEvents()
+    suspend fun insertBillOfLadingNoNetwork(billOfLading: BillOfLading) = database.tripDao.insertBillOfLading(billOfLading)
+    suspend fun insertTripEventNoNetwork(tripEvent: TripEvent) = database.tripDao.insertTripEvent(tripEvent)
+
+    fun putTripProductPickupAsync(
+        driverId: String,
+        tripId: String,
+        sourceId: String,
+        productId: String,
+        bolNum: String,
+        startTime: String,
+        endTime: String,
+        grossQty: String,
+        netQty: String,
+        API_KEY: String
+    ) = Network.dispatcher.putTripProductPickupAsync(
+        driverId.trim(),
+        tripId.trim(),
+        sourceId.trim(),
+        productId.trim(),
+        bolNum.trim(),
+        startTime.trim(),
+        endTime.trim(),
+        grossQty.trim(),
+        netQty.trim(),
+        API_KEY
+    )
+
+    fun putTripEventStatusAsync(
+        driverId: String,
+        tripId: String,
+        statusCode: String,
+        statusMessage: String,
+        statusDate: String,
+        API_KEY: String
+    ) = Network.dispatcher.putTripEventStatusAsync(
+        driverId.trim(),
+        tripId.trim(),
+        statusCode.trim(),
+        statusMessage.trim(),
+        statusDate.trim(),
+        API_KEY
+    )
 }

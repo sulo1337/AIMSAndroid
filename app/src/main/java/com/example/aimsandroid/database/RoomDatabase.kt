@@ -49,6 +49,12 @@ interface TripDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTripEvent(tripEvent: TripEvent)
+
+    @Query("select * from billoflading_table where synced = 0 and complete = 1")
+    suspend fun getUnSyncedBillOfLading(): List<BillOfLading>
+
+    @Query("select * from trips_events_table where synced = 0")
+    suspend fun getUnSyncedTripEvents(): List<TripEvent>
 }
 
 @Database(entities = [Trip::class, WayPoint::class, BillOfLading::class, TripStatus::class, TripEvent::class], version = 2)

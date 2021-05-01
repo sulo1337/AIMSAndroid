@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-val API_KEY = "f20f8b25-b149-481c-9d2c-41aeb76246ef"
+val API_KEY: String = "f20f8b25-b149-481c-9d2c-41aeb76246ef"
 
 fun SharedPreferences.Editor.putDouble(key: String, double: Double) =
     putLong(key, java.lang.Double.doubleToRawLongBits(double))
