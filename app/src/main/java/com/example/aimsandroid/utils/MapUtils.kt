@@ -15,6 +15,7 @@ import com.here.android.mpa.common.PositioningManager
 import com.here.android.mpa.mapping.Map
 import com.here.android.mpa.mapping.MapState
 import com.here.android.mpa.routing.Maneuver
+import java.lang.Exception
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
@@ -82,7 +83,11 @@ fun HomeFragment.updateEta(eta: Date) {
 }
 
 fun HomeFragment.updateNextManeuverIcon(icon: Maneuver.Icon?) {
-    binding.nextManeuverLayout.nextManeuverIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, getManeuverDrawableId(icon), null))
+    try{
+        binding.nextManeuverLayout.nextManeuverIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, getManeuverDrawableId(icon), null))
+    } catch (e: Exception) {
+        
+    }
 }
 
 fun HomeFragment.updateDistanceRemaining(distance: Int) {

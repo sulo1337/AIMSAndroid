@@ -1,12 +1,14 @@
 import android.app.Activity
-import androidx.appcompat.app.AlertDialog
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
+import androidx.appcompat.app.AlertDialog
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.WayPoint
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,6 +46,13 @@ fun getLoader(activity: Activity): AlertDialog{
 
 fun getCurrentDateTimeString(): String {
     return  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())
+}
+
+fun getStackTraceString(e: Throwable): String {
+    val sw = StringWriter()
+    val pw = PrintWriter(sw)
+    e.printStackTrace(pw)
+    return sw.toString()
 }
 
 val colorGreen = Color.rgb(0,171,102)

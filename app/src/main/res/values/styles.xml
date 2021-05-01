@@ -3,15 +3,16 @@
     <!-- //TODO refactor using inheritance concept -->
 
     <style name="san_francisco_bold">
-        <item name="android:fontFamily">@font/san_francisco_display_regular</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textStyle">bold</item>
         <item name="android:typeface">normal</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="san_francisco_regular">
-        <item name="fontFamily">@font/san_francisco_display_regular</item>
+        <item name="fontFamily">@font/roboto_light</item>
         <item name="android:typeface">normal</item>
+        <item name="android:textFontWeight">800</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 

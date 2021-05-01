@@ -55,7 +55,7 @@ suspend fun ForegroundService.syncTripsData() {
                     API_KEY
                 ).await()
                 if(response.data.responseStatus[0].statusCode == 1000) {
-                    Log.i("aimsDebugSyncService", "Sent trip status: $tripEvent")
+                    Log.i("aimsDebugData", "Sent trip status: $tripEvent")
                     tripEvent.synced = true
                     tripRepository.insertTripEventNoNetwork(tripEvent)
                 }

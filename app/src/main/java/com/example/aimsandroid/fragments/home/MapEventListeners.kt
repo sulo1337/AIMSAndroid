@@ -1,6 +1,7 @@
 package com.example.aimsandroid.fragments.home
 
 import android.graphics.PointF
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.widget.Toast
 import com.example.aimsandroid.utils.*
@@ -17,6 +18,8 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
 
     private var m_navigationManager: NavigationManager = NavigationManager.getInstance()
 
+    val tts = TextToSpeechUtil(homeFragment.requireContext())
+
     val m_maneuverListener: NavigationManager.ManeuverEventListener = object: NavigationManager.ManeuverEventListener(){
         override fun onManeuverEvent() {
         }
@@ -24,7 +27,7 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
 
     val m_instructionListener: NavigationManager.NewInstructionEventListener = object : NavigationManager.NewInstructionEventListener() {
         override fun onNewInstructionEvent() {
-            homeFragment.updateNextManeuverIcon(m_navigationManager.nextManeuver?.icon)
+
         }
     }
 
@@ -59,6 +62,7 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
                 if(geoPosition is MatchedGeoPosition) {
                     geoPosition.roadElement?.speedLimit?.let { homeFragment.updateSpeedLimit(it) }
                 }
+                homeFragment.updateNextManeuverIcon(m_navigationManager.nextManeuver?.icon)
 //                homeFragment.updateSpeedLimit(m_navigationManager.lane)
             }
         }
@@ -169,6 +173,7 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
     val m_audioPlayerDelegate: AudioPlayerDelegate = object : AudioPlayerDelegate {
         override fun playText(s: String): Boolean {
             Log.i("aimsDebugNavigationAudio", s)
+            tts.speakText(s, TextToSpeech.QUEUE_FLUSH)
             return false
         }
 

@@ -379,6 +379,8 @@ open class MapFragmentView(
                     val voiceGuidanceOptions = m_navigationManager!!.voiceGuidanceOptions
                     voiceGuidanceOptions.setVoiceSkin(voiceCatalog.getLocalVoiceSkin(voiceId)!!)
                     m_navigationManager!!.naturalGuidanceMode = EnumSet.allOf(NavigationManager.NaturalGuidanceMode::class.java)
+                } else {
+                    Log.i("aimsDebugNavigationAudio", error.toString())
                 }
             }
             return true

@@ -1,14 +1,12 @@
 package com.example.aimsandroid
 
 import android.Manifest
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.Network
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -18,7 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.gu.toolargetool.TooLargeTool
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
-import com.jakewharton.processphoenix.ProcessPhoenix
+import getStackTraceString
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +34,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.setDefaultUncaughtExceptionHandler { t, e ->
+            Log.e(
+                "aimsDebugException",
+                "Uncaught exception in ${t.name} ${getStackTraceString(e)}"
+            )
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+        }
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(false);
@@ -45,26 +50,31 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemReselectedListener {  }
         foregroundServiceIntent = Intent(this, ForegroundService::class.java)
         foregroundServiceIntent.setAction("Online")
-        checkLogin()
-        if(!ForegroundService.isRunning()){
-            startForegroundService(foregroundServiceIntent)
+        if(checkLogin()){
+            if(!ForegroundService.isRunning()){
+                startForegroundService(foregroundServiceIntent)
+            }
+            TooLargeTool.startLogging(this.application)
+            try {
+                var process = Runtime.getRuntime().exec("logcat -d")
+                process = Runtime.getRuntime().exec("logcat -f " + "/storage/emulated/0/" + "Logging.txt")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
-        TooLargeTool.startLogging(this.application)
     }
 
-    private fun setupForegroundService() {
 
-    }
-
-    private fun checkLogin() {
+    private fun checkLogin(): Boolean {
         val prefs: SharedPreferences = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         val driverId = prefs.getString("driverId", null)
         val driverKey = prefs.getString("driverKey", null)
         if(driverId == null || driverKey == null) {
             startLoginActivity()
             finish()
-        } else {
-            TedPermission.with(this)
+            return false
+        }
+        TedPermission.with(this)
                 .setPermissionListener(object: PermissionListener{
                     override fun onPermissionGranted() {
                     }
@@ -84,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                     Manifest.permission.READ_EXTERNAL_STORAGE
                     )
                 .check()
-        }
+        return true
     }
 
     private fun startLoginActivity() {
@@ -92,24 +102,10 @@ class MainActivity : AppCompatActivity() {
         startActivity(loginIntent)
     }
 
-    private fun restartApp() {
-        ProcessPhoenix.triggerRebirth(applicationContext)
-    }
-
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
         outPersistentState.clear()
         outState.clear()
-    }
-
-    private fun isServiceRunning(serviceClass: Class<*>): Boolean{
-        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.className)) {
-                return true
-            }
-        }
-        return false
     }
 
     override fun onDestroy() {

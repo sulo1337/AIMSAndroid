@@ -17,7 +17,7 @@ import java.net.UnknownHostException
 
 class TripRepository(application: Application) {
     private val prefs = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
-    val driverId = prefs.getString("driverId", "D1")!!.trim()
+    val driverId = prefs.getString("driverId", null)!!.trim()
     val database = getDatabase(application, driverId)
     val trips = database.tripDao.getTripsWithWaypoints()
     fun getTripWithWaypointsByTripId(tripId: Long) = database.tripDao.getTripWithWaypointsByTripId(tripId)
@@ -47,8 +47,7 @@ class TripRepository(application: Application) {
     private suspend fun insertSourceBillOfLading(billOfLading: BillOfLading) {
         if(billOfLading.complete == true) {
             try {
-                //TODO check status code 1000 on response
-                putTripProductPickupAsync(
+                val response = putTripProductPickupAsync(
                     driverId,
                     "170",
                     "27",
@@ -61,8 +60,10 @@ class TripRepository(application: Application) {
                     billOfLading.netQuantity.toString(),
                     API_KEY
                 ).await()
-                billOfLading.synced = true
-                Log.i("aimsDebugData", "Sent bill of lading: $billOfLading")
+                if(response.data.responseStatus[0].statusCode == 1000) {
+                    billOfLading.synced = true
+                    Log.i("aimsDebugData", "Sent bill of lading: $billOfLading")
+                }
             } catch (e: UnknownHostException) {
                 billOfLading.synced = false
                 Log.w("aimsDebugData", "No internet connection, saving for later: $billOfLading")
@@ -95,8 +96,7 @@ class TripRepository(application: Application) {
                 false
             )
             try{
-                //TODO check status code 1000 on response
-                putTripEventStatusAsync(
+                val response = putTripEventStatusAsync(
                     tripEvent.driverId,
                     tripEvent.tripId.toString(),
                     tripEvent.statusCode,
@@ -104,8 +104,12 @@ class TripRepository(application: Application) {
                     tripEvent.datetime,
                     API_KEY
                 ).await()
-                tripEvent.synced = true
-                Log.i("aimsDebugData", "Sent trip status: $tripEvent")
+                response.let{
+                    if(it.data.responseStatus[0].statusCode == 1000){
+                        tripEvent.synced = true
+                        Log.i("aimsDebugData", "Sent trip status: $tripEvent")
+                    }
+                }
             } catch(e: UnknownHostException){
                 Log.w("aimsDebugData", "No internet connection, saving for later: $tripEvent")
             } catch (e: Exception){
@@ -117,27 +121,29 @@ class TripRepository(application: Application) {
     }
 
     suspend fun refreshTrips(fetchApiEventListener: FetchApiEventListener) {
-        withContext(Dispatchers.IO){
-            try {
-                val response = Network.dispatcher.getTripsAsync(driverId, API_KEY).await()
-                val data =response.data
-                val responseStatus = data.responseStatus
-                val tripSections = data.tripSections
-                val trips = ArrayList<Trip>()
-                val waypoints = ArrayList<WayPoint>()
-                if(tripSections!=null){
-                    for(tripSection in tripSections){
-                        val trip = tripSection.getTrip()
-                        val waypoint = tripSection.getWaypoint()
-                        trips.add(trip)
-                        waypoints.add(waypoint)
+        if(driverId!=null){
+            withContext(Dispatchers.IO){
+                try {
+                    val response = Network.dispatcher.getTripsAsync(driverId, API_KEY).await()
+                    val data =response.data
+                    val responseStatus = data.responseStatus
+                    val tripSections = data.tripSections
+                    val trips = ArrayList<Trip>()
+                    val waypoints = ArrayList<WayPoint>()
+                    if(tripSections!=null){
+                        for(tripSection in tripSections){
+                            val trip = tripSection.getTrip()
+                            val waypoint = tripSection.getWaypoint()
+                            trips.add(trip)
+                            waypoints.add(waypoint)
+                        }
+                        insertAllTrips(trips)
+                        insertAllWaypoints(waypoints)
                     }
-                    insertAllTrips(trips)
-                    insertAllWaypoints(waypoints)
+                    fetchApiEventListener.onSuccess()
+                } catch (e: Exception){
+                    fetchApiEventListener.onError(e.toString())
                 }
-                fetchApiEventListener.onSuccess()
-            } catch (e: Exception){
-                fetchApiEventListener.onError(e.toString())
             }
         }
     }

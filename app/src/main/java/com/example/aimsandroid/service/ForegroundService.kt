@@ -27,7 +27,7 @@ class ForegroundService: Service() {
         }
     }
 
-    val INTERVAL = 60000L
+    val INTERVAL = 30000L
     val CHANNEL_ID = "AIMSNetworkService"
     val NOTIFICATION_ID = 1
     private lateinit var notification: Notification
@@ -39,12 +39,8 @@ class ForegroundService: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         createNotificationChannel()
 
-        if(internetIsConnected()) {
-            buildNotification("Communicating with the dispatcher...")
-        } else {
-            buildNotification("Running on offline mode...")
-        }
-
+        buildNotification("Communicating with the dispatcher...")
+        startForeground(NOTIFICATION_ID, notification)
         val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
@@ -58,7 +54,6 @@ class ForegroundService: Service() {
                 updateNotification()
             }
         })
-        startForeground(NOTIFICATION_ID, notification)
         tripRepository = TripRepository(application)
         running = true
         doWork()
@@ -95,9 +90,13 @@ class ForegroundService: Service() {
         doWorkRunnable = Runnable {
             CoroutineScope(Job()).launch {
                 withContext(Dispatchers.IO){
-                    if(internetAvailable == true) {
+                    if(internetIsConnected()) {
+                        buildNotification("Communicating with the dispatcher...")
                         syncTripsData()
+                    } else {
+                        buildNotification("Running on offline mode...")
                     }
+                    updateNotification()
                     doWorkRunnable?.let { handler!!.postDelayed(it, INTERVAL) }
                 }
             }
@@ -123,11 +122,11 @@ class ForegroundService: Service() {
     override fun onDestroy() {
         stopForeground(true)
         stopSelf()
-        if(doWorkRunnable != null) {
-            handler?.removeCallbacks(doWorkRunnable!!)
-            handler?.removeCallbacksAndMessages(null)
-            doWorkRunnable = null
-        }
+//        if(doWorkRunnable != null) {
+//            handler?.removeCallbacks(doWorkRunnable!!)
+//            handler?.removeCallbacksAndMessages(null)
+//            doWorkRunnable = null
+//        }
         running = false
         super.onDestroy()
     }
