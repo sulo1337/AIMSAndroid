@@ -6,10 +6,15 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.os.SystemClock
+import android.provider.ContactsContract.Intents.Insert.ACTION
+import android.provider.SyncStateContract
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -20,7 +25,6 @@ import com.gu.toolargetool.TooLargeTool
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.jakewharton.processphoenix.ProcessPhoenix
-
 class MainActivity : AppCompatActivity() {
     var PERMISSION_ALL = 1
     private lateinit var foregroundServiceIntent: Intent
@@ -49,11 +53,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupForegroundService() {
+        val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         foregroundServiceIntent = Intent(this, ForegroundService::class.java)
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            startForegroundService(foregroundServiceIntent)
-        } else {
-            startService(foregroundServiceIntent)
+        foregroundServiceIntent.setAction("Offline")
+        startForegroundService(foregroundServiceIntent)
+        connectivityManager.let {
+            it.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    foregroundServiceIntent.setAction("Online")
+                    startForegroundService(foregroundServiceIntent)
+                }
+
+                override fun onLost(network: Network) {
+                    foregroundServiceIntent.setAction("Offline")
+                    startForegroundService(foregroundServiceIntent)
+                }
+            })
         }
     }
 

@@ -21,18 +21,28 @@ class ForegroundService: Service() {
     val CHANNEL_ID = "AIMSNetworkService"
 
     private lateinit var notification: Notification
-    private lateinit var doWorkRunnable: Runnable
-    private val tripRepository = TripRepository(application)
+    private var doWorkRunnable: Runnable? = null
+    private var handler: Handler? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         createNotificationChannel()
-
-        notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentText("Communicating with the dispatcher...")
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setSound(null)
-            .build()
-        doWork()
+        if(intent?.action.equals("Online")) {
+            notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentText("Communicating with the dispatcher...")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSound(null)
+                .build()
+            startForeground(1, notification)
+            doWork()
+        } else {
+            notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentText("Running on offline mode...")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSound(null)
+                .build()
+            startForeground(1, notification)
+            endWork()
+        }
         return START_STICKY
     }
 
@@ -49,23 +59,27 @@ class ForegroundService: Service() {
     }
 
     private fun doWork() {
-        val handler = Handler(Looper.getMainLooper())
+        handler = Handler(Looper.getMainLooper())
         doWorkRunnable = Runnable {
             CoroutineScope(Job()).launch {
                 withContext(Dispatchers.IO){
-                    startForeground(1, notification)
                     syncTripsData()
-                    stopForeground(true)
-                    handler.postDelayed(doWorkRunnable, INTERVAL)
+                    doWorkRunnable?.let { handler!!.postDelayed(it, INTERVAL) }
                 }
             }
         }
-        handler.post(doWorkRunnable)
+        handler!!.post(doWorkRunnable!!)
         return
     }
 
-    private suspend fun syncTripsData() {
+    private fun endWork() {
+        if(handler!=null && doWorkRunnable != null) {
+            handler!!.removeCallbacks(doWorkRunnable!!)
+        }
+    }
 
+    private suspend fun syncTripsData() {
+        Log.i("aimsDebug", "Syncing...")
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -74,6 +88,7 @@ class ForegroundService: Service() {
 
     override fun onDestroy() {
         stopForeground(true)
+        stopSelf()
         super.onDestroy()
     }
 }
