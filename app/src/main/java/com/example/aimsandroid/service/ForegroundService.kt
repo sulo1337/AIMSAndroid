@@ -27,7 +27,7 @@ class ForegroundService: Service() {
         }
     }
 
-    val INTERVAL = 5000L
+    val INTERVAL = 60000L
     val CHANNEL_ID = "AIMSNetworkService"
     val NOTIFICATION_ID = 1
     private lateinit var notification: Notification
@@ -38,7 +38,13 @@ class ForegroundService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         createNotificationChannel()
-        buildNotification("Initializing background worker...")
+
+        if(internetIsConnected()) {
+            buildNotification("Communicating with the dispatcher...")
+        } else {
+            buildNotification("Running on offline mode...")
+        }
+
         val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
