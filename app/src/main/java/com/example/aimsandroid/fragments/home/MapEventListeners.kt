@@ -166,9 +166,9 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
         }
     }
 
-     val m_audioPlayerDelegate: AudioPlayerDelegate = object : AudioPlayerDelegate {
+    val m_audioPlayerDelegate: AudioPlayerDelegate = object : AudioPlayerDelegate {
         override fun playText(s: String): Boolean {
-            Log.i("aimsDebug", s)
+            Log.i("aimsDebugNavigationAudio", s)
             return false
         }
 

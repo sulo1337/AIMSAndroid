@@ -208,8 +208,10 @@ open class MapFragmentView(
                             Toast.makeText(
                                 m_activity,
                                 "Error:route calculation returned error code: $routingError",
-                                Toast.LENGTH_LONG
+                                Toast.LENGTH_SHORT
                             ).show()
+                            parentFragment.hideLoader()
+                            parentFragment.afterRouteCalculationError()
                         }
                     }
 
@@ -226,12 +228,12 @@ open class MapFragmentView(
      * See https://developer.android.com/guide/components/services.html#Foreground
      */
 
-     fun startNavigation() {
+    fun startNavigation() {
         /* Configure Navigation manager to launch navigation on current map */
         m_navigationManager!!.setMap(m_map)
-         if(m_navigationManager!!.countryCode == null) {
-             setUpVoiceNavigation()
-         }
+        if(m_navigationManager!!.countryCode == null) {
+            setUpVoiceNavigation()
+        }
         /*
          * Start the turn-by-turn navigation.Please note if the transport mode of the passed-in
          * route is pedestrian, the NavigationManager automatically triggers the guidance which is
@@ -261,9 +263,9 @@ open class MapFragmentView(
         val wmlp = alertDialog.window!!.attributes
         wmlp.gravity = Gravity.TOP or Gravity.LEFT
         wmlp.verticalMargin = 0.6f
-         if(m_navigationManager!!.countryCode == null){
-             alertDialog.show()
-         }
+        if(m_navigationManager!!.countryCode == null){
+            alertDialog.show()
+        }
 //        m_navigationManager!!.startNavigation(m_route!!)
 //        m_map!!.tilt = 0f
 

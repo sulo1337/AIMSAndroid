@@ -225,6 +225,13 @@ class HomeFragment : Fragment() {
         }
     }
 
+    fun afterRouteCalculationError() {
+        hideLoader()
+        if(prefs.getBoolean("navigating", false)) {
+            stopNavigationMode()
+        }
+    }
+
     fun endNavigationOnly() {
         mapFragmentView?.onNavigationEnded()
     }
@@ -261,19 +268,16 @@ class HomeFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        Log.i("aimsDebug", "onPause called")
         mapFragmentView?.onPause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i("aimsDebug", "onDestroy called")
         mapFragmentView?.onDestroy()
     }
 
     override fun onResume() {
         super.onResume()
-        Log.i("aimsDebug", "onResumeCalled")
         mapFragmentView = MapFragmentView.getInstance(this, binding.viewModel!!)
         mapFragmentView!!.initMapFragment()
     }

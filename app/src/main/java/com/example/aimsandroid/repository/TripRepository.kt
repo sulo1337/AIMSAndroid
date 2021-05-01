@@ -62,18 +62,17 @@ class TripRepository(application: Application) {
                     API_KEY
                 ).await()
                 billOfLading.synced = true
-                Log.i("aimsDebugRepository", "Sent bill of lading: $billOfLading")
+                Log.i("aimsDebugData", "Sent bill of lading: $billOfLading")
             } catch (e: UnknownHostException) {
                 billOfLading.synced = false
-                Log.w("aimsDebugRepository", "No internet connection, saving for later: $billOfLading")
+                Log.w("aimsDebugData", "No internet connection, saving for later: $billOfLading")
             } catch (e: Exception) {
                 billOfLading.synced = false
-                Log.w("aimsDebugRepository", "Unexpected error occurred while sending: $billOfLading")
+                Log.w("aimsDebugData", "Unexpected error occurred while sending: $billOfLading")
             } finally {
                 database.tripDao.insertBillOfLading(billOfLading)
             }
         } else {
-            Log.i("aimsDebugRepository", "Updated waypoint information")
             database.tripDao.insertBillOfLading(billOfLading)
         }
     }
@@ -106,11 +105,11 @@ class TripRepository(application: Application) {
                     API_KEY
                 ).await()
                 tripEvent.synced = true
-                Log.i("aimsDebugRepository", "Sent trip status: $tripEvent")
+                Log.i("aimsDebugData", "Sent trip status: $tripEvent")
             } catch(e: UnknownHostException){
-                Log.w("aimsDebugRepository", "No internet connection, saving for later: $tripEvent")
+                Log.w("aimsDebugData", "No internet connection, saving for later: $tripEvent")
             } catch (e: Exception){
-                Log.w("aimsDebugRepository", "Unexpected error while saving: $tripEvent")
+                Log.w("aimsDebugData", "Unexpected error while saving: $tripEvent")
             } finally {
                 database.tripDao.insertTripEvent(tripEvent)
             }

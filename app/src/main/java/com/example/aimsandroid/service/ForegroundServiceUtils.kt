@@ -33,14 +33,14 @@ suspend fun ForegroundService.syncTripsData() {
                     API_KEY
                 ).await()
                 if (response.data.responseStatus[0].statusCode == 1000) {
-                    Log.i("aimsDebugSyncService", "Sent bill of lading: $billOfLading")
+                    Log.i("aimsDebugData", "Sent bill of lading: $billOfLading")
                     billOfLading.synced = true
                     tripRepository.insertBillOfLadingNoNetwork(billOfLading)
                 }
             } catch (e: UnknownHostException) {
-                Log.w("aimsDebugSyncService", "No internet connection, saving for later: $billOfLading")
+                Log.w("aimsDebugData", "No internet connection, saving for later: $billOfLading")
             } catch (e: Exception) {
-                Log.w("aimsDebugSyncService", "Unexpected error occurred while sending: $billOfLading")
+                Log.w("aimsDebugData", "Unexpected error occurred while sending: $billOfLading")
             }
         }
 
@@ -60,19 +60,19 @@ suspend fun ForegroundService.syncTripsData() {
                     tripRepository.insertTripEventNoNetwork(tripEvent)
                 }
             } catch (e: UnknownHostException) {
-                Log.w("aimsDebugSyncService", "No internet connection, saving for later: $tripEvent")
+                Log.w("aimsDebugData", "No internet connection, saving for later: $tripEvent")
             } catch (e: Exception) {
-                Log.w("aimsDebugSyncService", "Unexpected error occurred while sending: $tripEvent")
+                Log.w("aimsDebugData", "Unexpected error occurred while sending: $tripEvent")
             }
         }
 
         tripRepository.refreshTrips(object : FetchApiEventListener{
             override fun onSuccess() {
-                Log.i("aimsDebugSyncService", "Trips Up to Date")
+                Log.i("aimsDebugDataSyncService", "Trips Up to Date")
             }
 
             override fun onError(error: String) {
-                Log.w("aimsDebugSyncService", "Error while updating trips: $error")
+                Log.w("aimsDebugDataSyncService", "Error while updating trips: $error")
             }
         })
     }

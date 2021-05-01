@@ -70,9 +70,9 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
                     rotatedBolBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
                     fOut.flush()
                     fOut.close()
-                    Log.i("aimsDebugFiles", "BOL image saved at path ${file.absolutePath}")
+                    Log.i("aimsDebugDataPersist", "BOL image saved at path ${file.absolutePath}")
                 } catch (e: Exception) {
-                    Log.w("aimsDebugFiles", "Error while saving BOL image: $e")
+                    Log.w("aimsDebugDataPersist", "Error while saving BOL image: $e")
                 }
             }
         }

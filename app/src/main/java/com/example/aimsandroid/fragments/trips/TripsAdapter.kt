@@ -18,7 +18,6 @@ class TripsAdapter(val tripsClickListener: TripsClickListener, private val prefs
 
     override fun onBindViewHolder(holder: TripsAdapter.TripsViewHolder, position: Int) {
         val thisTripWithWaypoints = getItem(position)
-        Log.i("aimsDebug", thisTripWithWaypoints.tripStatus.toString())
         holder.bind(thisTripWithWaypoints, tripsClickListener, prefs)
     }
 
