@@ -72,7 +72,7 @@ suspend fun ForegroundService.syncTripsData() {
             }
 
             override fun onError(error: String) {
-                Log.i("aimsDebugSyncService", "Error while updating trips: $error")
+                Log.w("aimsDebugSyncService", "Error while updating trips: $error")
             }
         })
     }

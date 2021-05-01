@@ -1,15 +1,15 @@
 package com.example.aimsandroid.service
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
 import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.os.postDelayed
-import com.example.aimsandroid.MainActivity
 import com.example.aimsandroid.R
 import com.example.aimsandroid.repository.TripRepository
 import kotlinx.coroutines.*
@@ -65,13 +65,24 @@ class ForegroundService: Service() {
         doWorkRunnable = Runnable {
             CoroutineScope(Job()).launch {
                 withContext(Dispatchers.IO){
-                    syncTripsData()
+                    if(internetIsConnected()) {
+                        syncTripsData()
+                    }
                     doWorkRunnable?.let { handler!!.postDelayed(it, INTERVAL) }
                 }
             }
         }
         handler!!.post(doWorkRunnable!!)
         return
+    }
+
+    fun internetIsConnected(): Boolean {
+        return try {
+            val command = "ping -c 1 google.com"
+            Runtime.getRuntime().exec(command).waitFor() == 0
+        } catch (e: Exception) {
+            false
+        }
     }
 
     private fun endWork() {
