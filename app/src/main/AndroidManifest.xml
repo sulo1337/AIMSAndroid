@@ -36,20 +36,20 @@
         android:theme="@style/Theme.AIMSAndroid.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:ignore="HardcodedDebugMode">
+        <activity android:name=".MapDownloadActivity">
+        </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-        </activity>
-        <!-- <meta-data -->
+        </activity> <!-- <meta-data -->
         <!-- android:name="com.google.android.geo.API_KEY" -->
         <!-- android:value="AIzaSyC6Tp1IsaLSemABoPwFieN0LXFv6lmEq1E"/> -->
         <activity android:name=".MainActivity">
-
         </activity>
-
         <activity android:name=".LoginActivity"/>
 
         <meta-data

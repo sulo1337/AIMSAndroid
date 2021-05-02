@@ -12,7 +12,6 @@
     <style name="san_francisco_regular">
         <item name="fontFamily">@font/roboto_light</item>
         <item name="android:typeface">normal</item>
-        <item name="android:textFontWeight">800</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 

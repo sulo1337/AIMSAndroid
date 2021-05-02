@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.aimsandroid.MapDownloadActivity
 import com.example.aimsandroid.SplashActivity
 import com.example.aimsandroid.databinding.FragmentProfileBinding
 import com.jakewharton.processphoenix.ProcessPhoenix
@@ -46,6 +47,9 @@ class ProfileFragment : Fragment() {
         binding.logoutContainer.setOnClickListener {
             handleLogout()
         }
+        binding.downloadMapContainer.setOnClickListener {
+            handleDownloadMap()
+        }
     }
 
     fun handleLogout() {
@@ -65,6 +69,10 @@ class ProfileFragment : Fragment() {
         } else {
             Toast.makeText(requireContext(), "Logout disabled while offline", Toast.LENGTH_LONG).show()
         }
+    }
+
+    fun handleDownloadMap() {
+        startActivity(Intent(requireContext(), MapDownloadActivity::class.java))
     }
 
     fun refreshInfo() {
