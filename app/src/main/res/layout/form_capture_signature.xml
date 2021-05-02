@@ -19,41 +19,51 @@
             android:background="@color/ltgray"
             app:penColor="@color/black"/>
 
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      app:layout_constraintStart_toStartOf="parent"
-                      app:layout_constraintTop_toTopOf="parent"
-                      app:layout_constraintBottom_toBottomOf="parent"
-                      app:layout_constraintEnd_toStartOf="@id/signaturePad"
-                      android:id="@+id/buttonContainer"
-                      android:rotation="90"
+        <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/buttonContainer" android:layout_width="0dp"
+                                                           android:layout_height="0dp"
+                                                           android:orientation="vertical"
+                                                           app:layout_constraintBottom_toBottomOf="parent"
+                                                           app:layout_constraintEnd_toStartOf="@id/signaturePad"
+                                                           app:layout_constraintStart_toStartOf="parent"
+                                                           app:layout_constraintTop_toTopOf="parent"
+
         >
-            <com.google.android.material.button.MaterialButton android:layout_width="wrap_content"
-                                                               android:id="@+id/captureSignature"
-                                                               android:layout_height="wrap_content"
-                                                               android:layout_margin="5dp"
-                                                               android:layout_weight="1"
-                                                               android:layout_gravity="center"
+            <com.google.android.material.button.MaterialButton android:id="@+id/captureSignature"
                                                                style="@style/pillButton"
+                                                               android:layout_width="wrap_content"
+                                                               android:layout_height="wrap_content"
+                                                               android:layout_gravity="center"
+                                                               android:layout_margin="5dp"
                                                                android:text="Save Signature"
+                                                               android:rotation="90"
                                                                android:textColor="?attr/colorPrimary"
                                                                app:backgroundTint="@color/secondaryLightColor"
 
-            />
+                                                               app:layout_constraintBottom_toTopOf="@+id/clearSignature"
+                                                               app:layout_constraintEnd_toEndOf="parent"
+                                                               app:layout_constraintHorizontal_bias="0.5"
 
-            <com.google.android.material.button.MaterialButton android:layout_width="wrap_content"
-                                                               android:id="@+id/clearSignature"
-                                                               android:layout_height="wrap_content"
-                                                               android:layout_margin="5dp"
-                                                               android:layout_gravity="center"
-                                                               android:layout_weight="2"
+                                                               app:layout_constraintStart_toStartOf="parent"
+                                                               app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.google.android.material.button.MaterialButton android:id="@+id/clearSignature"
                                                                style="@style/pillButton"
+                                                               android:layout_width="wrap_content"
+                                                               android:layout_height="wrap_content"
+                                                               android:layout_gravity="center"
+                                                               android:layout_margin="5dp"
+                                                               android:layout_weight="2"
                                                                android:text="Clear Pad"
+                                                               android:rotation="90"
                                                                android:textColor="@color/secondaryLightColor"
                                                                app:backgroundTint="?attr/colorPrimary"
+                                                               app:layout_constraintBottom_toBottomOf="parent"
+                                                               app:layout_constraintEnd_toEndOf="parent"
+                                                               app:layout_constraintHorizontal_bias="0.5"
 
-            />
-        </LinearLayout>
+                                                               app:layout_constraintStart_toStartOf="parent"
+                                                               app:layout_constraintTop_toBottomOf="@+id/captureSignature"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

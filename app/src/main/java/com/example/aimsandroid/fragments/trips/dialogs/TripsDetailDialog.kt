@@ -8,10 +8,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
