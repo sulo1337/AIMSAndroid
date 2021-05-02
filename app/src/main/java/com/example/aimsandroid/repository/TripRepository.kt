@@ -15,10 +15,10 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.net.UnknownHostException
 
-class TripRepository(application: Application) {
+class TripRepository(private val application: Application) {
     private val prefs = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
-    val driverId = prefs.getString("driverId", null)!!.trim()
-    val database = getDatabase(application, driverId)
+    var driverId = prefs.getString("driverId", "x")!!.trim()
+    var database = getDatabase(application, driverId)
     val trips = database.tripDao.getTripsWithWaypoints()
     fun getTripWithWaypointsByTripId(tripId: Long) = database.tripDao.getTripWithWaypointsByTripId(tripId)
     suspend fun getTripByTripId(tripId: Long) = database.tripDao.getTrip(tripId)
@@ -121,7 +121,8 @@ class TripRepository(application: Application) {
     }
 
     suspend fun refreshTrips(fetchApiEventListener: FetchApiEventListener) {
-        if(driverId!=null){
+        refresh()
+        if(driverId!="x"){
             withContext(Dispatchers.IO){
                 try {
                     val response = Network.dispatcher.getTripsAsync(driverId, API_KEY).await()
@@ -191,4 +192,9 @@ class TripRepository(application: Application) {
         statusDate.trim(),
         API_KEY
     )
+
+    fun refresh() {
+        driverId = prefs.getString("driverId", "x")!!.trim()
+        database = getDatabase(application, driverId)
+    }
 }

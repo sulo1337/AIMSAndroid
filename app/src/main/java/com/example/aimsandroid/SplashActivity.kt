@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.core.content.ContextCompat
 
 class SplashActivity : AppCompatActivity() {
@@ -24,9 +25,10 @@ class SplashActivity : AppCompatActivity() {
 
     private fun checkLogin(): Boolean {
         val prefs: SharedPreferences = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
-        val driverId = prefs.getString("driverId", null)
-        val driverKey = prefs.getString("driverKey", null)
-        if(driverId == null || driverKey == null) {
+        val driverId = prefs.getString("driverId", "x")
+        val driverKey = prefs.getString("driverKey", "x")
+        Log.i("aimsDebug", "driverId: $driverId driverKey: $driverKey")
+        if(driverId == "x" || driverKey == "x") {
             return false
         }
         return true
