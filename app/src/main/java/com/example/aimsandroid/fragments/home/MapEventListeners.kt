@@ -173,7 +173,6 @@ class MapEventListeners(private val homeFragment: HomeFragment, private val mapF
     val m_audioPlayerDelegate: AudioPlayerDelegate = object : AudioPlayerDelegate {
         override fun playText(s: String): Boolean {
             Log.i("aimsDebugNavigationAudio", s)
-            tts.speakText(s, TextToSpeech.QUEUE_FLUSH)
             return false
         }
 

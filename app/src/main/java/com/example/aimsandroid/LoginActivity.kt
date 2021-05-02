@@ -3,7 +3,9 @@ package com.example.aimsandroid
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.aimsandroid.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -18,6 +20,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         setContentView(binding.root)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.secondaryLightColor)
     }
 
     private fun validateLoginInfo() {
