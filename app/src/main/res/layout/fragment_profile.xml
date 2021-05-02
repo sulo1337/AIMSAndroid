@@ -163,6 +163,7 @@
                                                android:id="@+id/truckSettingContainer"
                                                android:foreground="?android:attr/selectableItemBackground"
                                                android:clickable="true"
+                                               app:cardBackgroundColor="?attr/colorPrimary"
                                                app:layout_constraintTop_toBottomOf="@id/clockToggleButton">
                 <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
                                                                    android:layout_height="wrap_content"
@@ -198,6 +199,7 @@
                                                android:id="@+id/downloadMapContainer"
                                                android:foreground="?android:attr/selectableItemBackground"
                                                android:clickable="true"
+                                               app:cardBackgroundColor="?attr/colorPrimary"
                                                app:layout_constraintTop_toBottomOf="@id/truckSettingContainer">
                 <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
                                                                    android:layout_height="wrap_content"
@@ -233,6 +235,7 @@
                                                android:id="@+id/aboutContainer"
                                                android:foreground="?android:attr/selectableItemBackground"
                                                android:clickable="true"
+                                               app:cardBackgroundColor="?attr/colorPrimary"
                                                app:layout_constraintTop_toBottomOf="@id/downloadMapContainer">
                 <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
                                                                    android:layout_height="wrap_content"
@@ -267,6 +270,7 @@
                                                android:id="@+id/logoutContainer"
                                                android:foreground="?android:attr/selectableItemBackground"
                                                android:clickable="true"
+                                               app:cardBackgroundColor="?attr/colorPrimary"
                                                app:layout_constraintTop_toBottomOf="@id/aboutContainer">
                 <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
                                                                    android:layout_height="wrap_content"

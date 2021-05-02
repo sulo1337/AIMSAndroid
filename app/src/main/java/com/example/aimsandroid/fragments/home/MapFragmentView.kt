@@ -148,7 +148,7 @@ open class MapFragmentView(
          */
         val routeOptions = RouteOptions()
         /* Other transport modes are also available e.g Pedestrian */routeOptions.transportMode =
-            RouteOptions.TransportMode.TRUCK
+            RouteOptions.TransportMode.UNDEFINED
         /* Disable highway in this route. */routeOptions.setHighwaysAllowed(true)
 
         /* Calculate the shortest route available. */routeOptions.routeType = RouteOptions.Type.FASTEST
@@ -160,8 +160,8 @@ open class MapFragmentView(
         val startPoint = RouteWaypoint(srcGeoCoordinate)
         /* END: Langley BC */
         val destination = RouteWaypoint(destGeoCoordinate)
-
-        /* Add both waypoints to the route plan */routePlan.addWaypoint(startPoint)
+        Log.i("aimsDebugMapFragmentView", srcGeoCoordinate.latitude.toString())
+        routePlan.addWaypoint(startPoint)
         routePlan.addWaypoint(destination)
 
         /* Trigger the route calculation,results will be called back via the listener */coreRouter.calculateRoute(
