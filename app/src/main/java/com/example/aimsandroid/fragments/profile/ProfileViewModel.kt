@@ -26,9 +26,15 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                     prefs.edit().putString("driverId", "x").apply()
                     prefs.edit().putString("driverKey", "x").apply()
                     prefs.edit().putString("driverName", "x").apply()
+                    prefs.edit().putLong("currentTripId", -1L).apply()
+                    prefs.edit().putLong("nextWaypointSeqNumber", -1L).apply()
                 }
                 logoutEventListener.onLogoutComplete()
             }
         }
+    }
+
+    fun getDriverName(): String? {
+        return prefs.getString("driverName", "Driver")
     }
 }

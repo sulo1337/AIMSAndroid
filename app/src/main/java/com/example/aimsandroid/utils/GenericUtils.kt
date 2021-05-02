@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.WayPoint
@@ -53,6 +54,23 @@ fun getStackTraceString(e: Throwable): String {
     val pw = PrintWriter(sw)
     e.printStackTrace(pw)
     return sw.toString()
+}
+
+fun getGreeting(): String {
+    val c = Calendar.getInstance()
+    val timeOfDay = c[Calendar.HOUR_OF_DAY]
+
+    if (timeOfDay in 0..11) {
+        return "Good Morning"
+    } else if (timeOfDay in 12..15) {
+        return "Good Afternoon"
+    } else if (timeOfDay in 16..20) {
+        return "Good Evening"
+    } else if (timeOfDay in 21..23) {
+        return "Good Night"
+    } else {
+        return "Good Night"
+    }
 }
 
 val colorGreen = Color.rgb(0,171,102)

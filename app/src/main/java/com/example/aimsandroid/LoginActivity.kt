@@ -62,8 +62,8 @@ class LoginActivity : AppCompatActivity() {
                     try{
                         val response = Network.dispatcher.getDriverInfoAsync(API_KEY, binding.driverId.text.toString(), "true").await()
                         if(response.data.resultSet1.isNotEmpty()) {
-                            prefs.edit().putString("driverId", binding.driverId.text.toString()).apply()
-                            prefs.edit().putString("driverKey",binding.driverKey.text.toString()).apply()
+                            prefs.edit().putString("driverId", response.data.resultSet1[0].code.trim()).apply()
+                            prefs.edit().putString("driverKey",binding.driverKey.text.toString().trim()).apply()
                             prefs.edit().putString("driverName", response.data.resultSet1[0].driverName.trim()).apply()
                             withContext(Dispatchers.Main) {
                                 Handler(Looper.getMainLooper()).postDelayed({
