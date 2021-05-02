@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkPermissions()
         Thread.setDefaultUncaughtExceptionHandler { t, e ->
             Log.e(
                 "aimsDebugException",
@@ -50,56 +51,32 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemReselectedListener {  }
         foregroundServiceIntent = Intent(this, ForegroundService::class.java)
         foregroundServiceIntent.setAction("Online")
-        if(checkLogin()){
-            if(!ForegroundService.isRunning()){
+            if(!ForegroundService.isRunning()) {
                 startForegroundService(foregroundServiceIntent)
             }
-            TooLargeTool.startLogging(this.application)
-            try {
-                var process = Runtime.getRuntime().exec("logcat -d")
-                process = Runtime.getRuntime().exec("logcat -f " + "/storage/emulated/0/" + "Logging.txt")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
     }
 
-
-    private fun checkLogin(): Boolean {
-        val prefs: SharedPreferences = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
-        val driverId = prefs.getString("driverId", null)
-        val driverKey = prefs.getString("driverKey", null)
-        if(driverId == null || driverKey == null) {
-            startLoginActivity()
-            finish()
-            return false
-        }
+    private fun checkPermissions() {
         TedPermission.with(this)
-                .setPermissionListener(object: PermissionListener{
-                    override fun onPermissionGranted() {
-                    }
+            .setPermissionListener(object: PermissionListener{
+                override fun onPermissionGranted() {
+                }
 
-                    override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-                        Toast.makeText(applicationContext, "Background location permission denied", Toast.LENGTH_SHORT).show()
-                    }
-                })
-                .setDeniedMessage("Please allow location permission.\n\nPlease select \"Allow all the time\" for location to enable background navigation.")
-                .setGotoSettingButtonText("Open App Settings")
-                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.INTERNET,
-                    Manifest.permission.ACCESS_WIFI_STATE,
-                    Manifest.permission.ACCESS_NETWORK_STATE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                    )
-                .check()
-        return true
-    }
-
-    private fun startLoginActivity() {
-        val loginIntent = Intent(this, LoginActivity::class.java)
-        startActivity(loginIntent)
+                override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                    Toast.makeText(applicationContext, "Background location permission denied", Toast.LENGTH_SHORT).show()
+                }
+            })
+            .setDeniedMessage("Please allow location permission.\n\nPlease select \"Allow all the time\" for location to enable background navigation.")
+            .setGotoSettingButtonText("Open App Settings")
+            .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            .check()
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
@@ -109,9 +86,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        if(foregroundServiceIntent!=null) {
-            stopService(foregroundServiceIntent)
-        }
+        stopService(foregroundServiceIntent)
         super.onDestroy()
     }
 }
