@@ -44,6 +44,13 @@ interface Dispatcher {
         @Path("netQty") netQty: String,
         @Query("apiKey") apiKey: String
     ): Deferred<PutTripProductPickupContainer>
+
+    @GET("/rest/1/apiexpress/api/DispatcherMobileApp/")
+    fun getDriverInfoAsync(
+        @Query("apiKey") apiKey: String,
+        @Query("Code") code: String,
+        @Query("Active") active: String
+    ): Deferred<GetDriverInfoResponseContainer>
 }
 
 private val moshi = Moshi.Builder()

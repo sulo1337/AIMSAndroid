@@ -27,8 +27,8 @@ class SplashActivity : AppCompatActivity() {
         val prefs: SharedPreferences = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         val driverId = prefs.getString("driverId", "x")
         val driverKey = prefs.getString("driverKey", "x")
-        Log.i("aimsDebug", "driverId: $driverId driverKey: $driverKey")
-        if(driverId == "x" || driverKey == "x") {
+        val driverName = prefs.getString("driverName", "x")
+        if(driverId == "x" || driverKey == "x" || driverName == "x") {
             return false
         }
         return true

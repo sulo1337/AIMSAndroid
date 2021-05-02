@@ -128,3 +128,24 @@ data class TripSection(
         )
     }
 }
+
+data class GetDriverInfoResponseContainer(
+    @Json(name = "data") val data: GetDriverInfoResponse,
+    @Json(name = "status") val status: String
+)
+
+data class GetDriverInfoResponse(
+    @Json(name = "resultSet1") val resultSet1: List<GetDriverInfoData>
+)
+
+data class GetDriverInfoData(
+    @Json(name = "Id") val id: Long,
+    @Json(name = "CompanyID") val companyId: Long,
+    @Json(name = "Code") val code: String,
+    @Json(name = "DriverName") val driverName: String,
+    @Json(name = "DriverDescription") val driverDescription: String,
+    @Json(name = "CompasDriverID") val compasDriverId: String,
+    @Json(name = "TruckId") val truckId: Long,
+    @Json(name = "TruckDescription") val truckDescription: String,
+    @Json(name = "Active") val active: Boolean
+)

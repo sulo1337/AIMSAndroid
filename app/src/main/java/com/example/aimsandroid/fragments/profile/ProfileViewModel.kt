@@ -25,6 +25,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 withContext(Dispatchers.IO) {
                     prefs.edit().putString("driverId", "x").apply()
                     prefs.edit().putString("driverKey", "x").apply()
+                    prefs.edit().putString("driverName", "x").apply()
                 }
                 logoutEventListener.onLogoutComplete()
             }
