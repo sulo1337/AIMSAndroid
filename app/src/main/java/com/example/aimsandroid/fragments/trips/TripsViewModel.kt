@@ -4,6 +4,8 @@ import RotateBitmap
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Environment
 import android.util.Log
 import androidx.core.net.toUri
@@ -33,6 +35,10 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
     private val _refreshing = MutableLiveData<Boolean>()
     val refreshing: LiveData<Boolean>
         get() = _refreshing
+
+    private val _online = MutableLiveData<Boolean>()
+    val online: LiveData<Boolean>
+        get() = _online
 
     fun refreshTrips(fetchApiEventListener: FetchApiEventListener){
         viewModelScope.launch {
@@ -110,5 +116,29 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
                 tripRepository.onTripEvent(tripId, tripStatusCode)
             }
         }
+    }
+
+    fun setupInternetListener() {
+        val connectivityManager = getApplication<Application>().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                setOnline(true)
+            }
+            override fun onLost(network: Network) {
+                setOnline(false)
+            }
+        })
+    }
+
+    fun setOnline(value: Boolean) {
+        viewModelScope.launch {
+            withContext(Dispatchers.Main){
+                _online.value = value
+            }
+        }
+    }
+
+    init {
+        setupInternetListener()
     }
 }

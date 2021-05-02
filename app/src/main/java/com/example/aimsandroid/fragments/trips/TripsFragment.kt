@@ -3,6 +3,8 @@ package com.example.aimsandroid.fragments.trips
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.Network
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
@@ -10,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import colorGreen
 import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FragmentTripsBinding
 import com.example.aimsandroid.fragments.trips.dialogs.TripsDetailDialog
@@ -31,6 +34,7 @@ class TripsFragment : Fragment() {
         binding = FragmentTripsBinding.inflate(inflater);
         val tripsViewModelFactory = TripsViewModelFactory(requireActivity().application)
         viewModel = ViewModelProvider(this, tripsViewModelFactory).get(TripsViewModel::class.java)
+        setupInternetListener();
         prefs = requireActivity().getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         val fragmentTitle = binding.fragmentTitle
         fragmentTitle.setText(getString(R.string.trips_toolbar_title));
@@ -103,16 +107,28 @@ class TripsFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.refreshTrips(object : FetchApiEventListener{
-            override fun onSuccess() {}
-            override fun onError(error: String) {}
+    fun getViewModel(): TripsViewModel{
+        return viewModel
+    }
+
+    fun setupInternetListener() {
+        viewModel.online.observe(viewLifecycleOwner, Observer {
+            if(it == true) {
+                showOnlineStatus()
+            } else if(it == false) {
+                showOfflineStatus()
+            }
         })
     }
 
-    fun getViewModel(): TripsViewModel{
-        return viewModel
+    fun showOnlineStatus() {
+        binding.onlineStatus.text = "Online"
+        binding.onlineStatus.setTextColor(colorGreen)
+    }
+
+    fun showOfflineStatus() {
+        binding.onlineStatus.text = "Offline"
+        binding.onlineStatus.setTextColor(Color.RED)
     }
 
     suspend fun getSignatureUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {

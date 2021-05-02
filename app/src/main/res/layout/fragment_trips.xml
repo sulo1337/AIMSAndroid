@@ -10,20 +10,31 @@
         tools:context=".fragments.trips.TripsFragment"
         android:background="?attr/colorPrimary">
 
+        <TextView android:id="@+id/onlineStatus" style="@style/san_francisco_16"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginEnd="16dp"
+                  app:layout_constraintBaseline_toBaselineOf="@id/fragmentTitle"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  tools:text="Online"/>
+
+
         <TextView
             android:id="@+id/fragmentTitle"
-            style="@style/san_francisco_bold_20" android:layout_width="wrap_content"
+            style="@style/san_francisco_bold_32" android:layout_width="0dp"
             android:layout_height="wrap_content" android:layout_marginStart="8dp"
-            android:textSize="32dp"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-            tools:text="Your Trips"/>
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/onlineStatus" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" tools:text="Your Trips"/>
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  app:layout_constraintTop_toBottomOf="@id/fragmentTitle"
+        <TextView android:id="@+id/instruction" style="@style/san_francisco_bold_16"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
                   android:text="Swipe down to fetch data!"
-                  android:id="@+id/instruction"
-                  style="@style/san_francisco_bold_20"
-                  app:layout_constraintStart_toStartOf="@id/fragmentTitle"/>
+                  android:textColor="@color/gray"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  app:layout_constraintStart_toStartOf="@id/fragmentTitle"
+                  app:layout_constraintTop_toBottomOf="@id/fragmentTitle"/>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
