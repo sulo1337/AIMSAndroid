@@ -1,79 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   android:layout_width="match_parent"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:layout_height="match_parent">
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/truckHeightInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:hint="Truck Height (feet)"
-        app:boxStrokeColor="@color/secondaryLightColor"
-        app:endIconDrawable="@drawable/ic_close"
-        app:endIconMode="clear_text"
-        app:hintTextColor="@color/secondaryLightColor"
-        android:textColorHint="@color/gray"
-        app:placeholderTextColor="@color/secondaryLightColor"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-    >
-        <com.google.android.material.textfield.TextInputEditText android:id="@+id/truckHeight"
-                                                                 android:layout_width="match_parent"
-                                                                 android:layout_height="wrap_content"
-                                                                 android:inputType="numberDecimal"
-                                                                 style="@style/Theme.AIMSAndroid"
-                                                                 android:textCursorDrawable="@null"
-                                                                 android:textColor="?attr/colorOnPrimary"
-        />
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
 
-    </com.google.android.material.textfield.TextInputLayout>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/truckHeightInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:hint="Truck Height (feet)"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
+            app:hintTextColor="@color/secondaryLightColor"
+            android:textColorHint="@color/gray"
+            app:placeholderTextColor="@color/secondaryLightColor"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+        >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/truckHeight"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="numberDecimal"
+                                                                     style="@style/Theme.AIMSAndroid"
+                                                                     android:textCursorDrawable="@null"
+                                                                     android:textColor="?attr/colorOnPrimary"
+            />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/truckWeightInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:hint="Truck Weight (pounds)"
-        app:boxStrokeColor="@color/secondaryLightColor"
-        app:endIconDrawable="@drawable/ic_close"
-        app:endIconMode="clear_text"
-        app:hintTextColor="@color/secondaryLightColor"
-        android:textColorHint="@color/gray"
-        app:placeholderTextColor="@color/secondaryLightColor"
-        app:layout_constraintTop_toBottomOf="@id/truckHeightInputLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-    >
-        <com.google.android.material.textfield.TextInputEditText android:id="@+id/truckWeight"
-                                                                 android:layout_width="match_parent"
-                                                                 android:layout_height="wrap_content"
-                                                                 android:inputType="numberDecimal"
-                                                                 style="@style/Theme.AIMSAndroid"
-                                                                 android:textCursorDrawable="@null"
-                                                                 android:textColor="?attr/colorOnPrimary"
-        />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/truckWeightInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:hint="Truck Weight (pounds)"
+            app:boxStrokeColor="@color/secondaryLightColor"
+            app:endIconDrawable="@drawable/ic_close"
+            app:endIconMode="clear_text"
+            app:hintTextColor="@color/secondaryLightColor"
+            android:textColorHint="@color/gray"
+            app:placeholderTextColor="@color/secondaryLightColor"
+            app:layout_constraintTop_toBottomOf="@id/truckHeightInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+        >
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/truckWeight"
+                                                                     android:layout_width="match_parent"
+                                                                     android:layout_height="wrap_content"
+                                                                     android:inputType="numberDecimal"
+                                                                     style="@style/Theme.AIMSAndroid"
+                                                                     android:textCursorDrawable="@null"
+                                                                     android:textColor="?attr/colorOnPrimary"
+            />
 
-    <com.google.android.material.button.MaterialButton android:id="@+id/saveTruckInfoButton"
-                                                       style="@style/pillButton"
-                                                       android:layout_width="wrap_content"
-                                                       android:layout_height="wrap_content"
-                                                       android:text="Save"
-                                                       android:textColor="?attr/colorPrimary"
-                                                       app:backgroundTint="@color/secondaryLightColor"
-                                                       app:icon="@drawable/ic_save"
-                                                       app:iconTint="?attr/colorPrimary"
-                                                       app:layout_constraintTop_toBottomOf="@id/truckWeightInputLayout"
-                                                       app:layout_constraintStart_toStartOf="@id/truckWeightInputLayout"
-                                                       app:layout_constraintEnd_toEndOf="@id/truckWeightInputLayout"
-    />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

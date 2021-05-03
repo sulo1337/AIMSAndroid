@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,12 +23,14 @@ import com.example.aimsandroid.MapDownloadActivity
 import com.example.aimsandroid.R
 import com.example.aimsandroid.SplashActivity
 import com.example.aimsandroid.databinding.AlertAboutAppBinding
+import com.example.aimsandroid.databinding.AlertTruckSettingsBinding
 import com.example.aimsandroid.databinding.FragmentProfileBinding
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.jakewharton.processphoenix.ProcessPhoenix
 import getGreeting
 import getLoader
+import kotlinx.android.synthetic.main.dialog_waypoint_details.*
 
 
 class ProfileFragment : Fragment() {
@@ -63,6 +66,9 @@ class ProfileFragment : Fragment() {
         }
         binding.aboutContainer.setOnClickListener {
             handleAbout()
+        }
+        binding.truckSettingContainer.setOnClickListener {
+            handleTruckSettings()
         }
     }
 
@@ -127,6 +133,41 @@ class ProfileFragment : Fragment() {
                 dialog?.dismiss()
             }
             .show()
+    }
+
+    fun handleTruckSettings() {
+        val truckSettingsBinding = AlertTruckSettingsBinding.inflate(layoutInflater)
+        val alertDialog = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+            .setCancelable(false)
+            .setTitle("Please Enter Truck info")
+            .setView(truckSettingsBinding.root)
+            .setPositiveButton("Save"){ dialogInterface: DialogInterface, i: Int -> }
+            .setNegativeButton("Cancel"){ dialogInterface: DialogInterface, i: Int ->
+                dialogInterface.dismiss()
+            }.create()
+
+        alertDialog.show()
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            if(isValidTruckSettingsForm(truckSettingsBinding)){
+                Toast.makeText(requireContext(), "Saved successfully", Toast.LENGTH_SHORT).show()
+                alertDialog.dismiss()
+            } else {
+                Toast.makeText(requireContext(), "Invalid form data", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun isValidTruckSettingsForm(binding: AlertTruckSettingsBinding): Boolean {
+        var valid = true
+        if(binding.truckHeight.text.toString() == "") {
+            valid = false
+            binding.truckHeight.error = "Required"
+        }
+        if(binding.truckWeight.text.toString() == "") {
+            valid = false
+            binding.truckWeight.error = "Required"
+        }
+        return valid
     }
 
     fun refreshInfo() {
