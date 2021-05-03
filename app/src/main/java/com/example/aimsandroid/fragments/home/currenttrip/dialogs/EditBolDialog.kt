@@ -245,7 +245,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
             java.lang.Double.parseDouble(binding.deliveryForm.grossQuantity.text.toString()),
             java.lang.Double.parseDouble(binding.deliveryForm.netQuantity.text.toString()),
             this.billOfLading.value!!.arrivedAt,
-            false
+            false,
+            waypoint.sourceId,
+            waypoint.siteId
         )
     }
 
@@ -266,7 +268,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
             java.lang.Double.parseDouble(binding.pickUpForm.grossQuantity.text.toString()),
             java.lang.Double.parseDouble(binding.pickUpForm.netQuantity.text.toString()),
             this.billOfLading.value!!.arrivedAt,
-            false
+            false,
+            waypoint.sourceId,
+            waypoint.siteId
         )
     }
 

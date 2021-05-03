@@ -161,7 +161,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                     null,
                     null,
                     getCurrentDateTimeString(),
-                    false
+                    false,
+                    waypoint.sourceId,
+                    waypoint.siteId
                 )
                 updateBillOfLading(billOfLading)
                 if(waypoint.waypointTypeDescription == "Source"){
@@ -201,7 +203,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                                 null,
                                 null,
                                 it.arrivedAt,
-                                false
+                                false,
+                                waypoint.sourceId,
+                                waypoint.siteId
                             )
                             updateBillOfLading(billOfLading)
                         }
@@ -240,7 +244,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
                                 null,
                                 null,
                                 it.arrivedAt,
-                                false
+                                false,
+                                waypoint.sourceId,
+                                waypoint.siteId
                             )
                             updateBillOfLading(billOfLading)
                         }

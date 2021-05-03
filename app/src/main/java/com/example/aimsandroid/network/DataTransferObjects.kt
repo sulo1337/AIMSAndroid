@@ -85,7 +85,9 @@ data class TripSection(
     @Json(name = "ProductDesc") val productDesc: String?,
     @Json(name = "RequestedQty") val requestedQty: Double?,
     @Json(name = "UOM") val uom: String?,
-    @Json(name = "Fill") val fill: String?
+    @Json(name = "Fill") val fill: String?,
+    @Json(name = "SourceID") val sourceId: Long?,
+    @Json(name = "SiteID") val siteId: Long?
 ) {
     fun getTrip(): Trip {
         return Trip(
@@ -124,7 +126,9 @@ data class TripSection(
             productDesc,
             requestedQty,
             uom,
-            fill
+            fill,
+            sourceId,
+            siteId
         )
     }
 }

@@ -14,7 +14,7 @@ import retrofit2.http.Query
 import java.lang.Exception
 
 interface Dispatcher {
-    @GET("GetTripListDetailByDriver/{Id}")
+    @GET("GetDetailedTripListByDriver/{Id}")
     @Throws(Exception::class)
     fun getTripsAsync(
         @Path("Id") driverId: String,
@@ -62,7 +62,7 @@ object Network{
     private var retrofit: Retrofit? = null
     init {
         val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
         val httpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
         retrofit= Retrofit.Builder()
             .baseUrl("https://api.appery.io/rest/1/apiexpress/api/DispatcherMobileApp/")

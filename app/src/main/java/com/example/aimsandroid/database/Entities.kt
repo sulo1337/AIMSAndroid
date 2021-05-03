@@ -76,7 +76,9 @@ data class WayPoint(
     val productDesc: String?,
     val requestedQty: Double?,
     val uom: String?,
-    val fill: String?
+    val fill: String?,
+    val sourceId: Long?,
+    val siteId: Long?
 )
 
 @Entity(tableName = "billoflading_table", primaryKeys = ["tripIdFk", "wayPointSeqNum"])
@@ -102,7 +104,9 @@ data class BillOfLading(
     val grossQuantity: Double?,
     val netQuantity: Double?,
     val arrivedAt: String?,
-    var synced: Boolean
+    var synced: Boolean,
+    val waypointSourceId: Long?,
+    val waypointSiteId: Long?
 )
 
 data class WaypointWithBillOfLading(

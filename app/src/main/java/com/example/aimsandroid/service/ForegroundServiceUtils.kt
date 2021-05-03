@@ -21,8 +21,8 @@ suspend fun ForegroundService.syncTripsData() {
             try {
                 val response = tripRepository.putTripProductPickupAsync(
                     driverId,
-                    "170",
-                    "27",
+                    billOfLading.tripIdFk.toString(),
+                    billOfLading.waypointSourceId.toString(),
                     //TODO implement product id
                     "1175",
                     billOfLading.billOfLadingNumber.toString(),

@@ -51,8 +51,8 @@ class TripRepository(private val application: Application) {
             try {
                 val response = putTripProductPickupAsync(
                     driverId,
-                    "170",
-                    "27",
+                    billOfLading.tripIdFk.toString(),
+                    billOfLading.waypointSourceId.toString(),
                     //TODO implement product id
                     "1175",
                     billOfLading.billOfLadingNumber.toString(),
