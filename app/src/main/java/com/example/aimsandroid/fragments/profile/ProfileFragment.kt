@@ -1,9 +1,13 @@
 package com.example.aimsandroid.fragments.profile
 
+import PHONE_NUMBER
+import android.Manifest
 import android.content.Context
+import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,8 +18,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.MapDownloadActivity
+import com.example.aimsandroid.R
 import com.example.aimsandroid.SplashActivity
+import com.example.aimsandroid.databinding.AlertAboutAppBinding
 import com.example.aimsandroid.databinding.FragmentProfileBinding
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.TedPermission
 import com.jakewharton.processphoenix.ProcessPhoenix
 import getGreeting
 import getLoader
@@ -50,6 +58,9 @@ class ProfileFragment : Fragment() {
         binding.downloadMapContainer.setOnClickListener {
             handleDownloadMap()
         }
+        binding.aboutContainer.setOnClickListener {
+            handleAbout()
+        }
     }
 
     fun handleLogout() {
@@ -73,6 +84,35 @@ class ProfileFragment : Fragment() {
 
     fun handleDownloadMap() {
         startActivity(Intent(requireContext(), MapDownloadActivity::class.java))
+    }
+
+    fun handleAbout() {
+        val alertAboutAppBinding = AlertAboutAppBinding.inflate(layoutInflater)
+        AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+            .setCancelable(true)
+            .setView(alertAboutAppBinding.root)
+            .setPositiveButton("Help") { dialogInterface: DialogInterface, i: Int ->
+                TedPermission.with(requireContext())
+                    .setPermissionListener(object: PermissionListener {
+                        override fun onPermissionGranted() {
+                            startActivity(Intent(Intent.ACTION_CALL, Uri.parse("tel: $PHONE_NUMBER")))
+                        }
+
+                        override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+                            Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                    .setDeniedMessage("Please allow phone call permission for help.")
+                    .setGotoSettingButtonText("Open App Settings")
+                    .setPermissions(
+                        Manifest.permission.CALL_PHONE
+                    )
+                    .check()
+            }
+            .setNegativeButton("Close"){dialog: DialogInterface?, i: Int ->
+                dialog?.dismiss()
+            }
+            .show()
     }
 
     fun refreshInfo() {

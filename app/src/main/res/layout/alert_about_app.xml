@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.AIMSAndroid"
+        android:background="?attr/colorPrimaryVariant"
+    >
+        <ImageView android:layout_width="wrap_content" android:layout_height="32dp"
+                   android:layout_marginTop="24dp"
+                   android:src="@drawable/aims_logo"
+                   android:id="@+id/aimsLogo"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView android:layout_width="300dp" android:layout_height="wrap_content"
+                  android:id="@+id/aimsDescription"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  android:gravity="center"
+                  android:text="50+ years in the ever-changing petroleum distribution software industry"
+                  style="@style/san_francisco_bold_20"
+                  app:layout_constraintTop_toBottomOf="@id/aimsLogo"
+                  android:layout_marginTop="32dp"
+                  android:textColor="?attr/colorOnPrimary"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  app:layout_constraintTop_toBottomOf="@id/aimsDescription"
+                  style="@style/san_francisco_16"
+                  android:textSize="12sp"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginTop="16dp"
+                  android:layout_marginBottom="16dp"
+                  android:textColor="?attr/colorOnPrimaryVariant"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  android:text="Copyright © 2021"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

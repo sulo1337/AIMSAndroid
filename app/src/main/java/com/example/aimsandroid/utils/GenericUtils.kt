@@ -15,7 +15,7 @@ import java.util.*
 
 
 val API_KEY: String = "f20f8b25-b149-481c-9d2c-41aeb76246ef"
-
+val PHONE_NUMBER: String = "8007292467"
 fun SharedPreferences.Editor.putDouble(key: String, double: Double) =
     putLong(key, java.lang.Double.doubleToRawLongBits(double))
 
