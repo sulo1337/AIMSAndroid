@@ -4,17 +4,15 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
-import android.widget.Toast
+import android.icu.text.DateFormatSymbols
 import androidx.appcompat.app.AlertDialog
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.TimeTable
 import com.example.aimsandroid.database.WayPoint
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.round
 
 
 val API_KEY: String = "f20f8b25-b149-481c-9d2c-41aeb76246ef"
@@ -98,12 +96,43 @@ fun calculateTotalHours(listTimeTable: List<TimeTable>): String{
     return String.format("%.1f", totalHours)
 }
 
+fun getWaypointDate(date: String) : String{
+    try{
+        return "${date.substring(8, 10)} ${getMonthForInt(Integer.parseInt(date.substring(5,7))-1)} ${date.substring(0,4)}"
+    } catch (e: Exception) {
+        return date
+    }
+}
+
+fun getMonthForInt(num: Int) : String {
+    var month = "wrong"
+    val dfs = DateFormatSymbols()
+    val months: Array<String> = dfs.months
+    if (num in 0..11) {
+        month = months[num]
+    }
+    return month
+}
+
 fun getSignatureBitmapPath(tripId: Long, seqNum: Long, driverId: String) : String{
     return "signature_"+tripId.toString()+"_"+seqNum.toString()+"_"+driverId.toString()+".png"
 }
 
 fun getBolBitmapPath(tripId: Long, seqNum: Long, driverId: String) : String {
     return "bol_"+tripId.toString()+"_"+seqNum.toString()+"_"+driverId.toString()+".jpeg"
+}
+
+fun getFuel(fuelType : String?): String {
+    if(fuelType == null) {
+        return "N/A"
+    }
+    return fuelType
+}
+fun getReqQty(waypoint: WayPoint): String {
+    if(waypoint.requestedQty == null || waypoint.uom == null) {
+        return "N/A"
+    }
+    return String.format("%.2f %s", waypoint.requestedQty, waypoint.uom)
 }
 
 val colorGreen = Color.rgb(0,171,102)

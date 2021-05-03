@@ -6,6 +6,7 @@ import androidx.databinding.BindingAdapter
 import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.database.WayPoint
 import getFullAddress
+import getWaypointDate
 
 @BindingAdapter("bindSourceTitle")
 fun bindSourceTitle(textView: TextView, data: TripWithWaypoints){
@@ -64,6 +65,26 @@ fun bindSiteNumber(textView: TextView, data: TripWithWaypoints){
         textView.visibility = View.GONE
     } else {
         textView.text = "+"+(numSite-1).toString()+" destinations"
+    }
+}
+
+@BindingAdapter("bindSourceDeadline")
+fun bindSourceDeadline(textView: TextView, data: TripWithWaypoints) {
+    val firstSource = findFirst(data.waypoints, "Source")
+    if(firstSource != null) {
+        textView.text = "Load by ${firstSource!!.date?.let { getWaypointDate(it) }}"
+    } else {
+        textView.text = ""
+    }
+}
+
+@BindingAdapter("bindSiteDeadline")
+fun bindSiteDeadline(textView: TextView, data: TripWithWaypoints) {
+    val firstSite = findFirst(data.waypoints, "Site Container")
+    if(firstSite != null) {
+        textView.text = "Deliver by ${firstSite!!.date?.let { getWaypointDate(it) }}"
+    } else {
+        textView.text = ""
     }
 }
 

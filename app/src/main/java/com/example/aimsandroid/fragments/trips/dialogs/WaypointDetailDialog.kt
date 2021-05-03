@@ -32,8 +32,10 @@ import com.example.aimsandroid.repository.TripRepository
 import com.example.aimsandroid.utils.FileLoaderListener
 import com.example.aimsandroid.utils.OnSaveListener
 import com.google.android.material.textfield.TextInputLayout
+import getFuel
 import getFullAddress
 import getLoader
+import getReqQty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -64,6 +66,8 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding = DialogWaypointDetailsBinding.inflate(inflater)
         binding.deliveryFormLayout.visibility = View.GONE
         binding.pickUpFormLayout.visibility = View.GONE
+        binding.fuelQuantity.text = getReqQty(waypoint)
+        binding.fuelType.text = getFuel(waypoint.productDesc)
         tripRepository = TripRepository(requireActivity().application)
         return binding.root
     }

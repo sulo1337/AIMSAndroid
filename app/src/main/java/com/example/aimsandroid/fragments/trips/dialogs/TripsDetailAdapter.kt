@@ -1,6 +1,7 @@
 package com.example.aimsandroid.fragments.trips.dialogs
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -8,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.aimsandroid.R
 import com.example.aimsandroid.database.WayPoint
 import com.example.aimsandroid.databinding.DialogTripDetailsItemBinding
+import getFullAddress
+import getWaypointDate
 
 class TripsDetailAdapter(val clickListener: TripsDetailClickListener): ListAdapter<WayPoint, TripsDetailAdapter.TripsDetailViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripsDetailAdapter.TripsDetailViewHolder {
@@ -22,10 +25,18 @@ class TripsDetailAdapter(val clickListener: TripsDetailClickListener): ListAdapt
     class TripsDetailViewHolder(private var binding: DialogTripDetailsItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(thisWayPoint: WayPoint, position: Int, clickListener: TripsDetailClickListener){
             binding.wayPoint = thisWayPoint
-            binding.address.text = thisWayPoint.address1.trim() + ", " + thisWayPoint.city.trim() + ", " + thisWayPoint.state.trim() + " " + thisWayPoint.postalCode
-            binding.deadline.text = "19 December, 2020"
-            binding.fuelQuantity.text = thisWayPoint.requestedQty.toString() + " " + thisWayPoint.uom
-            binding.fuelType.text = thisWayPoint.productDesc
+            binding.address.text = getFullAddress(thisWayPoint)
+            binding.deadline.text = getWaypointDate(thisWayPoint.date?.trim()?.substring(0,11)?:"")
+            if(thisWayPoint.requestedQty == null || thisWayPoint.uom == null) {
+                binding.fuelQuantity.visibility = View.GONE
+            } else {
+                binding.fuelQuantity.text = thisWayPoint.requestedQty.toString() + " " + thisWayPoint.uom.toString()
+            }
+            if(thisWayPoint.productDesc != null) {
+                binding.fuelType.text = thisWayPoint.productDesc
+            } else {
+                binding.fuelType.visibility = View.GONE
+            }
             binding.waypointTitle.text = thisWayPoint.destinationName
             binding.clickListener = clickListener
             when(thisWayPoint.waypointTypeDescription.trim()){

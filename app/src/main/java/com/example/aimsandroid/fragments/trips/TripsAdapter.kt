@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aimsandroid.database.TripWithWaypoints
 import com.example.aimsandroid.databinding.TripItemBinding
+import getWaypointDate
 
 class TripsAdapter(val tripsClickListener: TripsClickListener, private val prefs: SharedPreferences): ListAdapter<TripWithWaypoints, TripsAdapter.TripsViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripsAdapter.TripsViewHolder {

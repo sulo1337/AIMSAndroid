@@ -78,7 +78,8 @@ data class WayPoint(
     val uom: String?,
     val fill: String?,
     val sourceId: Long?,
-    val siteId: Long?
+    val siteId: Long?,
+    val date: String?
 )
 
 @Entity(tableName = "billoflading_table", primaryKeys = ["tripIdFk", "wayPointSeqNum"])

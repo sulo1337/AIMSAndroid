@@ -17,6 +17,7 @@ import com.example.aimsandroid.databinding.CurrentTripDetailItemBinding
 import com.example.aimsandroid.databinding.DialogTripDetailsItemBinding
 import com.example.aimsandroid.repository.TripRepository
 import getFullAddress
+import getWaypointDate
 import kotlinx.coroutines.*
 import java.lang.Exception
 
@@ -69,9 +70,17 @@ class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private va
         fun bind(thisWayPoint: WayPoint, position: Int, clickListener: CurrentTripClickListener, isNextWaypoint: Boolean, isCompleted: Boolean){
             binding.wayPoint = thisWayPoint
             binding.address.text = getFullAddress(thisWayPoint)
-            binding.deadline.text = "19 December, 2020"
-            binding.fuelQuantity.text = thisWayPoint.requestedQty.toString() + " " + thisWayPoint.uom
-            binding.fuelType.text = thisWayPoint.productDesc
+            binding.deadline.text = getWaypointDate(thisWayPoint.date?.trim()?.substring(0,11)?:"")
+            if(thisWayPoint.requestedQty == null || thisWayPoint.uom == null) {
+                binding.fuelQuantity.visibility = View.GONE
+            } else {
+                binding.fuelQuantity.text = thisWayPoint.requestedQty.toString() + " " + thisWayPoint.uom.toString()
+            }
+            if(thisWayPoint.productDesc != null) {
+                binding.fuelType.text = thisWayPoint.productDesc
+            } else {
+                binding.fuelType.visibility = View.GONE
+            }
             binding.waypointTitle.text = thisWayPoint.destinationName
             binding.clickListener = clickListener
             when(thisWayPoint.waypointTypeDescription.trim()){

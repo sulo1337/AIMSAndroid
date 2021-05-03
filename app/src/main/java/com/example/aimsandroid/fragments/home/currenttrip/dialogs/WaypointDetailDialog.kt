@@ -36,7 +36,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 import com.here.android.mpa.common.GeoCoordinate
 import getCurrentDateTimeString
+import getFuel
 import getFullAddress
+import getReqQty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -74,6 +76,8 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         tripRepository = TripRepository(requireActivity().application)
         binding.pickUpFormLayout.visibility = View.GONE
         binding.deliveryFormLayout.visibility = View.GONE
+        binding.fuelQuantity.text = getReqQty(waypoint)
+        binding.fuelType.text = getFuel(waypoint.productDesc)
         lifecycleScope.launch {
             withContext(Dispatchers.IO){
                 val trip = tripRepository.getTripByTripId(waypoint.owningTripId)

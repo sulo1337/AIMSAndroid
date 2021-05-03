@@ -108,7 +108,7 @@ data class TripSection(
         return WayPoint(
             tripId,
             seqNum,
-            waypointTypeDescription,
+            waypointTypeDescription.trim(),
             latitude,
             longitude,
             destinationCode,
@@ -128,7 +128,8 @@ data class TripSection(
             uom,
             fill,
             sourceId,
-            siteId
+            siteId,
+            tripDate
         )
     }
 }

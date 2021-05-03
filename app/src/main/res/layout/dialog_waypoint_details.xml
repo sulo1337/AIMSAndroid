@@ -215,7 +215,6 @@
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginStart="8dp"
-                          android:text="@{waypoint.productDesc}"
                           app:layout_constraintBaseline_toBaselineOf="@+id/fuelTypeTitle"
                           app:layout_constraintStart_toEndOf="@id/fuelTypeTitle" tools:text="REG87 GASOLINE"/>
 
@@ -231,7 +230,6 @@
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_marginStart="8dp"
-                          android:text="@{String.valueOf(waypoint.requestedQty)+` `+waypoint.uom}"
                           app:layout_constraintBaseline_toBaselineOf="@+id/fuelQuantityTitle"
                           app:layout_constraintStart_toEndOf="@id/fuelQuantityTitle" tools:text="10000 GL"/>
 
