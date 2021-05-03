@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.aimsandroid.MapDownloadActivity
 import com.example.aimsandroid.R
@@ -51,7 +52,9 @@ class ProfileFragment : Fragment() {
         val viewModelFactory = ProfileViewModelFactory(requireActivity().application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(ProfileViewModel::class.java)
         loader = getLoader(requireActivity())
-        refreshInfo()
+        viewModel.trips.observe(viewLifecycleOwner, Observer {
+            refreshInfo()
+        })
         binding.logoutContainer.setOnClickListener {
             handleLogout()
         }
@@ -64,22 +67,33 @@ class ProfileFragment : Fragment() {
     }
 
     fun handleLogout() {
-        if(internetIsConnected()) {
-            viewModel.logout(object : LogoutEventListener{
-                override fun onLogoutStarted() {
-                    loader.show()
-                }
+        AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+            .setCancelable(true)
+            .setTitle("Confirm Logout?")
+            .setMessage("Do you want to logout?")
+            .setPositiveButton("Confirm"){ dialogInterface: DialogInterface, i: Int ->
+                dialogInterface.dismiss()
+                if(viewModel.internetIsConnected()) {
+                    viewModel.logout(object : LogoutEventListener{
+                        override fun onLogoutStarted() {
+                            loader.show()
+                        }
 
-                override fun onLogoutComplete() {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        loader.hide()
-                        ProcessPhoenix.triggerRebirth(context, Intent(requireContext(), SplashActivity::class.java))
-                    }, 1000)
+                        override fun onLogoutComplete() {
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                loader.hide()
+                                ProcessPhoenix.triggerRebirth(context, Intent(requireContext(), SplashActivity::class.java))
+                            }, 1000)
+                        }
+                    })
+                } else {
+                    Toast.makeText(requireContext(), "Logout disabled while offline", Toast.LENGTH_LONG).show()
                 }
-            })
-        } else {
-            Toast.makeText(requireContext(), "Logout disabled while offline", Toast.LENGTH_LONG).show()
-        }
+            }
+            .setNegativeButton("Cancel"){ dialogInterface: DialogInterface, i: Int ->
+                dialogInterface.dismiss()
+            }
+            .show()
     }
 
     fun handleDownloadMap() {
@@ -121,15 +135,21 @@ class ProfileFragment : Fragment() {
             val greetingText = "${getGreeting()},\n ${it.trim()}"
             binding.driverName.text = greetingText
         }
+        updateTotalTrips()
+        updateTotalTripsCompleted()
+        updateHoursCompleted()
     }
 
-    fun internetIsConnected(): Boolean {
-        return try {
-            val command = "ping -c 1 google.com"
-            Runtime.getRuntime().exec(command).waitFor() == 0
-        } catch (e: Exception) {
-            false
-        }
+    fun updateTotalTrips(){
+        binding.numTrips.text = viewModel.getNumTrips().toString()
+    }
+
+    fun updateTotalTripsCompleted(){
+        binding.numCompletedTrips.text = viewModel.getNumCompletedTrips().toString()
+    }
+
+    fun updateHoursCompleted() {
+
     }
 
     interface LogoutEventListener{

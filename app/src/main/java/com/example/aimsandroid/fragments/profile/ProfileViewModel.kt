@@ -17,7 +17,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private var prefs = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
     private var tripRepository = TripRepository(application)
-
+    val trips = tripRepository.trips
     fun logout(logoutEventListener: ProfileFragment.LogoutEventListener) {
         viewModelScope.launch {
             withContext(Dispatchers.Main) {
@@ -36,5 +36,30 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun getDriverName(): String? {
         return prefs.getString("driverName", "Driver")
+    }
+
+    fun internetIsConnected(): Boolean {
+        return try {
+            val command = "ping -c 1 google.com"
+            Runtime.getRuntime().exec(command).waitFor() == 0
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun getNumTrips(): Int {
+        if(trips.value != null){
+            return trips.value!!.size
+        }
+        return 0
+    }
+
+    fun getNumCompletedTrips() : Int {
+        if(trips.value!=null) {
+            return trips.value!!.filter{
+                it.tripStatus?.complete == true
+            }.size
+        }
+        return 0
     }
 }

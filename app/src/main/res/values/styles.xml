@@ -6,12 +6,14 @@
         <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textStyle">bold</item>
         <item name="android:typeface">normal</item>
+        <item name="android:textFontWeight">1000</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="san_francisco_regular">
         <item name="fontFamily">@font/roboto_light</item>
         <item name="android:typeface">normal</item>
+        <item name="android:textFontWeight">700</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
