@@ -89,12 +89,12 @@ class TripRepository(private val application: Application) {
     suspend fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode) {
         withContext(Dispatchers.IO){
             val tripEvent = TripEvent(
-                0L,
-                driverId,
-                tripId,
                 tripStatusCode.getStatusCode().trim(),
+                driverId,
+                0L,
+                tripId,
                 tripStatusCode.getStatusMessage().trim(),
-                getCurrentDateTimeString().trim(),
+                getCurrentDateTimeString(),
                 false
             )
             try{

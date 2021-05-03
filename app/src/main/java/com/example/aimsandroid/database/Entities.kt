@@ -130,11 +130,11 @@ data class TripWithWaypoints(
 
 @Entity(tableName = "trips_events_table")
 data class TripEvent(
+    val statusCode: String,
+    val driverId: String,
     @PrimaryKey(autoGenerate = true)
     val eventId: Long,
-    val driverId: String,
     val tripId: Long,
-    val statusCode: String,
     val statusMessage: String,
     val datetime: String,
     var synced: Boolean

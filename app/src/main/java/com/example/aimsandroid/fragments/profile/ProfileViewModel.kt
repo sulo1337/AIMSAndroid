@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import calculateTotalHours
 import com.example.aimsandroid.database.TimeTable
 import com.example.aimsandroid.repository.TripRepository
+import com.example.aimsandroid.utils.TripStatusCode
 import com.here.odnp.util.ClientLooper.getLooper
 import getCurrentDateTimeString
 import kotlinx.coroutines.*
@@ -77,6 +78,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 withContext(Dispatchers.IO) {
                     val timeTable = TimeTable(0, getCurrentDateTimeString(), null)
                     val id = tripRepository.insertTimeTable(timeTable)
+                    tripRepository.onTripEvent(0L, TripStatusCode.ON_DUTY)
                     prefs.edit().putBoolean("clockedIn", true).apply()
                     withContext(Dispatchers.Main) {
                         param.onComplete()
@@ -94,6 +96,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                     val timeTable = tripRepository.getLatestTimeTable()
                     timeTable.clockedOut = getCurrentDateTimeString()
                     val id = tripRepository.insertTimeTable(timeTable)
+                    tripRepository.onTripEvent(0L,TripStatusCode.OFF_DUTY)
                     prefs.edit().putBoolean("clockedIn", false).apply()
                     withContext(Dispatchers.Main) {
                         param.onComplete()

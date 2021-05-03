@@ -94,7 +94,7 @@ class ProfileFragment : Fragment() {
                             Handler(Looper.getMainLooper()).postDelayed({
                                 loader.hide()
                                 ProcessPhoenix.triggerRebirth(context, Intent(requireContext(), SplashActivity::class.java))
-                            }, 1000)
+                            }, 2000)
                         }
                     })
                 } else {

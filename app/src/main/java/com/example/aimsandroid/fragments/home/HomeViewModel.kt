@@ -22,6 +22,8 @@ import com.example.aimsandroid.utils.OnSaveListener
 import com.example.aimsandroid.utils.TripStatusCode
 import com.here.android.mpa.common.GeoCoordinate
 import com.here.android.mpa.mapping.Map
+import getBolBitmapPath
+import getSignatureBitmapPath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,6 +36,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var map: Map? = null
     private var _currentTripId: Long = -1L
     private var prefs: SharedPreferences = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
+    private var driverId: String? = prefs.getString("driverId", "D1")
     private val locationRepository = LocationRepository(application)
     val tripRepository = TripRepository(application)
     private val _currentTripCompleted = MutableLiveData<Boolean>(false)
@@ -147,7 +150,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     if(!dir.exists()) {
                         dir.mkdirs()
                     }
-                    val file = File(dir, "bol_"+billOfLading.tripIdFk.toString()+"_"+billOfLading.wayPointSeqNum.toString()+".jpeg")
+                    val file = File(dir, getBolBitmapPath(billOfLading.tripIdFk, billOfLading.wayPointSeqNum, driverId.toString()))
                     val fOut = FileOutputStream(file)
                     val rotatedBolBitmap = RotateBitmap(bolBitmap, 90.0f)
                     rotatedBolBitmap.compress(Bitmap.CompressFormat.JPEG, 75, fOut)
@@ -170,7 +173,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     if(!dir.exists()) {
                         dir.mkdirs()
                     }
-                    val file = File(dir, "signature_"+billOfLading.tripIdFk.toString()+"_"+billOfLading.wayPointSeqNum.toString()+".png")
+                    val file = File(dir, getSignatureBitmapPath(billOfLading.tripIdFk, billOfLading.wayPointSeqNum, driverId.toString()))
                     val fOut = FileOutputStream(file)
                     signatureBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut)
                     fOut.flush()
@@ -188,7 +191,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val filePath = getApplication<Application>().getDir(Environment.DIRECTORY_PICTURES, Context.MODE_PRIVATE).absolutePath + "/AIMS/signature/"
                 val dir = File(filePath)
-                val file = File(dir, "signature_"+tripIdFk.toString()+"_"+wayPointSeqNum.toString()+".png")
+                val file = File(dir, getSignatureBitmapPath(tripIdFk, wayPointSeqNum, driverId.toString()))
                 fileLoaderListener.onSuccess(file.toUri())
             } catch (e: Exception) {
                 fileLoaderListener.onError(e.toString())
@@ -201,7 +204,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val filePath = getApplication<Application>().getDir(Environment.DIRECTORY_PICTURES, Context.MODE_PRIVATE).absolutePath + "/AIMS/bol/"
                 val dir = File(filePath)
-                val file = File(dir, "bol_"+tripIdFk.toString()+"_"+wayPointSeqNum.toString()+".jpeg")
+                val file = File(dir, getBolBitmapPath(tripIdFk, wayPointSeqNum, driverId.toString()))
                 fileLoaderListener.onSuccess(file.toUri())
             } catch (e: Exception) {
                 fileLoaderListener.onError(e.toString())

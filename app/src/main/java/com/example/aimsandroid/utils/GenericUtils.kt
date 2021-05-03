@@ -95,10 +95,16 @@ fun calculateTotalHours(listTimeTable: List<TimeTable>): String{
 
     }
     totalHours /= 1000*60*60
-    totalHours = round(totalHours)
-    return totalHours.toString()
+    return String.format("%.1f", totalHours)
 }
 
+fun getSignatureBitmapPath(tripId: Long, seqNum: Long, driverId: String) : String{
+    return "signature_"+tripId.toString()+"_"+seqNum.toString()+"_"+driverId.toString()+".png"
+}
+
+fun getBolBitmapPath(tripId: Long, seqNum: Long, driverId: String) : String {
+    return "bol_"+tripId.toString()+"_"+seqNum.toString()+"_"+driverId.toString()+".jpeg"
+}
 
 val colorGreen = Color.rgb(0,171,102)
 val colorBlue = Color.rgb(0,150,255)
