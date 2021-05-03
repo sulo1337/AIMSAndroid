@@ -2,11 +2,10 @@ package com.example.aimsandroid.fragments.profile
 
 import PHONE_NUMBER
 import android.Manifest
-import android.content.Context
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import android.content.Intent
-import android.content.SharedPreferences
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -19,6 +18,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import colorGreen
 import com.example.aimsandroid.MapDownloadActivity
 import com.example.aimsandroid.R
 import com.example.aimsandroid.SplashActivity
@@ -30,7 +30,6 @@ import com.gun0912.tedpermission.TedPermission
 import com.jakewharton.processphoenix.ProcessPhoenix
 import getGreeting
 import getLoader
-import kotlinx.android.synthetic.main.dialog_waypoint_details.*
 
 
 class ProfileFragment : Fragment() {
@@ -70,6 +69,9 @@ class ProfileFragment : Fragment() {
         binding.truckSettingContainer.setOnClickListener {
             handleTruckSettings()
         }
+        binding.clockToggleButton.setOnClickListener {
+            handleClockToggle()
+        }
     }
 
     fun handleLogout() {
@@ -80,6 +82,9 @@ class ProfileFragment : Fragment() {
             .setPositiveButton("Confirm"){ dialogInterface: DialogInterface, i: Int ->
                 dialogInterface.dismiss()
                 if(viewModel.internetIsConnected()) {
+                    if(viewModel.isClockedIn()) {
+                        handleClockToggle()
+                    }
                     viewModel.logout(object : LogoutEventListener{
                         override fun onLogoutStarted() {
                             loader.show()
@@ -176,6 +181,11 @@ class ProfileFragment : Fragment() {
             val greetingText = "${getGreeting()},\n ${it.trim()}"
             binding.driverName.text = greetingText
         }
+        if(viewModel.isClockedIn()) {
+            clockInState()
+        } else {
+            clockOutState()
+        }
         updateTotalTrips()
         updateTotalTripsCompleted()
         updateHoursCompleted()
@@ -190,11 +200,58 @@ class ProfileFragment : Fragment() {
     }
 
     fun updateHoursCompleted() {
+        binding.hoursComplete.text = viewModel.getHoursCompleted()
+    }
 
+    fun handleClockToggle() {
+        if(viewModel.isClockedIn()){
+            viewModel.clockOut(object : EventListener{
+                override fun onStarted() {
+                    loader.show()
+                }
+
+                override fun onComplete() {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        refreshInfo()
+                        loader.hide()
+                    }, 1000)
+                }
+            })
+        } else {
+            viewModel.clockIn(object: EventListener{
+                override fun onStarted() {
+                    loader.show()
+                }
+
+                override fun onComplete() {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        refreshInfo()
+                        loader.hide()
+                    }, 1000)
+                }
+            })
+        }
+    }
+
+    fun clockInState() {
+        binding.clockToggleButton.text = "Clock out"
+        binding.clockStatusText.text = "You're clocked in right now"
+        binding.clockStatusText.setTextColor(colorGreen)
+    }
+
+    fun clockOutState() {
+        binding.clockToggleButton.text = "Clock in"
+        binding.clockStatusText.text = "You're clocked out right now"
+        binding.clockStatusText.setTextColor(Color.RED)
     }
 
     interface LogoutEventListener{
         fun onLogoutStarted()
         fun onLogoutComplete()
+    }
+
+    interface EventListener{
+        fun onStarted()
+        fun onComplete()
     }
 }

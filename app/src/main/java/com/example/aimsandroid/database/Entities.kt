@@ -135,3 +135,11 @@ data class TripEvent(
     val datetime: String,
     var synced: Boolean
 )
+
+@Entity(tableName = "time_table")
+data class TimeTable(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
+    val clockedIn: String,
+    var clockedOut: String?
+)

@@ -30,7 +30,9 @@ class TripRepository(private val application: Application) {
     suspend fun getWaypointWithBillOfLading(seqNum: Long, owningTripId: Long) = database.tripDao.getWayPointWithBillOfLading(seqNum, owningTripId)
     suspend fun insertAllTrips(trips: List<Trip>) = database.tripDao.insertAllTrips(trips)
     suspend fun insertAllWaypoints(waypoints:List<WayPoint>) = database.tripDao.insertAllWaypoints(waypoints)
-
+    suspend fun insertTimeTable(timeTable: TimeTable) = database.tripDao.insertTimeTable(timeTable)
+    suspend fun getLatestTimeTable() = database.tripDao.getLatestTimeTable()
+    suspend fun getAllTimeTable() = database.tripDao.getAllTimeTable()
     suspend fun insertBillOfLading(billOfLading: BillOfLading) {
         withContext(Dispatchers.IO) {
             val waypointWithBillOfLading = getWaypointWithBillOfLading(billOfLading.wayPointSeqNum, billOfLading.tripIdFk)

@@ -4,14 +4,17 @@ import android.app.Application
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import calculateTotalHours
+import com.example.aimsandroid.database.TimeTable
 import com.example.aimsandroid.repository.TripRepository
 import com.here.odnp.util.ClientLooper.getLooper
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import getCurrentDateTimeString
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -61,5 +64,49 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             }.size
         }
         return 0
+    }
+
+    fun isClockedIn(): Boolean{
+        return prefs.getBoolean("clockedIn", false)
+    }
+
+    fun clockIn(param: ProfileFragment.EventListener) {
+        viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                param.onStarted()
+                withContext(Dispatchers.IO) {
+                    val timeTable = TimeTable(0, getCurrentDateTimeString(), null)
+                    val id = tripRepository.insertTimeTable(timeTable)
+                    prefs.edit().putBoolean("clockedIn", true).apply()
+                    withContext(Dispatchers.Main) {
+                        param.onComplete()
+                    }
+                }
+            }
+        }
+    }
+
+    fun clockOut(param: ProfileFragment.EventListener) {
+        viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                param.onStarted()
+                withContext(Dispatchers.IO) {
+                    val timeTable = tripRepository.getLatestTimeTable()
+                    timeTable.clockedOut = getCurrentDateTimeString()
+                    val id = tripRepository.insertTimeTable(timeTable)
+                    prefs.edit().putBoolean("clockedIn", false).apply()
+                    withContext(Dispatchers.Main) {
+                        param.onComplete()
+                    }
+                }
+            }
+        }
+    }
+
+    fun getHoursCompleted(): String {
+        val listTimeTable = runBlocking {
+            tripRepository.getAllTimeTable()
+        }
+        return calculateTotalHours(listTimeTable)
     }
 }

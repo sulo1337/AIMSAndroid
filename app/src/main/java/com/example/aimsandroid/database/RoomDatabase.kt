@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TripDao {
@@ -55,9 +56,18 @@ interface TripDao {
 
     @Query("select * from trips_events_table where synced = 0")
     suspend fun getUnSyncedTripEvents(): List<TripEvent>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTimeTable(timeTable: TimeTable): Long
+
+    @Query("select * from time_table where nullif(clockedOut, '') is null")
+    suspend fun getLatestTimeTable(): TimeTable
+
+    @Query("select * from time_table")
+    suspend fun getAllTimeTable(): List<TimeTable>
 }
 
-@Database(entities = [Trip::class, WayPoint::class, BillOfLading::class, TripStatus::class, TripEvent::class], version = 2)
+@Database(entities = [Trip::class, WayPoint::class, BillOfLading::class, TripStatus::class, TripEvent::class, TimeTable::class], version = 3)
 abstract class TripDatabase: RoomDatabase() {
     abstract val tripDao: TripDao
 }

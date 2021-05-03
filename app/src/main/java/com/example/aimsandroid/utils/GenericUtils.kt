@@ -7,15 +7,19 @@ import android.graphics.drawable.ColorDrawable
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.aimsandroid.R
+import com.example.aimsandroid.database.TimeTable
 import com.example.aimsandroid.database.WayPoint
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.round
 
 
 val API_KEY: String = "f20f8b25-b149-481c-9d2c-41aeb76246ef"
 val PHONE_NUMBER: String = "8007292467"
+val DATE_TIME_PATTERN: String = "yyyy-MM-dd HH:mm:ss"
 fun SharedPreferences.Editor.putDouble(key: String, double: Double) =
     putLong(key, java.lang.Double.doubleToRawLongBits(double))
 
@@ -46,7 +50,7 @@ fun getLoader(activity: Activity): AlertDialog{
 }
 
 fun getCurrentDateTimeString(): String {
-    return  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())
+    return  SimpleDateFormat(DATE_TIME_PATTERN, Locale.US).format(Date())
 }
 
 fun getStackTraceString(e: Throwable): String {
@@ -72,6 +76,29 @@ fun getGreeting(): String {
         return "Good Night"
     }
 }
+
+fun calculateTotalHours(listTimeTable: List<TimeTable>): String{
+    var totalHours: Double = 0.0
+    try {
+        val sdf = SimpleDateFormat(DATE_TIME_PATTERN, Locale.US)
+        for(timeTable in listTimeTable) {
+            val startDate = sdf.parse(timeTable.clockedIn)!!
+            val endDate: Date
+            if(timeTable.clockedOut != null) {
+                endDate = sdf.parse(timeTable.clockedOut!!)!!
+            } else {
+                endDate = sdf.parse(getCurrentDateTimeString())!!
+            }
+            totalHours += endDate.time - startDate.time
+        }
+    } catch (e: Exception) {
+
+    }
+    totalHours /= 1000*60*60
+    totalHours = round(totalHours)
+    return totalHours.toString()
+}
+
 
 val colorGreen = Color.rgb(0,171,102)
 val colorBlue = Color.rgb(0,150,255)

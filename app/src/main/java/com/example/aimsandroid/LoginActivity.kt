@@ -65,6 +65,7 @@ class LoginActivity : AppCompatActivity() {
                             prefs.edit().putString("driverId", response.data.resultSet1[0].code.trim()).apply()
                             prefs.edit().putString("driverKey",binding.driverKey.text.toString().trim()).apply()
                             prefs.edit().putString("driverName", response.data.resultSet1[0].driverName.trim()).apply()
+                            prefs.edit().putBoolean("clockedIn", false).apply()
                             withContext(Dispatchers.Main) {
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     loader.hide()
