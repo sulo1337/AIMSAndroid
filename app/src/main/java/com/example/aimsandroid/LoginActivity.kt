@@ -55,6 +55,10 @@ class LoginActivity : AppCompatActivity() {
             error = true
             binding.driverKey.error = "Required"
         }
+        if(binding.driverKey.text.toString()!="0000") {
+            error = true
+            binding.driverKey.error = "Incorrect key!"
+        }
         if(!error) {
             loader.show()
             lifecycleScope.launch {

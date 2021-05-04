@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.aimsandroid.database.BillOfLading
 import com.example.aimsandroid.database.TripEvent
 import com.example.aimsandroid.utils.FetchApiEventListener
+import getProductId
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.lang.Exception
@@ -24,7 +25,7 @@ suspend fun ForegroundService.syncTripsData() {
                     billOfLading.tripIdFk.toString(),
                     billOfLading.waypointSourceId.toString(),
                     //TODO implement product id
-                    "1175",
+                    getProductId(billOfLading.product),
                     billOfLading.billOfLadingNumber.toString(),
                     billOfLading.loadingStarted.toString(),
                     billOfLading.loadingEnded.toString(),

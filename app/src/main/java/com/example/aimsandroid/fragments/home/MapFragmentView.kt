@@ -3,11 +3,15 @@ package com.example.aimsandroid.fragments.home
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.graphics.DiscretePathEffect
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.example.aimsandroid.R
 import com.example.aimsandroid.utils.MapTransformListener
 import com.here.android.mpa.common.*
@@ -20,7 +24,12 @@ import com.here.android.mpa.mapping.Map
 import com.here.android.mpa.mapping.MapRoute
 import com.here.android.mpa.routing.*
 import getDouble
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import putDouble
+import java.lang.Exception
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -313,11 +322,15 @@ open class MapFragmentView(
     }
 
     fun onPause(){
-        val prefs = m_activity.applicationContext.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
-        prefs.edit().putDouble("lastFocusLatitude", m_map?.center?.latitude!!).apply()
-        prefs.edit().putDouble("lastFocusLongitude", m_map?.center?.longitude!!).apply()
-        prefs.edit().putFloat("lastOrientation", m_map?.orientation!!).apply()
-        prefs.edit().putDouble("lastZoomLevel", m_map?.zoomLevel!!).apply()
+        try {
+            val prefs = parentFragment.requireActivity().getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
+            prefs.edit().putDouble("lastFocusLatitude", m_map?.center?.latitude!!).apply()
+            prefs.edit().putDouble("lastFocusLongitude", m_map?.center?.longitude!!).apply()
+            prefs.edit().putFloat("lastOrientation", m_map?.orientation!!).apply()
+            prefs.edit().putDouble("lastZoomLevel", m_map?.zoomLevel!!).apply()
+        } catch (e: Exception) {
+            Log.i("aimsDebugException", "Exception at mapFragmentView.kt")
+        }
         //onNavigationEnded()
     }
 

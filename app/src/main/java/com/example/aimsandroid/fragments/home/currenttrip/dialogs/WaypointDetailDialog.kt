@@ -277,8 +277,14 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
     private fun notArrived() {
+        val prefs = requireActivity().application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
+        // force only next waypoint to be used
+        if(prefs.getLong("nextWaypointSeqNumber", 0L) == waypoint.seqNum) {
+            binding.arrivedButton.visibility = View.VISIBLE
+        } else {
+            binding.arrivedButton.visibility = View.GONE
+        }
         binding.editFormButton.visibility = View.GONE
-        binding.arrivedButton.visibility = View.VISIBLE
         binding.startLoading.visibility = View.GONE
         binding.stopLoading.visibility = View.GONE
         binding.captureButton.visibility = View.GONE

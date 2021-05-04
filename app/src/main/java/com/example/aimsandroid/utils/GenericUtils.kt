@@ -135,6 +135,33 @@ fun getReqQty(waypoint: WayPoint): String {
     return String.format("%.2f %s", waypoint.requestedQty, waypoint.uom)
 }
 
+fun getProductId(product: String?): String{
+    if(product == null) {
+        return "759"
+    } else if(product.contains("REG87 GASOLINE", true)){
+        return "759"
+    } else if (product.contains("PLUS89 GASOLINE", true)){
+        return "887"
+    } else if (product.contains("SUPER93 GASOLINE", true)){
+        return "1015"
+    } else if(product.contains("BIO DIESEL", true)) {
+        return "1207"
+    } else if(product.contains("CLEAR L/S DIESEL", true)){
+        return "1175"
+    } else {
+        return "759"
+    }
+}
+
+val products= arrayOf(
+    "REG87 GASOLINE",
+    "PLUS89 GASOLINE",
+    "SUPER93 GASOLINE",
+    "BIO DIESEL",
+    "CLEAR L/S DIESEL"
+)
+
+
 val colorGreen = Color.rgb(0,171,102)
 val colorBlue = Color.rgb(0,150,255)
 val colorSecondaryLight = Color.rgb(241,134,64)

@@ -143,7 +143,7 @@ class ProfileFragment : Fragment() {
     fun handleTruckSettings() {
         val truckSettingsBinding = AlertTruckSettingsBinding.inflate(layoutInflater)
         val alertDialog = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
-            .setCancelable(false)
+            .setCancelable(true)
             .setTitle("Please Enter Truck info")
             .setView(truckSettingsBinding.root)
             .setPositiveButton("Save"){ dialogInterface: DialogInterface, i: Int -> }

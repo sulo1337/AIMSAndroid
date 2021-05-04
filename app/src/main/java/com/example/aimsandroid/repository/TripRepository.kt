@@ -10,6 +10,7 @@ import com.example.aimsandroid.network.Network
 import com.example.aimsandroid.utils.FetchApiEventListener
 import com.example.aimsandroid.utils.TripStatusCode
 import getCurrentDateTimeString
+import getProductId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
@@ -53,8 +54,7 @@ class TripRepository(private val application: Application) {
                     driverId,
                     billOfLading.tripIdFk.toString(),
                     billOfLading.waypointSourceId.toString(),
-                    //TODO implement product id
-                    "1175",
+                    getProductId(billOfLading.product),
                     billOfLading.billOfLadingNumber.toString(),
                     billOfLading.loadingStarted.toString(),
                     billOfLading.loadingEnded.toString(),
