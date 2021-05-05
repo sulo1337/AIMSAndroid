@@ -298,7 +298,7 @@
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/billOfLadingNumber"
                                                                      android:layout_width="match_parent"
                                                                      android:layout_height="wrap_content"
-                                                                     android:inputType="numberDecimal"
+                                                                     android:inputType="textCapCharacters"
                                                                      android:maxLines="1"
                                                                      android:textCursorDrawable="@null"
                                                                      android:textColor="?attr/colorOnPrimary"

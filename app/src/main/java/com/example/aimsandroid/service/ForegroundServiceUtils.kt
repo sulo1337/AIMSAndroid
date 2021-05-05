@@ -20,28 +20,55 @@ suspend fun ForegroundService.syncTripsData() {
     mutex.withLock{
         for(billOfLading: BillOfLading in unSyncedBillOfLadingList){
             try {
-                val response = tripRepository.putTripProductPickupAsync(
-                    driverId,
-                    billOfLading.tripIdFk.toString(),
-                    billOfLading.waypointSourceId.toString(),
-                    //TODO implement product id
-                    getProductId(billOfLading.product),
-                    billOfLading.billOfLadingNumber.toString(),
-                    billOfLading.loadingStarted.toString(),
-                    billOfLading.loadingEnded.toString(),
-                    billOfLading.grossQuantity.toString(),
-                    billOfLading.netQuantity.toString(),
-                    API_KEY
-                ).await()
-                if (response.data.responseStatus[0].statusCode == 1000) {
-                    Log.i("aimsDebugData", "Sent bill of lading: $billOfLading")
-                    billOfLading.synced = true
-                    tripRepository.insertBillOfLadingNoNetwork(billOfLading)
+                if(billOfLading.waypointSiteId == null) {
+                    val response = tripRepository.putTripProductPickupAsync(
+                        driverId,
+                        billOfLading.tripIdFk.toString(),
+                        billOfLading.waypointSourceId.toString(),
+                        getProductId(billOfLading.product),
+                        billOfLading.billOfLadingNumber.toString(),
+                        billOfLading.loadingStarted.toString(),
+                        billOfLading.loadingEnded.toString(),
+                        billOfLading.grossQuantity.toString(),
+                        billOfLading.netQuantity.toString(),
+                        API_KEY
+                    ).await()
+                    if (response.data.responseStatus[0].statusCode == 1000) {
+                        Log.i("aimsDebugData", "Sent bill of lading: SOURCE $billOfLading")
+                        billOfLading.synced = true
+                        tripRepository.insertBillOfLadingNoNetwork(billOfLading)
+                    }
+                } else if (billOfLading.waypointSourceId == null) {
+                    val response = tripRepository.putTripProductDeliveryAsync(
+                        driverId,
+                        billOfLading.tripIdFk.toString(),
+                        billOfLading.waypointSiteId.toString(),
+                        getProductId(billOfLading.product),
+                        billOfLading.loadingEnded.toString(),
+                        billOfLading.grossQuantity.toString(),
+                        billOfLading.netQuantity.toString(),
+                        billOfLading.finalMeterReading.toString(),
+                        API_KEY
+                    ).await()
+                    if(response.data.responseStatus[0].statusCode == 1000) {
+                        billOfLading.synced = true
+                        Log.i("aimsDebugData", "Sent bill of lading: SITE $billOfLading")
+                        tripRepository.insertBillOfLadingNoNetwork(billOfLading)
+                    }
                 }
             } catch (e: UnknownHostException) {
-                Log.w("aimsDebugData", "No internet connection, saving for later: $billOfLading")
+                if(billOfLading.waypointSiteId == null) {
+                    Log.w("aimsDebugData", "No internet connection, saving for later: SOURCE $billOfLading")
+                } else {
+                    Log.w("aimsDebugData", "No internet connection, saving for later: SITE $billOfLading")
+                }
+
             } catch (e: Exception) {
-                Log.w("aimsDebugData", "Unexpected error occurred while sending: $billOfLading")
+                if(billOfLading.waypointSiteId == null) {
+                    Log.w("aimsDebugData", "Unexpected error occurred while sending: SOURCE $billOfLading")
+                } else {
+                    Log.w("aimsDebugData", "Unexpected error occurred while sending: SITE $billOfLading")
+                }
             }
         }
 

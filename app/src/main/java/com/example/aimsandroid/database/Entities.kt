@@ -98,7 +98,7 @@ data class BillOfLading(
     val finalMeterReading: Double?,
     val pickedUpBy: String?,
     val comments: String?,
-    val billOfLadingNumber: Long?,
+    val billOfLadingNumber: String?,
     val loadingStarted: String?,
     val loadingEnded: String?,
     val product: String?,

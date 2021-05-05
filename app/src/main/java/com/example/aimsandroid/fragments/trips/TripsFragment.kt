@@ -34,6 +34,11 @@ class TripsFragment : Fragment() {
         binding = FragmentTripsBinding.inflate(inflater);
         val tripsViewModelFactory = TripsViewModelFactory(requireActivity().application)
         viewModel = ViewModelProvider(this, tripsViewModelFactory).get(TripsViewModel::class.java)
+        return binding.root;
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupInternetListener();
         prefs = requireActivity().getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         val fragmentTitle = binding.fragmentTitle
@@ -66,7 +71,6 @@ class TripsFragment : Fragment() {
                 }
             })
         }
-        return binding.root;
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

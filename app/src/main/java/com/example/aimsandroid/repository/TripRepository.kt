@@ -64,14 +64,14 @@ class TripRepository(private val application: Application) {
                 ).await()
                 if(response.data.responseStatus[0].statusCode == 1000) {
                     billOfLading.synced = true
-                    Log.i("aimsDebugData", "Sent bill of lading: $billOfLading")
+                    Log.i("aimsDebugData", "Sent bill of lading: SOURCE $billOfLading")
                 }
             } catch (e: UnknownHostException) {
                 billOfLading.synced = false
-                Log.w("aimsDebugData", "No internet connection, saving for later: $billOfLading")
+                Log.w("aimsDebugData", "No internet connection, saving for later: SOURCE $billOfLading")
             } catch (e: Exception) {
                 billOfLading.synced = false
-                Log.w("aimsDebugData", "Unexpected error occurred while sending: $billOfLading")
+                Log.w("aimsDebugData", "Unexpected error occurred while sending: SOURCE$billOfLading")
             } finally {
                 database.tripDao.insertBillOfLading(billOfLading)
             }
@@ -81,9 +81,35 @@ class TripRepository(private val application: Application) {
     }
 
     private suspend fun insertSiteBillOfLading(billOfLading: BillOfLading){
-        //TODO implement this with api
-        billOfLading.synced = true
-        database.tripDao.insertBillOfLading(billOfLading)
+        if(billOfLading.complete == true) {
+            try {
+                val response = putTripProductDeliveryAsync(
+                    driverId,
+                    billOfLading.tripIdFk.toString(),
+                    billOfLading.waypointSiteId.toString(),
+                    getProductId(billOfLading.product),
+                    billOfLading.loadingEnded.toString(),
+                    billOfLading.grossQuantity.toString(),
+                    billOfLading.netQuantity.toString(),
+                    billOfLading.finalMeterReading.toString(),
+                    API_KEY
+                ).await()
+                if(response.data.responseStatus[0].statusCode == 1000) {
+                    billOfLading.synced = true
+                    Log.i("aimsDebugData", "Sent bill of lading: SITE $billOfLading")
+                }
+            } catch (e: UnknownHostException) {
+                billOfLading.synced = false
+                Log.w("aimsDebugData", "No internet connection, saving for later: SITE $billOfLading")
+            } catch (e: Exception) {
+                billOfLading.synced = false
+                Log.w("aimsDebugData", "Unexpected error occurred while sending: SITE $billOfLading")
+            } finally {
+                database.tripDao.insertBillOfLading(billOfLading)
+            }
+        } else {
+            database.tripDao.insertBillOfLading(billOfLading)
+        }
     }
 
     suspend fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode) {
@@ -176,6 +202,28 @@ class TripRepository(private val application: Application) {
         endTime.trim(),
         grossQty.trim(),
         netQty.trim(),
+        API_KEY
+    )
+
+    fun putTripProductDeliveryAsync(
+        driverId: String,
+        tripId: String,
+        siteId: String,
+        productId: String,
+        startTime: String,
+        grossQty: String,
+        netQty: String,
+        remainingQty: String,
+        API_KEY: String
+    ) = Network.dispatcher.putTripProductDeliveryAsync(
+        driverId.trim(),
+        tripId.trim(),
+        siteId.trim(),
+        productId.trim(),
+        startTime.trim(),
+        grossQty.trim(),
+        netQty.trim(),
+        remainingQty.trim(),
         API_KEY
     )
 
