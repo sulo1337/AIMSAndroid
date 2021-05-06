@@ -6,6 +6,7 @@ import androidx.room.*
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
 
+/** This is abstract Dao that is used to query the database, all the method names are self explanatory*/
 @Dao
 interface TripDao {
     @Transaction
@@ -67,13 +68,16 @@ interface TripDao {
     suspend fun getAllTimeTable(): List<TimeTable>
 }
 
+//This is the database class that represents the Android room database as a POJO
 @Database(entities = [Trip::class, WayPoint::class, BillOfLading::class, TripStatus::class, TripEvent::class, TimeTable::class], version = 3)
 abstract class TripDatabase: RoomDatabase() {
     abstract val tripDao: TripDao
 }
 
+//This stores singleton instance of the database object
 private lateinit var INSTANCE: TripDatabase
 
+//Used to obtain singleton instance of the database object based on driver context
 fun getDatabase(context: Context, driverCode: String): TripDatabase {
     synchronized(TripDatabase::class.java) {
         if(!::INSTANCE.isInitialized) {

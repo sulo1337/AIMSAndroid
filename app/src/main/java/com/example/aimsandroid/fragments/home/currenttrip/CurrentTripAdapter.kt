@@ -21,6 +21,11 @@ import getWaypointDate
 import kotlinx.coroutines.*
 import java.lang.Exception
 
+/*
+* Adapter to convert data into view holder of recycler view
+* See android ListAdapter documentation for details about this class
+* Mostly boilerplate code
+* */
 class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private val prefs: SharedPreferences, private val tripRepository: TripRepository): ListAdapter<WayPoint, CurrentTripAdapter.CurrentTripsDetailViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrentTripAdapter.CurrentTripsDetailViewHolder {
         return CurrentTripsDetailViewHolder(CurrentTripDetailItemBinding.inflate(LayoutInflater.from(parent.context)))
@@ -66,7 +71,6 @@ class CurrentTripAdapter(val clickListener: CurrentTripClickListener, private va
     }
 
     class CurrentTripsDetailViewHolder(private var binding: CurrentTripDetailItemBinding): RecyclerView.ViewHolder(binding.root){
-        //TODO set colors
         fun bind(thisWayPoint: WayPoint, position: Int, clickListener: CurrentTripClickListener, isNextWaypoint: Boolean, isCompleted: Boolean){
             binding.wayPoint = thisWayPoint
             binding.address.text = getFullAddress(thisWayPoint)

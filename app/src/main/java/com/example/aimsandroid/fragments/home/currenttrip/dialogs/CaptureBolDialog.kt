@@ -46,6 +46,10 @@ import java.lang.Exception
 import java.lang.Long.parseLong
 import java.lang.StringBuilder
 
+/*
+* Android Dialog fragment to show form view
+* @param waypoint: The waypoint for which the form needs to be shown
+* */
 open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment() {
     protected lateinit var binding: FormContainerBinding
     private lateinit var tripRepository: TripRepository
@@ -57,6 +61,7 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
     private var photoFile: File? = null
     private lateinit var loader: AlertDialog
 
+    //Refer to android onCreateDialog method for documentation
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val root = RelativeLayout(activity)
         root.layoutParams =
@@ -69,24 +74,28 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         return dialog
     }
 
+    //Refer to android onCreate method for documentation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
         setStyle(STYLE_NORMAL, R.style.FullscreenDialogTheme)
     }
 
+    //Static object to create a new instance of this dialog
     companion object {
         fun newInstance(waypoint: WayPoint): CaptureBolDialog {
             return CaptureBolDialog(waypoint)
         }
     }
 
+    //Refer to android onCreateView method for documentation
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FormContainerBinding.inflate(inflater)
         return binding.root
     }
 
+    //Refer to android onViewCreated method for documentation
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loader = getLoader(requireActivity())
@@ -134,6 +143,10 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         }
     }
 
+    /*
+    * This method first checks the permission required to open the camera to scan the Bill of Lading
+    * After permission is allowed, it opens the camera to scan the bill of lading
+    * */
     private fun startCameraActivity() {
         TedPermission.with(requireContext())
             .setPermissionListener(object : PermissionListener{
@@ -161,6 +174,9 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
             .check()
     }
 
+    /*
+    * This method creates a temporary file to temporarily store the bill of lading picture in local file system
+    * */
     private fun createTempImageFile(): File {
         val tempFileName = waypoint.owningTripId.toString() + "_" + waypoint.seqNum.toString()
         val storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -174,6 +190,10 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         return tempFile
     }
 
+    /*
+    * This method is called when user clicks the camera and confirms the picture
+    * It tries to capture the picture information and save it as a local object in this class
+    * */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 1888 && resultCode == Activity.RESULT_OK){
@@ -196,11 +216,17 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         }
     }
 
+    /*
+    * Clearing any bundle information stored when this fragment is destroyed
+    *  */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.clear()
     }
 
+    /*
+    * Check android's onDestroyView() documentation for retainable dialog
+    * */
     override fun onDestroyView() {
         if(dialog != null && retainInstance){
             dialog!!.setDismissMessage(null)
@@ -208,6 +234,9 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         super.onDestroyView()
     }
 
+    /*
+    * This method saves the signature that was captured as a local object
+    * */
      fun saveSignature(signatureBitmap: Bitmap) {
         binding.deliveryForm.signatureView.visibility = View.VISIBLE
         binding.deliveryForm.signatureView.setImageBitmap(RotateBitmap(signatureBitmap, 270.0f))
@@ -216,6 +245,9 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         this.signatureBitmap = RotateBitmap(signatureBitmap, 270.0f)
     }
 
+    /*
+    * This object generates bill of lading POJO for site container based on form input data
+    * */
     private fun generateDeliveryBillOfLading(): BillOfLading{
         return BillOfLading(
             waypoint.seqNum,
@@ -239,6 +271,9 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         )
     }
 
+    /*
+    * This object generates bill of lading POJO for source based on form input data
+    * */
     private fun generatePickUpBillOfLading(): BillOfLading{
         return  BillOfLading(
             waypoint.seqNum,
@@ -262,6 +297,9 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         )
     }
 
+    /*
+    * This method saves the delivery form into the database, while showing the loader when in progress
+    * */
     fun saveDeliveryForm() {
         (parentFragment as WaypointDetailDialog).saveForm(generateDeliveryBillOfLading(), bolBitmap!!, signatureBitmap!!, object : OnSaveListener{
             override fun onSaving() {
@@ -291,6 +329,9 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         })
     }
 
+    /*
+    * This method saves pickup form into the database while showing the loader when in progress
+    * */
     fun savePickupForm() {
         (parentFragment as WaypointDetailDialog).saveForm(generatePickUpBillOfLading(), bolBitmap!!, signatureBitmap!!, object : OnSaveListener{
             override fun onSaving() {
@@ -316,6 +357,9 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         })
     }
 
+    /*
+    * A method for validating form input data for site container
+    * */
     private fun validateDeliveryForm() {
         var valid = validateDeliveryForm(binding.deliveryForm)
 
@@ -348,6 +392,9 @@ open class CaptureBolDialog(protected val waypoint: WayPoint) : DialogFragment()
         }
     }
 
+    /*
+    * A method for validating form input data for source
+    * */
     fun validatePickupForm() {
         var valid = validatePickUpForm(binding.pickUpForm)
 

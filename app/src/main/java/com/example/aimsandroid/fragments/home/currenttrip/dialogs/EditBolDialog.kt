@@ -53,6 +53,10 @@ import java.lang.Long
 import java.lang.StringBuilder
 import kotlin.math.sign
 
+/*
+* Android Dialog fragment to show form view for editing
+* @param waypoint: The waypoint for which the form needs to be shown
+* */
 class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
     private lateinit var binding: FormContainerBinding
     private lateinit var tripRepository: TripRepository
@@ -152,6 +156,10 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    /*
+       * This method first checks the permission required to open the camera to scan the Bill of Lading
+       * After permission is allowed, it opens the camera to scan the bill of lading
+    */
     private fun startCameraActivity() {
         TedPermission.with(requireContext())
             .setPermissionListener(object : PermissionListener{
@@ -180,6 +188,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
             .check()
     }
 
+    /*
+    * This method creates a temporary file to temporarily store the bill of lading picture in local file system
+    * */
     private fun createTempImageFile(): File {
         val tempFileName = waypoint.owningTripId.toString() + "_" + waypoint.seqNum.toString()
         val storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -193,6 +204,10 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
         return tempFile
     }
 
+    /*
+    * This method is called when user clicks the camera and confirms the picture
+    * It tries to capture the picture information and save it as a local object in this class
+    * */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 1888 && resultCode == Activity.RESULT_OK){
@@ -215,11 +230,17 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    /*
+    * Clearing any bundle information stored when this fragment is destroyed
+    *  */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.clear()
     }
 
+    /*
+    * Check android's onDestroyView() documentation for retainable dialog
+    * */
     override fun onDestroyView() {
         bolBitmap = null
         if(dialog != null && retainInstance){
@@ -251,6 +272,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
         )
     }
 
+    /*
+    * This object generates bill of lading POJO for site container based on form input data
+    * */
     private fun generatePickUpBillOfLading(): BillOfLading{
         return  BillOfLading(
             waypoint.seqNum,
@@ -274,6 +298,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
         )
     }
 
+    /*
+    * This method saves the delivery form into the database, while showing the loader when in progress
+    * */
     fun saveDeliveryForm() {
         (parentFragment as WaypointDetailDialog).saveForm(generateDeliveryBillOfLading(), bolBitmap, null, object : OnSaveListener{
             override fun onSaving() {
@@ -296,6 +323,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
         })
     }
 
+    /*
+    * This method saves pickup form into the database while showing the loader when in progress
+    * */
     fun savePickupForm() {
         (parentFragment as WaypointDetailDialog).saveForm(generatePickUpBillOfLading(), bolBitmap, null, object : OnSaveListener{
             override fun onSaving() {
@@ -318,6 +348,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
         })
     }
 
+    /*
+    * A method for validating form input data for site container
+    * */
     fun validateDeliveryForm() {
         var valid = com.example.aimsandroid.utils.validateDeliveryForm(binding.deliveryForm)
 
@@ -340,6 +373,9 @@ class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    /*
+    * A method for validating form input data for source
+    * */
     fun validatePickupForm() {
         var valid = validatePickUpForm(binding.pickUpForm)
 

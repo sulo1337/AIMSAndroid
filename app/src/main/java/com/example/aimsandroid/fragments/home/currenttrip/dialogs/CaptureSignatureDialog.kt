@@ -14,6 +14,10 @@ import com.example.aimsandroid.R
 import com.example.aimsandroid.databinding.FormCaptureSignatureBinding
 import com.github.gcacace.signaturepad.views.SignaturePad
 
+/*
+* Creates Android's dialog fragment to capture the signature while pickup/delivery
+* All the documentation for overridden methods can be found in Android library
+* */
 class CaptureSignatureDialog: DialogFragment() {
 
     private lateinit var binding: FormCaptureSignatureBinding
@@ -75,6 +79,9 @@ class CaptureSignatureDialog: DialogFragment() {
         })
     }
 
+    /*
+    * Static method to create a new instance of this dialog fragment
+    * */
     companion object {
         fun newInstance(): CaptureSignatureDialog {
             return CaptureSignatureDialog()
@@ -88,21 +95,33 @@ class CaptureSignatureDialog: DialogFragment() {
         super.onDestroyView()
     }
 
+    /*
+    * This method enables Clear button for signature pad
+    * */
     private fun enableClearSignatureButton() {
         binding.clearSignature.isEnabled = true
         binding.clearSignature.alpha = 1.0f
     }
 
+    /*
+    * This method disables Clear button for signature pad
+    * */
     private fun disableClearSignatureButton() {
         binding.clearSignature.isEnabled = false
         binding.clearSignature.alpha = 0.5f
     }
 
+    /*
+    * This method enables Capture Signature button for signature pad
+    * */
     private fun enableCaptureSignatureButton() {
         binding.captureSignature.isEnabled = true
         binding.captureSignature.alpha = 1.0f
     }
 
+    /*
+    * This method disables Capture Signature button for signature pad
+    * */
     private fun disableCaptureSignatureButton() {
         binding.captureSignature.isEnabled = false
         binding.captureSignature.alpha = 0.5f

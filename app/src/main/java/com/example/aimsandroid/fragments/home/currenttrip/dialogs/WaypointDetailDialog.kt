@@ -45,11 +45,18 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
+/*
+* This class displays dialog which shows detail for a waypoint
+* @param waypoint: the waypoint for which details needs to be shown
+* */
 class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
 
     private lateinit var tripRepository: TripRepository
     private lateinit var binding: DialogWaypointDetailsBinding
 
+    /*
+    * Please refer to onCreateDialog() method in Android SDK
+    * */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val root = RelativeLayout(activity)
         root.layoutParams =
@@ -62,12 +69,18 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         return dialog
     }
 
+    /*
+    * Please refer onCreateDialog() in Android SDK
+    * */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
         setStyle(STYLE_NORMAL, R.style.FullscreenDialogTheme)
     }
 
+    /*
+    * Please refer onCreateView() in Android SDK
+    * */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         //TODO decouple into viewmodel
         super.onCreateView(inflater, container, savedInstanceState)
@@ -109,6 +122,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         return binding.root
     }
 
+    /*
+    * Please refer onViewCreated() in Android SDK
+    * */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //fetch this waypoint's bill of lading
@@ -270,12 +286,18 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         getBolUri()
     }
 
+    /*
+    * This method updates new Bill of Lading form data in the database
+    * */
     private fun updateBillOfLading(billOfLading: BillOfLading){
         viewLifecycleOwner.lifecycleScope.launch {
             tripRepository.insertBillOfLading(billOfLading)
         }
     }
 
+    /*
+    * This handles the "Not Arrived" state for the dialog view
+    * */
     private fun notArrived() {
         val prefs = requireActivity().application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         // force only next waypoint to be used
@@ -293,6 +315,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.pickUpFormLayout.visibility = View.GONE
     }
 
+    /*
+    * This handles the "Waypoint Captured" state for dialog view
+    * */
     private fun waypointCaptured(billOfLading: BillOfLading) {
         binding.editFormButton.visibility = View.VISIBLE
         binding.arrivedButton.visibility = View.GONE
@@ -302,6 +327,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         resolveFormView(billOfLading)
     }
 
+    /*
+    * This handles the "Loading not Started" state for dialog view
+    * */
     private fun loadingNotStarted() {
         binding.editFormButton.visibility = View.GONE
         binding.arrivedButton.visibility = View.GONE
@@ -317,6 +345,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.pickUpFormLayout.visibility = View.GONE
     }
 
+    /*
+    * This handles the "Loading Not Ended" state for dialog view
+    * */
     private fun loadingNotEnded() {
         binding.editFormButton.visibility = View.GONE
         binding.arrivedButton.visibility = View.GONE
@@ -332,6 +363,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.pickUpFormLayout.visibility = View.GONE
     }
 
+    /*
+    * This handles the "Loading ended" state for dialog view
+    * */
     private fun loadingEnded() {
         binding.editFormButton.visibility = View.GONE
         binding.captureButton.visibility = View.VISIBLE
@@ -344,6 +378,10 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
 
     }
 
+    /*
+    * This shows displays the form data in a view based on the bill of lading information
+    * @param billOfLading: Bill of lading to be viewed in the form
+    * */
     private fun resolveFormView(billOfLading: BillOfLading) {
         if(waypoint.waypointTypeDescription=="Source"){
             binding.billOfLadingTitle.visibility = View.VISIBLE
@@ -358,6 +396,10 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    /*
+    * This shows displays the delivery form data in a view based on the bill of lading information
+    * @param billOfLading: Bill of lading to be viewed in the form
+    * */
     private fun resolveDeliveryFormView(billOfLading: BillOfLading) {
         deliveryFormNonEditable()
         binding.deliveryForm.initialFuelStickReading.setText(billOfLading.initialMeterReading.toString())
@@ -373,6 +415,10 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.deliveryForm.deliveryEnded.setText(billOfLading.loadingEnded.toString())
     }
 
+    /*
+    * This shows displays the pickup form data in a view based on the bill of lading information
+    * @param billOfLading: Bill of lading to be viewed in the form
+    * */
     private fun resolvePickupFormView(billOfLading: BillOfLading) {
         pickUpFormNonEditable()
         binding.pickUpForm.initialFuelStickReading.setText(billOfLading.initialMeterReading.toString())
@@ -389,6 +435,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     }
 
 
+    /*
+    * This method makes the delivery form non editable while just viewing
+    * */
     private fun deliveryFormNonEditable(){
         binding.deliveryForm.initialFuelStickReading.isEnabled = false
         binding.deliveryForm.finalFuelStickReading.isEnabled = false
@@ -412,6 +461,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.deliveryForm.pickedUpByLayout.endIconMode = TextInputLayout.END_ICON_NONE
     }
 
+    /*
+    * This method makes the pickup form non editable while viewing
+    * */
     private fun pickUpFormNonEditable() {
         binding.pickUpForm.initialFuelStickReading.isEnabled = false
         binding.pickUpForm.finalFuelStickReading.isEnabled = false
@@ -442,10 +494,16 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         super.onDestroyView()
     }
 
+    /*
+    * This method calls the viewModel method to save the bill of lading form and bitmaps
+    * */
     fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         (parentFragment as HomeFragment).saveForm(billOfLading, bolBitmap, signatureBitmap, onSaveListener)
     }
 
+    /*
+    * This method extracts the signature from local file system for current waypoint
+    * */
     fun getSignatureUri(){
         lifecycleScope.launch{
             withContext(Dispatchers.IO){
@@ -461,6 +519,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    /*
+    * This method extracts the bill of lading photo file from local file system for this waypoint
+    * */
     fun getBolUri(){
         lifecycleScope.launch{
             withContext(Dispatchers.IO){
@@ -476,6 +537,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    /*
+    * This method displays the bill of lading picture into image view after extracting the uri
+    * */
     fun loadBol(uri: Uri) {
         lifecycleScope.launch {
             withContext(Dispatchers.Main){
@@ -498,7 +562,9 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
-
+    /*
+    * This method displays the signature picture into image view after extracting the uri
+    * */
     fun loadSignature(uri: Uri){
         lifecycleScope.launch {
             withContext(Dispatchers.Main){
@@ -517,20 +583,32 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    /*
+    * This method refreshes the recycler view in its parent fragment
+    * */
     fun refreshRecyclerView() {
         (parentFragment as HomeFragment).refreshRecyclerView()
     }
 
+    /*
+    * This method performs action when a trip is completed
+    * */
     fun onTripCompleted() {
         Toast.makeText(requireContext(), "Trip Completed!", Toast.LENGTH_LONG).show()
         findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToTripsFragment())
         dismiss()
     }
 
+    /*
+    * This method passes work to its parent fragment  when there is a trip event
+    * */
     fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode){
         (parentFragment as HomeFragment).onTripEvent(tripId, tripStatusCode)
     }
 
+    /*
+    * This static method creates an instance of this class
+    * */
     companion object {
         fun newInstance(waypoint: WayPoint): WaypointDetailDialog {
             return WaypointDetailDialog(waypoint)

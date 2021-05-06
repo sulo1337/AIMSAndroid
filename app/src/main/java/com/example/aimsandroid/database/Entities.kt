@@ -5,6 +5,7 @@ import androidx.room.ForeignKey.CASCADE
 import java.io.Serializable
 import java.util.*
 
+/** These are all the entities that are stored in the local android Room(SQLITE) database*/
 @Entity(tableName = "review_table")
 data class Review(
     @PrimaryKey(autoGenerate = true)
@@ -19,6 +20,7 @@ data class Review(
     var atmosphere: String = ""
 )
 
+//This entity represents trips table where trips information is stored
 @Entity(tableName = "trips_table")
 data class Trip(
     @PrimaryKey
@@ -35,6 +37,8 @@ data class Trip(
     var complete: Boolean
 )
 
+
+//This entity represents trips status table where status for each trip is stored
 @Entity(tableName = "trips_status_table")
 data class TripStatus(
     @ForeignKey(
@@ -48,6 +52,7 @@ data class TripStatus(
     val complete: Boolean
 )
 
+//This entity represents waypoint table which includes details of each waypoint
 @Entity(tableName="waypoint_table", primaryKeys = ["owningTripId", "seqNum"])
 data class WayPoint(
     @ForeignKey(
@@ -82,6 +87,7 @@ data class WayPoint(
     val date: String?
 )
 
+//This entity represents bill of lading table used to store form data
 @Entity(tableName = "billoflading_table", primaryKeys = ["tripIdFk", "wayPointSeqNum"])
 data class BillOfLading(
     @ForeignKey(
@@ -110,11 +116,13 @@ data class BillOfLading(
     val waypointSiteId: Long?
 )
 
+//Embedded class for relational database
 data class WaypointWithBillOfLading(
     @Embedded val waypoint: WayPoint?,
     @Embedded val billOfLading: BillOfLading?
 )
 
+//Embedded class for relational databases
 data class TripWithWaypoints(
     @Embedded val trip: Trip,
     @Relation(
@@ -129,6 +137,7 @@ data class TripWithWaypoints(
     val tripStatus: TripStatus?
 )
 
+//This entity represents trip events table that store events that occur throughout the trip
 @Entity(tableName = "trips_events_table")
 data class TripEvent(
     val statusCode: String,
@@ -141,6 +150,7 @@ data class TripEvent(
     var synced: Boolean
 )
 
+//This entity is used to store clock in and clock out information
 @Entity(tableName = "time_table")
 data class TimeTable(
     @PrimaryKey(autoGenerate = true)

@@ -51,21 +51,13 @@ fun bindSiteTitleAddress(textView: TextView, data: TripWithWaypoints){
 @BindingAdapter("bindSourceNumber")
 fun bindSourceNumber(textView: TextView, data: TripWithWaypoints){
     val numSource = numTypes(data.waypoints, "Source")
-    if(numSource == 1){
-        textView.visibility = View.GONE
-    } else {
-        textView.text = "+"+(numSource-1).toString()+" sources"
-    }
+    textView.text = "Total $numSource source(s)"
 }
 
 @BindingAdapter("bindSiteNumber")
 fun bindSiteNumber(textView: TextView, data: TripWithWaypoints){
     val numSite = numTypes(data.waypoints, "Site Container")
-    if(numSite == 1){
-        textView.visibility = View.GONE
-    } else {
-        textView.text = "+"+(numSite-1).toString()+" destinations"
-    }
+    textView.text = "Total $numSite site container(s)"
 }
 
 @BindingAdapter("bindSourceDeadline")
