@@ -14,7 +14,10 @@ import java.io.StringWriter
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * This class contains values for necessary constants
+ * This class also contains generic utility functions such as date converter, address resolver etc.
+ */
 val API_KEY: String = "f20f8b25-b149-481c-9d2c-41aeb76246ef"
 val PHONE_NUMBER: String = "8007292467"
 val DATE_TIME_PATTERN: String = "yyyy-MM-dd HH:mm:ss"

@@ -5,6 +5,9 @@ import com.example.aimsandroid.databinding.FormPickupBinding
 import com.google.android.material.snackbar.Snackbar
 import java.lang.StringBuilder
 
+/**
+ * This class contains methods to validate form input
+ */
 fun validateDeliveryForm(formDeliveryBinding: FormDeliveryBinding): Boolean {
     var valid = true
     if(formDeliveryBinding.initialFuelStickReading.text.toString().isEmpty()){

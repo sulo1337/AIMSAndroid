@@ -45,7 +45,9 @@ import putDouble
 import sortWaypointBySeqNum
 import java.lang.Exception
 
-
+/*
+* Fragment (Android SDK) class to generate Home Tab.
+* */
 class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private lateinit var sheetBehavior: BottomSheetBehavior<LinearLayout>
@@ -55,11 +57,13 @@ class HomeFragment : Fragment() {
     private lateinit var prefs: SharedPreferences
     private lateinit var loader: AlertDialog
 
+    //Refer to android sdk for overridden method documentation
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
     }
 
+    //Refer to android sdk for overridden method documentation
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,6 +78,7 @@ class HomeFragment : Fragment() {
         return binding.root;
     }
 
+    //Refer to android sdk for overridden method documentation
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loader = getLoader(requireActivity())
@@ -179,12 +184,15 @@ class HomeFragment : Fragment() {
         })
     }
 
+    //Method to refresh the recycler view in home page with latest data
     fun refreshRecyclerView() {
         val adapter = binding.currentTripRecyclerView.adapter
         binding.currentTripRecyclerView.adapter = adapter
         adapter?.notifyDataSetChanged()
     }
 
+    //Method to show direction from the driver's current location to the passed destination
+    /* @param destination the coordinate of the destination */
     fun showDirections(destination: GeoCoordinate) {
         if(prefs.getBoolean("navigating", false)) {
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -204,6 +212,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //Method to toggle drawer layout
     private fun toggleFilters() {
         if(sheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED){
             collapseSheet()
@@ -212,6 +221,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //Method to run after route has been calculated
     fun afterRouteCalculated(boundingBox: GeoBoundingBox?) {
         hideLoader()
         if(prefs.getBoolean("navigating", false)){
@@ -225,6 +235,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //Method to run if there is a route calculation error
     fun afterRouteCalculationError() {
         hideLoader()
         if(prefs.getBoolean("navigating", false)) {
@@ -232,14 +243,17 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //Method to end just the navigation and not clear the routes
     fun endNavigationOnly() {
         mapFragmentView?.onNavigationEnded()
     }
 
+    //This method is called after driver has reached his destination
     fun onDestinationReached() {
         stopNavigationMode()
     }
 
+    //This method is called when navigation mode is started
     fun startNavigationMode() {
         prefs.edit().putBoolean("navigating", true).apply()
         mapFragmentView?.startNavigation()
@@ -249,6 +263,7 @@ class HomeFragment : Fragment() {
         hideNavFab()
     }
 
+    //This method is called when we need to continue current navigation if this view is destroyed and recovered back
     fun continueNavigationMode() {
         hideStartNavFab()
         hideGpsFab()
@@ -257,6 +272,7 @@ class HomeFragment : Fragment() {
         mapFragmentView?.startNavigation()
     }
 
+    //This method is called when navigation mode is stopped
     fun stopNavigationMode() {
         prefs.edit().putBoolean("navigating", false).apply()
         mapFragmentView?.onNavigationEnded()
@@ -266,22 +282,25 @@ class HomeFragment : Fragment() {
         hideStopNavFab()
     }
 
+    //Refer to android sdk for overridden method documentation
     override fun onPause() {
         super.onPause()
         mapFragmentView?.onPause()
     }
 
+    //Refer to android sdk for overridden method documentation
     override fun onDestroy() {
         super.onDestroy()
-        mapFragmentView?.onDestroy()
     }
 
+    //Refer to android sdk for overridden method documentation
     override fun onResume() {
         super.onResume()
         mapFragmentView = MapFragmentView.getInstance(this, binding.viewModel!!)
         mapFragmentView!!.initMapFragment()
     }
 
+    //Functions to view or hide the gps buttons based on the state
     fun viewNavFab() {
         requireActivity().runOnUiThread {
             binding.navFab.visibility = View.VISIBLE
@@ -326,35 +345,6 @@ class HomeFragment : Fragment() {
         binding.nextManeuverContainer.visibility = View.GONE
     }
 
-    fun positionIndicatorNav() {
-        if(mapFragmentView!=null) {
-            if(mapFragmentView!!.m_map!=null) {
-                val indicator = ResourcesCompat.getDrawable(resources, R.drawable.ic_recenter_fab, null)
-                indicator?.setTint(colorSecondaryLight)
-                val indicatorBitmap = indicator?.toBitmap(150, 150, null)
-                indicatorBitmap?.let {
-                    val image = Image()
-                    image.setBitmap(it)
-                    mapFragmentView!!.m_map!!.positionIndicator.setMarker(image)
-                }
-            }
-        }
-    }
-
-    fun positionIndicatorReset() {
-        if(mapFragmentView!=null) {
-            if(mapFragmentView!!.m_map!=null) {
-                val indicator = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_current_location)
-                val indicatorBitmap = indicator?.toBitmap(92, 92, null)
-                indicatorBitmap?.let {
-                    val image = Image()
-                    image.setBitmap(it)
-                    mapFragmentView!!.m_map!!.positionIndicator.setMarker(image)
-                }
-            }
-        }
-    }
-
     fun resetButtons() {
         viewGpsFab()
         hideNavFab()
@@ -362,6 +352,7 @@ class HomeFragment : Fragment() {
         hideStopNavFab()
     }
 
+    //method to pause road view mode
     fun pauseRoadView(){
         if(prefs.getBoolean("navigating", false)){
             mapFragmentView?.pauseRoadView()
@@ -369,6 +360,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //method to resume road view mode
     fun resumeRoadView() {
         if(prefs.getBoolean("navigating", false)){
             mapFragmentView?.resumeRoadView()
@@ -376,6 +368,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //method to save bill of lading form, this method delegates action to the viewmodel
     fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         lifecycleScope.launch{
             withContext(Dispatchers.IO){
@@ -387,6 +380,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    //method to handle ui when there is no current trip
     fun noCurrentTrip() {
         binding.currentTripRecyclerView.visibility = View.GONE
         sheetBehavior.isDraggable = false
@@ -395,18 +389,22 @@ class HomeFragment : Fragment() {
         binding.bottomSheetTitle.text = "You have not started any trips"
     }
 
+    //method to collapse bottom drawer
     fun collapseSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
+    //method to expand bottom drawer
     fun expandSheet() {
         sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
+    //method to get signature uri from view model
     suspend fun getSignatureUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
         viewModel.getSignatureUri(tripIdFk, waypointSeqNum, fileLoaderListener)
     }
 
+    //method to get bill of lading picture uri from view model
     suspend fun getBolUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
         viewModel.getBolUri(tripIdFk, waypointSeqNum, fileLoaderListener)
     }
@@ -415,18 +413,21 @@ class HomeFragment : Fragment() {
         showLoader()
     }
 
+    //method to show loader
     fun showLoader(){
         if(!loader.isShowing){
             loader.show()
         }
     }
 
+    //method to hide loader
     fun hideLoader(){
         Handler(Looper.getMainLooper()).postDelayed({
             loader.dismiss()
         }, 1000)
     }
 
+    //method to send api request on trip event via view model
     fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode){
         viewModel.onTripEvent(tripId, tripStatusCode)
     }

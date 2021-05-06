@@ -10,6 +10,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import java.lang.Exception
 
+/**
+ * This class provides live updates to the current location of the driver
+ * */
 class LocationRepository(private val application: Application) {
 
     private var locationManager: LocationManager = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager

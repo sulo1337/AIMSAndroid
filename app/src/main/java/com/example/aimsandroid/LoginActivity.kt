@@ -25,6 +25,9 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.net.UnknownHostException
 
+/**
+ * This class is an Android activity class to create login activity in the application
+ */
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
@@ -43,8 +46,7 @@ class LoginActivity : AppCompatActivity() {
         loader = getLoader(this)
     }
 
-
-
+    //This method validates login form and calls the login API
     private fun validateLoginInfo() {
         var error = false
         if(binding.driverId.text.toString().isEmpty()) {
@@ -98,6 +100,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    //This method checks necessary permissions to run the application
     private fun checkPermissions() {
         TedPermission.with(this)
             .setPermissionListener(object: PermissionListener {
@@ -122,12 +125,14 @@ class LoginActivity : AppCompatActivity() {
             .check()
     }
 
+    //This method is used to start the main activity after login is completed
     private fun startMainActivity() {
         val mainActivityIntent = Intent(this,MainActivity::class.java)
         startActivity(mainActivityIntent)
         finish()
     }
 
+    //This method is used to hide loader from the screen
     private fun hideLoader() {
         Handler(Looper.getMainLooper()).postDelayed({
             loader.hide()

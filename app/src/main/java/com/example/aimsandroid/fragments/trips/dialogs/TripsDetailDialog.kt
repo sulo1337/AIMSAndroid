@@ -25,6 +25,10 @@ import com.example.aimsandroid.utils.TripStatusCode
 import sortWaypointBySeqNum
 
 
+/**
+* This class displays detail for selected trip
+* @param tripWithWaypoints Trip with all the waypoints for which data needs to be displayed
+* */
 class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): DialogFragment(){
 
     private lateinit var binding: DialogTripDetailsBinding
@@ -121,20 +125,24 @@ class TripsDetailDialog(private val tripWithWaypoints: TripWithWaypoints): Dialo
         super.onDestroyView()
     }
 
+    //method to save edited form information
     fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         (parentFragment as TripsFragment).getViewModel().saveForm(billOfLading, bolBitmap, onSaveListener)
     }
 
+    //static method to create instance of this class
     companion object {
         fun newInstance(tripWithWaypoints: TripWithWaypoints): TripsDetailDialog {
             return TripsDetailDialog(tripWithWaypoints)
         }
     }
 
+    //method to get signature uri from saved signature file
     suspend fun getSignatureUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
         (parentFragment as TripsFragment).getSignatureUri(tripIdFk, waypointSeqNum, fileLoaderListener)
     }
 
+    //method to get bill of lading uri from saved bill of lading file
     suspend fun getBolUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
         (parentFragment as TripsFragment).getBolUri(tripIdFk, waypointSeqNum, fileLoaderListener)
     }

@@ -17,6 +17,9 @@ import getCurrentDateTimeString
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 
+/*
+* Android view model that handles the logic for overlying profile view
+* */
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
     private var prefs = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)

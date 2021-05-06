@@ -1,5 +1,8 @@
 package com.example.aimsandroid.utils
 
+/**
+ * This enum class contains all the possible values for trip event
+ */
 enum class TripStatusCode{
     ARRIVE_AT_SOURCE{
         override fun getStatusCode() = "ArriveSrc"

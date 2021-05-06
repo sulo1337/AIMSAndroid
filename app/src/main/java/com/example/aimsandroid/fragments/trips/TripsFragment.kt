@@ -21,6 +21,9 @@ import com.example.aimsandroid.utils.FileLoaderListener
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
+/*
+* Fragment (Android SDK) class to generate Trips Tab.
+* */
 class TripsFragment : Fragment() {
 
     private lateinit var viewModel: TripsViewModel
@@ -87,6 +90,7 @@ class TripsFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    //This method submits list of completed trips to recycler view
     private fun submitCompletedTrips() {
         val adapter = binding.tripsRecyclerView.adapter as TripsAdapter
         val completedTrips = viewModel.trips.value?.filter{
@@ -96,6 +100,7 @@ class TripsFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
+    //This method submits list of pending trips to recycler view
     private fun submitPendingTrips() {
         val adapter = binding.tripsRecyclerView.adapter as TripsAdapter
         val completedTrips = viewModel.trips.value?.filter{
@@ -105,16 +110,19 @@ class TripsFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
+    //This method submits all trips to recycler view
     private fun submitAllTrips() {
         val adapter = binding.tripsRecyclerView.adapter as TripsAdapter
         adapter.submitList(viewModel.trips.value)
         adapter.notifyDataSetChanged()
     }
 
+    //This method returns current view model associated with this view
     fun getViewModel(): TripsViewModel{
         return viewModel
     }
 
+    //This method observes current internet activity
     fun setupInternetListener() {
         viewModel.online.observe(viewLifecycleOwner, Observer {
             if(it == true) {
@@ -125,20 +133,24 @@ class TripsFragment : Fragment() {
         })
     }
 
+    //This methods performs UI operations to show that the app is online
     fun showOnlineStatus() {
         binding.onlineStatus.text = "Online"
         binding.onlineStatus.setTextColor(colorGreen)
     }
 
+    //This method performs UI operations to show that the app is offline
     fun showOfflineStatus() {
         binding.onlineStatus.text = "Offline"
         binding.onlineStatus.setTextColor(Color.RED)
     }
 
+    //This method gets the signature uri of passed trip information from the view model
     suspend fun getSignatureUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
         viewModel.getSignatureUri(tripIdFk, waypointSeqNum, fileLoaderListener)
     }
 
+    //This method gets the bill of lading uri of passed trip information from the view model
     suspend fun getBolUri(tripIdFk: Long, waypointSeqNum: Long, fileLoaderListener: FileLoaderListener) {
         viewModel.getBolUri(tripIdFk, waypointSeqNum, fileLoaderListener)
     }

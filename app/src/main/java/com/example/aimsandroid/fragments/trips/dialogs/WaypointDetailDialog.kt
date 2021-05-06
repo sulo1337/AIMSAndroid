@@ -40,6 +40,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * This class shows detail of waypoint and also the form captured(if any)
+ * @param waypoint Waypoint of which details needs to be shown
+ * */
 class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
     private lateinit var tripRepository: TripRepository
     private lateinit var binding: DialogWaypointDetailsBinding
@@ -122,6 +126,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         getSignatureUri()
     }
 
+    //This method populates the form data with currently saved data for both source and site container
     private fun resolveFormView(billOfLading: BillOfLading) {
         binding.editFormButton.visibility = View.VISIBLE
         binding.billOfLadingTitle.visibility = View.VISIBLE
@@ -136,6 +141,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    //This method populates the form data with currently saved data for site container
     private fun resolveDeliveryFormView(billOfLading: BillOfLading) {
         deliveryFormNonEditable()
         binding.deliveryForm.initialFuelStickReading.setText(billOfLading.initialMeterReading.toString())
@@ -151,6 +157,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.deliveryForm.deliveryEnded.setText(billOfLading.loadingEnded.toString())
     }
 
+    //This method populates the form data with currently saved data for source
     private fun resolvePickupFormView(billOfLading: BillOfLading) {
         pickUpFormNonEditable()
         binding.pickUpForm.initialFuelStickReading.setText(billOfLading.initialMeterReading.toString())
@@ -166,6 +173,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.pickUpForm.pickupEnded.setText(billOfLading.loadingEnded.toString())
     }
 
+    //This method makes the delivery form non editable
     private fun deliveryFormNonEditable(){
         binding.deliveryForm.initialFuelStickReading.isEnabled = false
         binding.deliveryForm.finalFuelStickReading.isEnabled = false
@@ -190,6 +198,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         binding.deliveryForm.commentLayout.endIconMode = TextInputLayout.END_ICON_NONE
     }
 
+    //This method makes the pickup form non editable
     private fun pickUpFormNonEditable() {
         binding.pickUpForm.initialFuelStickReading.isEnabled = false
         binding.pickUpForm.finalFuelStickReading.isEnabled = false
@@ -221,16 +230,19 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         super.onDestroyView()
     }
 
+    //This method saves the given bill of lading form, and the bitmaps
     fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         (parentFragment as TripsDetailDialog).saveForm(billOfLading, bolBitmap, onSaveListener)
     }
 
+    //This static method creates an instance of this class
     companion object {
         fun newInstance(waypoint: WayPoint): WaypointDetailDialog{
             return WaypointDetailDialog(waypoint)
         }
     }
 
+    //This method gets the uri of saved signature for this waypoint from local file system
     fun getSignatureUri(){
         lifecycleScope.launch{
             withContext(Dispatchers.IO){
@@ -247,6 +259,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    //This method gets the uri of saved bill of lading for this waypoint from local file system
     fun getBolUri(){
         lifecycleScope.launch{
             withContext(Dispatchers.IO){
@@ -263,6 +276,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
+    //This method loads bill of lading picture from given uri and displays in the image view
     fun loadBol(uri: Uri) {
         lifecycleScope.launch {
             withContext(Dispatchers.Main){
@@ -285,7 +299,7 @@ class WaypointDetailDialog(private val waypoint: WayPoint): DialogFragment() {
         }
     }
 
-
+    //This method loads signature from given uri and displays it in image view
     fun loadSignature(uri: Uri){
         lifecycleScope.launch {
             withContext(Dispatchers.Main){

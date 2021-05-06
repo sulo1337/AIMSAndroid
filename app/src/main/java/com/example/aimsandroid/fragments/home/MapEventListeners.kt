@@ -13,12 +13,13 @@ import com.here.android.mpa.mapping.MapGesture
 import com.here.android.mpa.mapping.MapRoute
 import com.here.android.mpa.routing.Route
 
-
+/**
+ * This class handles all the events that occur throughout the map
+ * */
 class MapEventListeners(private val homeFragment: HomeFragment, private val mapFragmentView: MapFragmentView) {
 
     private var m_navigationManager: NavigationManager = NavigationManager.getInstance()
 
-    val tts = TextToSpeechUtil(homeFragment.requireContext())
 
     val m_maneuverListener: NavigationManager.ManeuverEventListener = object: NavigationManager.ManeuverEventListener(){
         override fun onManeuverEvent() {

@@ -32,6 +32,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
 
+/*
+* Android view model that handles the logic for overlying home view
+* */
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var map: Map? = null
     private var _currentTripId: Long = -1L
@@ -47,6 +50,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val latitude = locationRepository.latitude
     val longitude = locationRepository.longitude
 
+    //method to recenter map when button is clicked
     fun recenterMap() {
         try{
             if(!this.latitude.value?.equals(0.0)!! && !this.longitude.value?.equals(0.0)!!) {
@@ -58,6 +62,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //method to find next waypoint
     suspend fun resolveNextWaypoint() {
         var waypoints = currentTrip.value?.waypoints
         if(waypoints != null) {
@@ -77,6 +82,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //method to save bill of lading form, bill of lading picture, and signature in database
     suspend fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, signatureBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         viewModelScope.launch {
             onSaveListener.onSaving()
@@ -105,6 +111,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //method to check if current trip has been completed
     private suspend fun checkCurrentTripIsCompleted(): Boolean {
         var waypoints = currentTrip.value?.waypoints
         if(waypoints!=null){
@@ -126,21 +133,25 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //method to remove current trip context when trip has been completed
     private fun removeCurrentTrip() {
         prefs.edit().putLong("currentTripId", -1L).apply()
         currentTrip = tripRepository.getTripWithWaypointsByTripId(-1L)
         _currentTripCompleted.value = true
     }
 
+    //method to signify current trip removed event has been complete
     fun onCurrentTripRemoved() {
         _currentTripCompleted.value = false
     }
 
+    //method to save bitmaps
     private suspend fun saveBitmaps(bolBitmap: Bitmap?, signatureBitmap: Bitmap?, billOfLading: BillOfLading) {
         saveBolBitmap(bolBitmap, billOfLading)
         saveSignatureBitmap(signatureBitmap, billOfLading)
     }
 
+    //method to save bill of lading bitmap
     suspend fun saveBolBitmap(bolBitmap: Bitmap?, billOfLading: BillOfLading){
         if(bolBitmap!=null){
             withContext(Dispatchers.IO){
@@ -164,6 +175,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //method to save signature bitmap
     suspend fun saveSignatureBitmap(signatureBitmap: Bitmap?, billOfLading: BillOfLading){
         if(signatureBitmap!=null){
             withContext(Dispatchers.IO){
@@ -186,6 +198,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //method to get saved signature uri from local file system
     suspend fun getSignatureUri(tripIdFk: Long, wayPointSeqNum: Long, fileLoaderListener: FileLoaderListener){
         withContext(Dispatchers.IO) {
             try {
@@ -199,6 +212,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //method to get saved bill of lading uri from local file system
     suspend fun getBolUri(tripIdFk: Long, wayPointSeqNum: Long, fileLoaderListener: FileLoaderListener){
         withContext(Dispatchers.IO) {
             try {
@@ -212,6 +226,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //method to send trip event to the dispatcher or save it in the app
     fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode){
         viewModelScope.launch {
             withContext(Dispatchers.IO){

@@ -11,6 +11,10 @@ import kotlinx.coroutines.sync.withLock
 import java.lang.Exception
 import java.net.UnknownHostException
 
+/**
+ * This method sends any non synchronized information back to the dispatcher
+ * This method calls the API every interval to update the trips
+ */
 suspend fun ForegroundService.syncTripsData() {
     val unSyncedBillOfLadingList = tripRepository.getUnSyncedBillOfLading()
     val unSyncedTripEventList = tripRepository.getUnSyncedTripEvents()
@@ -96,6 +100,7 @@ suspend fun ForegroundService.syncTripsData() {
 
         tripRepository.refreshTrips(object : FetchApiEventListener{
             override fun onSuccess() {
+                Log.i("aimsDebugLocationSyncService", "Location information sent to the Dispatcher")
                 Log.i("aimsDebugDataSyncService", "Trips Up to Date")
             }
 

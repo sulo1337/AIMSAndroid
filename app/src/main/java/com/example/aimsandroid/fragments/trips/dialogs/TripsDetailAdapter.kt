@@ -12,6 +12,11 @@ import com.example.aimsandroid.databinding.DialogTripDetailsItemBinding
 import getFullAddress
 import getWaypointDate
 
+/*
+* Adapter to convert data into view holder of recycler view
+* See android ListAdapter documentation for details about this class
+* Mostly boilerplate code
+* */
 class TripsDetailAdapter(val clickListener: TripsDetailClickListener): ListAdapter<WayPoint, TripsDetailAdapter.TripsDetailViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripsDetailAdapter.TripsDetailViewHolder {
         return TripsDetailViewHolder(DialogTripDetailsItemBinding.inflate(LayoutInflater.from(parent.context)))

@@ -19,7 +19,9 @@ import com.here.android.mpa.odml.MapLoader.ResultCode
 import com.here.android.mpa.odml.MapPackage
 import java.io.File
 
-
+/**
+ * Boiler-plate code from HERE-API to view downloadable map
+ * */
 internal class
 MapListView(private val m_activity: ListActivity) {
     private var m_progressTextView: TextView? = null

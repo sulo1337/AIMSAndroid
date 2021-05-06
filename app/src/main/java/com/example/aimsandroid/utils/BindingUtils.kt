@@ -8,6 +8,9 @@ import com.example.aimsandroid.database.WayPoint
 import getFullAddress
 import getWaypointDate
 
+/**
+ * This class contains necessary methods to bind the variables to the view
+ */
 @BindingAdapter("bindSourceTitle")
 fun bindSourceTitle(textView: TextView, data: TripWithWaypoints){
     var firstSource = findFirst(data.waypoints, "Source")

@@ -30,6 +30,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
 
+/*
+* Android view model that handles the logic for overlying profile view
+* */
 class TripsViewModel(application: Application) : AndroidViewModel(application) {
     private val tripRepository = TripRepository(application)
     val trips = tripRepository.trips
@@ -43,6 +46,8 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         get() = _online
     private var prefs = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
     private var driverId: String? = prefs.getString("driverId", "D1")
+
+    //this method refreshes trips manually when driver swipes down the screen
     fun refreshTrips(fetchApiEventListener: FetchApiEventListener){
         viewModelScope.launch {
             _refreshing.value = true
@@ -51,6 +56,7 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //this method updates given bill of lading form into the database with bill of lading picture
     fun saveForm(billOfLading: BillOfLading, bolBitmap: Bitmap?, onSaveListener: OnSaveListener) {
         viewModelScope.launch {
             onSaveListener.onSaving()
@@ -64,6 +70,7 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //this method saves bill of lading bitmap to local file system for given bill of lading
     suspend fun saveBitmaps(bolBitmap: Bitmap?, billOfLading: BillOfLading){
         if(bolBitmap!=null){
             withContext(Dispatchers.IO){
@@ -87,6 +94,7 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //this method returns signature uri based on the trip and waypoint
     suspend fun getSignatureUri(tripIdFk: Long, wayPointSeqNum: Long, fileLoaderListener: FileLoaderListener){
         withContext(Dispatchers.IO) {
             try {
@@ -100,6 +108,7 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //this method returns bill of lading uri based on the trip and waypoint
     suspend fun getBolUri(tripIdFk: Long, wayPointSeqNum: Long, fileLoaderListener: FileLoaderListener){
         withContext(Dispatchers.IO) {
             try {
@@ -113,6 +122,7 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //this method saves the trip event in the database
     fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode){
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -121,6 +131,7 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //this method sets up a connection listener which gets triggered when connectivity mode changes on the app
     fun setupInternetListener() {
         val connectivityManager = getApplication<Application>().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
@@ -133,6 +144,7 @@ class TripsViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
+    //this method sets online or offline state based on the boolean
     fun setOnline(value: Boolean) {
         viewModelScope.launch {
             withContext(Dispatchers.Main){

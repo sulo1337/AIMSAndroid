@@ -13,6 +13,10 @@ import androidx.core.app.ActivityCompat
 import com.example.aimsandroid.mapdownloader.MapListView
 
 
+/**
+ * This class is an Android activity class to create map download activity in the application
+ * Boiler-plate code from HERE-API
+ */
 class MapDownloadActivity : android.app.ListActivity() {
     private val REQUEST_CODE_ASK_PERMISSIONS = 1
     private var m_mapListView: MapListView? = null

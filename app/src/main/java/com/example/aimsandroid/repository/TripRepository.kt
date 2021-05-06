@@ -16,6 +16,10 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.net.UnknownHostException
 
+/**
+ * This class handles all the necessary database/network calls
+ * Handles CRUD operations on trip information
+ * */
 class TripRepository(private val application: Application) {
     private val prefs = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
     var driverId = prefs.getString("driverId", "x")!!.trim()
@@ -47,6 +51,10 @@ class TripRepository(private val application: Application) {
         }
     }
 
+    /**
+     * This method inserts the bill of lading for source into network and database
+     * @param billOfLading bill of lading to be inserted
+     * */
     private suspend fun insertSourceBillOfLading(billOfLading: BillOfLading) {
         if(billOfLading.complete == true) {
             try {
@@ -80,6 +88,10 @@ class TripRepository(private val application: Application) {
         }
     }
 
+    /**
+     * This method inserts the bill of lading for site container into network and database
+     * @param billOfLading bill of lading to be inserted
+     * */
     private suspend fun insertSiteBillOfLading(billOfLading: BillOfLading){
         if(billOfLading.complete == true) {
             try {
@@ -112,6 +124,11 @@ class TripRepository(private val application: Application) {
         }
     }
 
+    /**
+     * This method inserts trip event object into database and network
+     * @param tripStatusCode Trip Status
+     * @param tripId Trip Id
+     * */
     suspend fun onTripEvent(tripId: Long, tripStatusCode: TripStatusCode) {
         withContext(Dispatchers.IO){
             val tripEvent = TripEvent(
@@ -148,6 +165,10 @@ class TripRepository(private val application: Application) {
         }
     }
 
+    /**
+     * This method refreshes trip by calling the api, gets the latest information
+     * @param fetchApiEventListener Listener interface that contains callbacks
+     * */
     suspend fun refreshTrips(fetchApiEventListener: FetchApiEventListener) {
         refresh()
         if(driverId!="x"){
@@ -176,11 +197,18 @@ class TripRepository(private val application: Application) {
             }
         }
     }
+
+    /**
+     * These four methods maps the self descriptive method names to the Dao
+     * */
     suspend fun getUnSyncedBillOfLading() = database.tripDao.getUnSyncedBillOfLading()
     suspend fun getUnSyncedTripEvents() = database.tripDao.getUnSyncedTripEvents()
     suspend fun insertBillOfLadingNoNetwork(billOfLading: BillOfLading) = database.tripDao.insertBillOfLading(billOfLading)
     suspend fun insertTripEventNoNetwork(tripEvent: TripEvent) = database.tripDao.insertTripEvent(tripEvent)
 
+    /**
+     * This methods performs a put request for pickup with all the information
+     */
     fun putTripProductPickupAsync(
         driverId: String,
         tripId: String,
@@ -205,6 +233,9 @@ class TripRepository(private val application: Application) {
         API_KEY
     )
 
+    /**
+     * This methods performs a put request for delivery with all the information
+     */
     fun putTripProductDeliveryAsync(
         driverId: String,
         tripId: String,
@@ -227,6 +258,9 @@ class TripRepository(private val application: Application) {
         API_KEY
     )
 
+    /**
+     * This methods performs a put request for trip event with all the information
+     */
     fun putTripEventStatusAsync(
         driverId: String,
         tripId: String,
@@ -243,6 +277,9 @@ class TripRepository(private val application: Application) {
         API_KEY
     )
 
+    /**
+     * This method refreshes the database and the driver context for this repository
+     */
     fun refresh() {
         driverId = prefs.getString("driverId", "x")!!.trim()
         database = getDatabase(application, driverId)

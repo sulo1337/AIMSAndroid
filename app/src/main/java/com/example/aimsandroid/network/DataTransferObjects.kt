@@ -3,7 +3,9 @@ package com.example.aimsandroid.network
 import com.example.aimsandroid.database.Trip
 import com.example.aimsandroid.database.WayPoint
 import com.squareup.moshi.Json
-
+/**
+ * This file contains all the necessary data transfer objects used to call the API
+ * */
 data class PutTripStatusResponseContainer(
     @Json(name = "data") val data: PutTripStatusResponse,
     @Json(name = "status") val status: String

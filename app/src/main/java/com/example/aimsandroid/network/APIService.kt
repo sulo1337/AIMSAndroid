@@ -13,6 +13,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import java.lang.Exception
 
+/**
+ * This interface contains all the necessary methods to call the Dispatcher API
+ * */
 interface Dispatcher {
     @GET("GetDetailedTripListByDriver/{Id}")
     @Throws(Exception::class)
@@ -66,11 +69,12 @@ interface Dispatcher {
     ): Deferred<PutTripStatusResponseContainer>
 }
 
+//This object converts json into pojo
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
-
+//This static object builds a api call abstraction that can be used to call apis using the interface above
 object Network{
     private var retrofit: Retrofit? = null
     init {

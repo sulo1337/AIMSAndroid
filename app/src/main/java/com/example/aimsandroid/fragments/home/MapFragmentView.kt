@@ -33,6 +33,9 @@ import java.lang.Exception
 import java.lang.ref.WeakReference
 import java.util.*
 
+/**
+ * This class inflates the map into view
+ * */
 open class MapFragmentView(
     private var parentFragment: HomeFragment,
     private var viewModel: HomeViewModel
@@ -58,6 +61,7 @@ open class MapFragmentView(
         initMapFragment()
     }
 
+    //this method creates singleton object of this class
     companion object Singleton{
         private var instance: MapFragmentView? = null
         fun getInstance(parentFragment: HomeFragment,
@@ -72,6 +76,7 @@ open class MapFragmentView(
         }
     }
 
+    //this method initializes map into view
     fun initMapFragment() {
         mapFragment = parentFragment.childFragmentManager.findFragmentById(R.id.mapView) as AndroidXMapFragment
         prefs = m_activity.applicationContext.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
@@ -130,6 +135,11 @@ open class MapFragmentView(
         }
     }
 
+    /**
+     * This method views directions from start coordinate to end
+     * @param srcGeoCoordinate coordinate of source
+     * @param destGeoCoordinate coordinate of destination
+     * */
     fun showDirections(srcGeoCoordinate: GeoCoordinate, destGeoCoordinate: GeoCoordinate){
         if(m_navigationManager?.navigationMode?.toString().equals("NONE")!!){
             createRoute(srcGeoCoordinate, destGeoCoordinate)
@@ -141,6 +151,11 @@ open class MapFragmentView(
         }
     }
 
+    /**
+     * This method creates and shows calculated route from source to destination
+     * @param srcGeoCoordinate geo coordinate of source
+     * @param destGeoCoordinate geo coordinate of destination
+     * */
     private fun createRoute(srcGeoCoordinate: GeoCoordinate, destGeoCoordinate: GeoCoordinate) {
         //clear previous navigation data (if any)
         onNavigationEnded()
@@ -251,7 +266,7 @@ open class MapFragmentView(
          */
 
 //        /* Choose navigation modes between real time navigation and simulation */
-        val alertDialogBuilder = AlertDialog.Builder(m_activity, R.style.AlertDialogTheme)
+        val alertDialogBuilder = AlertDialog.Builder(parentFragment.requireActivity(), R.style.AlertDialogTheme)
         alertDialogBuilder.setTitle("Navigation")
         alertDialogBuilder.setMessage("Choose Mode")
         alertDialogBuilder.setNegativeButton(
@@ -292,6 +307,9 @@ open class MapFragmentView(
          */addNavigationListeners()
     }
 
+    /**
+     * Method to add navigation event listeners from MapEventListeners::class.java
+     * */
     private fun addNavigationListeners() {
 
         m_navigationManager!!.addNavigationManagerEventListener(
@@ -321,6 +339,9 @@ open class MapFragmentView(
         m_navigationManager!!.audioPlayer.setDelegate(mapEventListeners!!.m_audioPlayerDelegate)
     }
 
+    /**
+     * This methods performs necessary actions when map fragment is paused
+     * */
     fun onPause(){
         try {
             val prefs = parentFragment.requireActivity().getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
@@ -334,10 +355,9 @@ open class MapFragmentView(
         //onNavigationEnded()
     }
 
-    fun onDestroy(){
-//        onNavigationEnded()
-    }
-
+    /**
+    * This method performs necessary actions when navigation is ended
+    * */
     fun onNavigationEnded() {
         if(m_navigationManager != null && mapEventListeners != null){
             m_navigationManager!!.stop()
@@ -353,18 +373,21 @@ open class MapFragmentView(
         m_map?.setOrientation(0.0f, Map.Animation.BOW)
     }
 
+    //Pause the follow mode while navigating
     fun pauseRoadView() {
         if(m_navigationManager!=null) {
             m_navigationManager!!.mapUpdateMode = MapUpdateMode.NONE
         }
     }
 
+    //Resume the follow mode while navigating
     fun resumeRoadView() {
         if(m_navigationManager!=null){
             m_navigationManager!!.mapUpdateMode = MapUpdateMode.ROADVIEW
         }
     }
 
+    //This method performs necessary actions related to voice navigation
     private fun setUpVoiceNavigation() {
         val voiceCatalog = VoiceCatalog.getInstance()
         voiceCatalog.downloadCatalog { error ->
@@ -401,6 +424,7 @@ open class MapFragmentView(
         return false
     }
 
+    //This method zooms to given bounding box (area of map)
     fun zoomTo(boundingBox: GeoBoundingBox?) {
         if (boundingBox != null) {
             m_map?.zoomTo(

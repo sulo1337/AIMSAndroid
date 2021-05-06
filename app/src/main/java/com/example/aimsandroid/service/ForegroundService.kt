@@ -18,6 +18,10 @@ import com.example.aimsandroid.repository.TripRepository
 import kotlinx.coroutines.*
 import java.lang.Runnable
 
+/**
+ * This class creates a foreground service in android with a notification
+ * This class then handles the continuous API call in the background to update the trips
+ */
 class ForegroundService: Service() {
 
     companion object {
@@ -60,6 +64,7 @@ class ForegroundService: Service() {
         return START_NOT_STICKY
     }
 
+    //This method builds notification for given message as as string
     private fun buildNotification(message: String) {
         notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentText(message)
@@ -68,11 +73,13 @@ class ForegroundService: Service() {
             .build()
     }
 
+    //This method updates newly made notification to view
     private fun updateNotification() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
+    //This method creates notification channel for the application
     private fun createNotificationChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
@@ -85,6 +92,7 @@ class ForegroundService: Service() {
         }
     }
 
+    //This method in an interval of value INTERVAL specified above
     private fun doWork() {
         handler = Handler(Looper.getMainLooper())
         doWorkRunnable = Runnable {
@@ -105,6 +113,7 @@ class ForegroundService: Service() {
         return
     }
 
+    //This method checks to see if internet is connected
     fun internetIsConnected(): Boolean {
         return try {
             val command = "ping -c 1 google.com"
@@ -113,7 +122,6 @@ class ForegroundService: Service() {
             false
         }
     }
-
 
     override fun onBind(intent: Intent?): IBinder? {
         return null

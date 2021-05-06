@@ -10,6 +10,9 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
 
+/**
+ * This class is an Android activity class to create splash screen activity in the application
+ */
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +26,7 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
+    //This method checks if a user has already logged in
     private fun checkLogin(): Boolean {
         val prefs: SharedPreferences = application.getSharedPreferences("com.example.aimsandroid", Context.MODE_PRIVATE)
         val driverId = prefs.getString("driverId", "x")
@@ -34,6 +38,7 @@ class SplashActivity : AppCompatActivity() {
         return true
     }
 
+    //This method will start login activity in the application
     private fun startLoginActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(Intent(this, LoginActivity::class.java))
@@ -41,6 +46,7 @@ class SplashActivity : AppCompatActivity() {
         }, 1000)
     }
 
+    //This method will start main activity in the application
     private fun startMainActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(Intent(this, MainActivity::class.java))

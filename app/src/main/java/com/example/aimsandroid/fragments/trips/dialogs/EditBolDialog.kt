@@ -53,6 +53,10 @@ import java.lang.Long
 import java.lang.StringBuilder
 import kotlin.math.sign
 
+/**
+ * Android Dialog fragment to show form view for editing
+ * @param waypoint: The waypoint for which the form needs to be shown
+ * */
 class EditBolDialog(private val waypoint: WayPoint): DialogFragment() {
     private lateinit var binding: FormContainerBinding
     private lateinit var tripRepository: TripRepository

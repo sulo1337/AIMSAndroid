@@ -18,19 +18,11 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import getStackTraceString
 
-
+/**
+ * This class is an Android activity class to create main activity in the application
+ */
 class MainActivity : AppCompatActivity() {
-    var PERMISSION_ALL = 1
     private lateinit var foregroundServiceIntent: Intent
-    var PERMISSIONS = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-        Manifest.permission.INTERNET,
-        Manifest.permission.ACCESS_WIFI_STATE,
-        Manifest.permission.ACCESS_NETWORK_STATE,
-        Manifest.permission.CAMERA
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +48,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    //This method checks necessary permissions for the app
     private fun checkPermissions() {
         TedPermission.with(this)
             .setPermissionListener(object: PermissionListener{

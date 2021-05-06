@@ -15,7 +15,9 @@ import colorGreen
 import colorSecondaryLight
 import com.here.android.mpa.odml.MapPackage
 
-
+/**
+ * Boiler-plate code from HERE API to populate list of downloadable maps
+ * */
 class MapListAdapter(context: Context?, resource: Int, private val m_list: List<MapPackage>) :
     ArrayAdapter<MapPackage?>(context!!, resource, m_list) {
 

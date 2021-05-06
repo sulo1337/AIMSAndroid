@@ -20,6 +20,9 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
 
+/**
+ * This class contains necessary methods to update the map view according to new map data
+ */
 class MapPositionChangedListener: PositioningManager.OnPositionChangedListener{
     override fun onPositionUpdated(p0: PositioningManager.LocationMethod?, p1: GeoPosition?, p2: Boolean) {
     }

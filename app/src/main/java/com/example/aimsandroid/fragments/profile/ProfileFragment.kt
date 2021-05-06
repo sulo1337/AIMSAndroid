@@ -31,7 +31,9 @@ import com.jakewharton.processphoenix.ProcessPhoenix
 import getGreeting
 import getLoader
 
-
+/*
+* Fragment (Android SDK) class to generate Profile Tab.
+* */
 class ProfileFragment : Fragment() {
 
     companion object {
@@ -74,6 +76,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    //This method handles logout functionality
     fun handleLogout() {
         AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
             .setCancelable(true)
@@ -107,10 +110,12 @@ class ProfileFragment : Fragment() {
             .show()
     }
 
+    //This method handles map download activity
     fun handleDownloadMap() {
         startActivity(Intent(requireContext(), MapDownloadActivity::class.java))
     }
 
+    //This method handles about app functionality
     fun handleAbout() {
         val alertAboutAppBinding = AlertAboutAppBinding.inflate(layoutInflater)
         AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
@@ -140,6 +145,7 @@ class ProfileFragment : Fragment() {
             .show()
     }
 
+    //This method handles truck settings
     fun handleTruckSettings() {
         val truckSettingsBinding = AlertTruckSettingsBinding.inflate(layoutInflater)
         val alertDialog = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
@@ -162,6 +168,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    //This method checks if truck settings are valid
     fun isValidTruckSettingsForm(binding: AlertTruckSettingsBinding): Boolean {
         var valid = true
         if(binding.truckHeight.text.toString() == "") {
@@ -175,6 +182,7 @@ class ProfileFragment : Fragment() {
         return valid
     }
 
+    //This method refreshes info for driver in profile page
     fun refreshInfo() {
         val driverName = viewModel.getDriverName()
         driverName?.let{
@@ -191,18 +199,22 @@ class ProfileFragment : Fragment() {
         updateHoursCompleted()
     }
 
+    //This method updates total number of trips
     fun updateTotalTrips(){
         binding.numTrips.text = viewModel.getNumTrips().toString()
     }
 
+    //This method updates total number of trips completed
     fun updateTotalTripsCompleted(){
         binding.numCompletedTrips.text = viewModel.getNumCompletedTrips().toString()
     }
 
+    //This method updates total hours completed
     fun updateHoursCompleted() {
         binding.hoursComplete.text = viewModel.getHoursCompleted()
     }
 
+    //This method toggles clock in or clock out mode
     fun handleClockToggle() {
         if(viewModel.isClockedIn()){
             viewModel.clockOut(object : EventListener{
@@ -233,23 +245,27 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    //This method handles clock in state
     fun clockInState() {
         binding.clockToggleButton.text = "Clock out"
         binding.clockStatusText.text = "You're clocked in right now"
         binding.clockStatusText.setTextColor(colorGreen)
     }
 
+    //This method handles clock out state
     fun clockOutState() {
         binding.clockToggleButton.text = "Clock in"
         binding.clockStatusText.text = "You're clocked out right now"
         binding.clockStatusText.setTextColor(Color.RED)
     }
 
+    //This is listener interface for logout
     interface LogoutEventListener{
         fun onLogoutStarted()
         fun onLogoutComplete()
     }
 
+    //This is listener interface for trip event
     interface EventListener{
         fun onStarted()
         fun onComplete()
